@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Knowledge base for Youssif Elfeshawy.">
+  <meta name="theme-color" content="#07111f">
+  <title>Knowledge Base — Youssif Elfeshawy</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .docs-hero { padding: 11rem 0 4rem; }
+    .docs-hero h1 { margin: 0; max-width: 900px; font-size: clamp(3rem,7vw,6.8rem); line-height: 1; letter-spacing: -.065em; }
+    .docs-hero h1 span { color: var(--muted); display: block; }
+    .docs-hero p { max-width: 690px; margin: 1.5rem 0 0; color: #b6c4cf; font-size: 1.05rem; }
+    .docs-list { padding: 1rem 0 6rem; }
+    .doc-card {
+      display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: center;
+      padding: 1.7rem; border: 1px solid var(--line); border-radius: 22px;
+      background: linear-gradient(145deg, rgba(20,43,62,.72), rgba(10,23,35,.82)); text-decoration: none;
+    }
+    .doc-card h2 { margin: .5rem 0 .5rem; font-size: 1.85rem; letter-spacing: -.03em; }
+    .doc-card p { margin: 0; max-width: 760px; color: var(--muted); }
+    .doc-meta { display:flex; flex-wrap:wrap; gap:.55rem; margin-top:1rem; }
+    .doc-meta span { padding:.48rem .7rem; border:1px solid var(--line); border-radius:999px; color:#aab8c4; font-size:.7rem; }
+    .doc-open {
+      width:64px; height:64px; display:grid; place-items:center; border:1px solid var(--line); border-radius:50%;
+      color:var(--cyan); font-size:1.8rem;
+    }
+    @media (max-width: 760px) {
+      .doc-card { grid-template-columns: 1fr; }
+      .doc-open { width:56px; height:56px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="wrap nav">
+      <a class="brand" href="index.html">YE<span>.</span></a>
+      <nav class="links" aria-label="Main navigation">
+        <a href="index.html#about">About</a>
+        <a href="index.html#work">Work</a>
+        <a href="index.html#skills">Skills</a>
+        <a class="active-link" href="knowledge.html">Knowledge</a>
+      </nav>
+      <a class="cv-link" href="assets/Youssif-Elfeshawy-CV.pdf" download>Download CV</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="docs-hero">
+      <div class="wrap">
+        <p class="label">KNOWLEDGE BASE</p>
+        <h1>Documentation that shows <span>what I know and how I explain it.</span></h1>
+        <p>
+          This section is designed as a learning library. Visitors can explore technical notes,
+          documentation, and study guides written in a cleaner, more readable web format.
+        </p>
+      </div>
+    </section>
+
+    <section class="docs-list">
+      <div class="wrap">
+        <a class="doc-card" href="network.html">
+          <div>
+            <p class="label" style="margin-bottom:.55rem;">DOCUMENT 01</p>
+            <h2>Network</h2>
+            <p>
+              A networking documentation page based on my study notes, covering the OSI model,
+              encapsulation, Layer 1, Layer 2, STP, routing, and OSPF.
+            </p>
+            <div class="doc-meta">
+              <span>CCNA</span>
+              <span>OSI Model</span>
+              <span>STP</span>
+              <span>OSPF</span>
+            </div>
+          </div>
+          <div class="doc-open">→</div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <span>Youssif Elfeshawy</span>
+      <a href="index.html">Back to portfolio</a>
+    </div>
+  </footer>
+</body>
+</html>

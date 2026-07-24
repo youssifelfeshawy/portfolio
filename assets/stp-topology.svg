@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420">
+<rect width="760" height="420" rx="28" fill="#0d1d2d"/>
+<g font-family="Arial, sans-serif" text-anchor="middle">
+  <g stroke="#63e6ff" stroke-width="4" opacity="0.65" fill="none">
+    <path d="M380 95 L220 210"/>
+    <path d="M380 95 L540 210"/>
+    <path d="M220 210 L540 210" stroke="#ff8b8b" stroke-dasharray="10 8"/>
+  </g>
+  <g>
+    <rect x="310" y="52" width="140" height="70" rx="18" fill="#143149" stroke="#63e6ff"/>
+    <text x="380" y="80" fill="#63e6ff" font-size="16">Root Bridge</text>
+    <text x="380" y="103" fill="#edf6fb" font-size="24" font-weight="700">Switch A</text>
+  </g>
+  <g>
+    <rect x="150" y="185" width="140" height="70" rx="18" fill="#15283c" stroke="#63e6ff"/>
+    <text x="220" y="213" fill="#63e6ff" font-size="16">Forwarding</text>
+    <text x="220" y="236" fill="#edf6fb" font-size="24" font-weight="700">Switch B</text>
+  </g>
+  <g>
+    <rect x="470" y="185" width="140" height="70" rx="18" fill="#15283c" stroke="#63e6ff"/>
+    <text x="540" y="213" fill="#63e6ff" font-size="16">Forwarding</text>
+    <text x="540" y="236" fill="#edf6fb" font-size="24" font-weight="700">Switch C</text>
+  </g>
+  <rect x="232" y="280" width="296" height="86" rx="20" fill="#161f30" stroke="#ff8b8b"/>
+  <text x="380" y="316" fill="#ff8b8b" font-size="16">Blocked by STP</text>
+  <text x="380" y="345" fill="#f4f8fb" font-size="25" font-weight="700">Redundant loop broken</text>
+</g>
+</svg>

@@ -1,0 +1,16 @@
+{
+  "documents": [
+    {
+      "id": "network",
+      "title": "Network",
+      "slug": "network.html",
+      "summary": "Networking guide covering the OSI model, encapsulation, Layer 1, Layer 2, STP, routing, and OSPF.",
+      "tags": [
+        "CCNA",
+        "OSI Model",
+        "STP",
+        "OSPF"
+      ]
+    }
+  ]
+}

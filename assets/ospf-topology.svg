@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 430">
+<rect width="760" height="430" rx="28" fill="#0d1d2d"/>
+<g font-family="Arial, sans-serif" text-anchor="middle">
+  <rect x="90" y="70" width="580" height="290" rx="26" fill="#112338" stroke="#63e6ff"/>
+  <text x="380" y="98" fill="#63e6ff" font-size="18">Area 0 (Backbone)</text>
+
+  <g stroke="#63e6ff" stroke-width="3" opacity="0.65" fill="none">
+    <path d="M215 155 L380 215"/>
+    <path d="M545 155 L380 215"/>
+    <path d="M215 290 L380 215"/>
+    <path d="M545 290 L380 215"/>
+  </g>
+
+  <g>
+    <circle cx="215" cy="155" r="34" fill="#17344f" stroke="#63e6ff"/>
+    <text x="215" y="161" fill="#edf6fb" font-size="18" font-weight="700">R1</text>
+    <circle cx="545" cy="155" r="34" fill="#17344f" stroke="#63e6ff"/>
+    <text x="545" y="161" fill="#edf6fb" font-size="18" font-weight="700">R2</text>
+    <circle cx="215" cy="290" r="34" fill="#17344f" stroke="#63e6ff"/>
+    <text x="215" y="296" fill="#edf6fb" font-size="18" font-weight="700">R3</text>
+    <circle cx="545" cy="290" r="34" fill="#17344f" stroke="#63e6ff"/>
+    <text x="545" y="296" fill="#edf6fb" font-size="18" font-weight="700">R4</text>
+    <circle cx="380" cy="215" r="38" fill="#16324a" stroke="#7fb2ff"/>
+    <text x="380" y="209" fill="#edf6fb" font-size="18" font-weight="700">DR</text>
+    <text x="380" y="231" fill="#98a8b8" font-size="14">Adjacency hub</text>
+  </g>
+
+  <rect x="265" y="370" width="230" height="32" rx="10" fill="#15283c" stroke="#63e6ff"/>
+  <text x="380" y="392" fill="#edf6fb" font-size="16">LSAs + SPF + cost-based routing</text>
+</g>
+</svg>
