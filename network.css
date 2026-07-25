@@ -1,4 +1,4 @@
-﻿
+
 .network-page {
   background: #0f1117;
 }
@@ -228,7 +228,7 @@ h2.major-heading {
   scroll-margin-top: 95px;
   margin: 43.2px 0 13.6px;
   color: #f1f5f9;
-  font-size: 21.6px;
+  font-size: 30px;
   line-height: 1.25;
   letter-spacing: -.018em;
 }
@@ -337,6 +337,11 @@ h2.major-heading {
   border: 1px dashed rgba(56,189,248,.24);
   border-radius: 18px;
   background: rgba(56,189,248,.035);
+}
+
+.figure-block.float-left {
+  float: left;
+  margin: 9.6px 24px 19.2px 0;
 }
 
 .figure-block > span {

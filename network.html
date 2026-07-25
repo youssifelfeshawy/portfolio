@@ -202,56 +202,56 @@
 </ul><p class="body-line">The two main wired media used in modern networks are UTP (Unshielded Twisted Pair) copper cable and fiber optic cable. Each is covered in detail below.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="unshielded-twisted-pair-utp-copper-cables">UTP (Unshielded Twisted Pair) Copper Cables:-</h4>
+<aside class="figure-block"><img src="assets/twisted_pair_cables.jpg" alt=""></aside>
 <p class="body-line">UTP (Unshielded Twisted Pair) is the standard copper cable used in wired Ethernet networks. It contains 4 pairs of copper wires — 8 wires total — twisted together inside a plastic outer jacket. Twisting each pair reduces EMI (Electromagnetic Interference) that would otherwise corrupt the signal.</p>
-<aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: UTP cable cross-section: 4 color-coded twisted pairs inside an outer plastic jacket, terminating in an RJ-45 connector ]</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="the-rj-45-connector">The RJ-45 Connector:-</h4>
+<h4 class="subheading" id="the-rj-45-connector">The RJ-45 Connector</h4>
+<aside class="figure-block float-left"><img src="assets/rj45.png" alt="RJ-45 Connector"></aside>
 <p class="body-line">UTP (Unshielded Twisted Pair) cables terminate with an RJ-45 connector — the standard plastic plug used for all wired Ethernet connections. It has 8 pins, each corresponding to one of the 8 wires. How those pins are wired at each end determines the cable type.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="10base-t-and-100base-t-pin-usage">10BASE-T and 100BASE-T — Pin Usage:-</h4>
+<h4 class="subheading" id="10base-t-and-100base-t-pin-usage">10BASE-T and 100BASE-T</h4>
 <p class="body-line">At speeds of 10 Mbps (10BASE-T) and 100 Mbps (100BASE-TX, also called Fast Ethernet), only 4 of the 8 wires carry data — one pair to transmit and one pair to receive:</p>
 <pre class="command-line"><code>Pins 1 &amp; 2: Transmit (TX) from the PC or Router → Receive (RX) on the Switch.</code></pre>
-<ul class="doc-list">
-  <li>Pins 3 &amp; 6: Receive (RX) on the PC or Router ← Transmit (TX) from the Switch.</li>
-</ul><aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: 10BASE-T pin diagram: PC pins 1 and 2 (TX) connect to Switch pins 1 and 2 (RX). PC pins 3 and 6 (RX) connect to Switch pins 3 and 6 (TX). ]</p></aside>
+<pre class="command-line"><code>Pins 3 &amp; 6: Receive (RX) on the PC or Router ← Transmit (TX) from the Switch.</code></pre>
+<!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: 10BASE-T pin diagram: PC pins 1 and 2 (TX) connect to Switch pins 1 and 2 (RX). PC pins 3 and 6 (RX) connect to Switch pins 3 and 6 (TX). ]</p></aside> -->
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="straight-through-vs-crossover-cables">Straight-Through vs. Crossover Cables:-</h4>
+<h4 class="subheading" id="straight-through-vs-crossover-cables">Straight-Through vs. Crossover Cables</h4>
 <pre class="command-line"><code>Straight-Through: pins are wired identically at both ends (1→1, 2→2, 3→3, 6→6). Used when connecting different device types — PC to Switch, Router to Switch — because TX pins on one device type align with RX pins on the other.</code></pre>
 <pre class="command-line"><code>Crossover: pairs are swapped at one end (1→3, 2→6, 3→1, 6→2). Used when connecting the same device types — PC to PC, Switch to Switch, Router to Router — so that TX connects to RX rather than TX to TX.</code></pre>
-<aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Left: Straight-through — identical color pattern at both ends. Right: Crossover — orange and green pairs are swapped at one end. ]</p></aside>
+<!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Left: Straight-through — identical color pattern at both ends. Right: Crossover — orange and green pairs are swapped at one end. ]</p></aside> -->
 <ul class="doc-list">
   <li>Auto MDI-X (Auto Medium Dependent Interface Crossover): a feature on virtually all modern switches and routers that automatically detects the cable type and adjusts internally. Either cable type can be used in any situation — the device compensates automatically.</li>
 </ul><div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="gigabit-and-10-gigabit-ethernet">Gigabit and 10-Gigabit Ethernet:-</h4>
+<h4 class="subheading" id="gigabit-and-10-gigabit-ethernet">Gigabit and 10-Gigabit Ethernet</h4>
 <p class="body-line">At speeds of 1 Gbps (1000BASE-T) and 10 Gbps (10GBASE-T), all 8 wires are used across all 4 pairs. Each pair operates bidirectionally — the same pair simultaneously carries signals in both directions using advanced signal processing. This bidirectionality enables the dramatically higher throughput.</p>
 <div class="table-wrap"><table><thead><tr><th>Standard</th><th>Speed</th><th>Wires Used</th><th>Bidirectional Pairs?</th></tr></thead><tbody><tr><td>10BASE-T</td><td>10 Mbps</td><td>4 — pins 1, 2, 3, 6</td><td>No — dedicated TX and RX pairs</td></tr><tr><td>100BASE-TX</td><td>100 Mbps</td><td>4 — pins 1, 2, 3, 6</td><td>No — dedicated TX and RX pairs</td></tr><tr><td>1000BASE-T</td><td>1 Gbps</td><td>8 — all 4 pairs</td><td>Yes — all 4 pairs bidirectional</td></tr><tr><td>10GBASE-T</td><td>10 Gbps</td><td>8 — all 4 pairs</td><td>Yes — all 4 pairs bidirectional</td></tr></tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="fiber-optic-cables">Fiber Optic Cables:-</h4>
+<h4 class="subheading" id="fiber-optic-cables">Fiber Optic Cables</h4>
 <p class="body-line">Fiber optic cables transmit data as pulses of light through a glass core, rather than electrical signals through copper. This enables much longer distances, higher speeds, and complete immunity to electromagnetic interference — making fiber the preferred medium for inter-building links, WAN (Wide Area Network) connections, and high-security environments.</p>
-<h4 class="subheading" id="fiber-cable-structure-inside-to-outside">Fiber Cable Structure (inside to outside):-</h4>
+<h4 class="subheading" id="fiber-cable-structure-inside-to-outside">Fiber Cable Structure</h4>
 <ul class="doc-list">
+</ul><aside class="figure-block"><img src="assets/fiber_optic_cable.jpg" alt="Fiber Optic Cable"></aside>
   <li>Fiberglass core: the medium through which light pulses travel.</li>
   <li>Cladding: a glass layer surrounding the core with a different refractive index. This difference causes total internal reflection — light cannot escape through the cladding and stays confined to the core.</li>
   <li>Buffer coating: a protective plastic layer that cushions the fragile glass.</li>
   <li>Outer jacket: the tough outer sheath that protects the entire assembly from physical damage and the environment.</li>
-</ul><aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Fiber optic cable cross-section: fiberglass core → cladding → buffer coating → outer jacket. A light ray shown bouncing along the core via total internal reflection. ]</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="small-form-factor-pluggable-sfp-transceivers">SFP (Small Form-factor Pluggable) Transceivers:-</h4>
+<h4 class="subheading" id="small-form-factor-pluggable-sfp-transceivers">SFP Transceivers</h4>
+<aside class="figure-block float-left"><img src="assets/spf.jpg" alt=""></aside>
 <p class="body-line">Standard network device ports use electrical signals, so a fiber optic cable cannot be plugged directly into a regular Ethernet port. To connect a fiber cable to a switch or router, a SFP (Small Form-factor Pluggable) transceiver is required — a compact, hot-swappable module that slots into an SFP port on the device. The SFP converts the device&#x27;s electrical signals into optical signals for transmission, and converts incoming light signals back into electrical signals.</p>
 <p class="body-line">Each fiber connection uses two separate strands — one for transmitting (TX) and one for receiving (RX) — making fiber connections inherently full-duplex.</p>
-<aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: SFP transceiver module plugging into a switch SFP port, with two fiber strands: one labeled TX and one labeled RX ]</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="single-mode-vs-multi-mode-fiber">Single-Mode vs. Multi-Mode Fiber:-</h4>
+<h4 class="subheading" id="single-mode-vs-multi-mode-fiber">Single-Mode vs. Multi-Mode Fiber</h4>
 <ul class="doc-list">
   <li>MMF (Multi-Mode Fiber): uses a LED (Light Emitting Diode) light source and a wider core (50 or 62.5 micrometers). Light bounces along multiple paths (modes), which causes slight signal spreading (modal dispersion) that limits distance to roughly 550 meters. Cheaper than single-mode. Best suited for short distances inside buildings or data centers.</li>
   <li>SMF (Single-Mode Fiber): uses a laser light source and an extremely narrow core (9 micrometers). Light travels in a single straight path with virtually no dispersion, enabling distances of 100 kilometers or more. More expensive. Used for long-distance runs between buildings, campuses, and WANs (Wide Area Networks).</li>
-</ul><aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Left (Multi-Mode Fiber): wide core with multiple light rays bouncing. Right (Single-Mode Fiber): narrow core with a single straight laser beam — no bouncing, minimal dispersion. ]</p></aside>
+</ul><aside class="overview-figure-block figure-with-image"><img src="assets/Single_Mode_vs_Multimode_Fiber.jpg" alt="Single Mode vs Multimode Fiber"></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <div class="table-wrap"><table><thead><tr><th>Factor</th><th>UTP Copper</th><th>Fiber Optic</th></tr></thead><tbody><tr><td>Signal type</td><td>Electrical</td><td>Light (LED or laser)</td></tr><tr><td>Max distance</td><td>~100 m per segment</td><td>~550 m (Multi-Mode) to 100+ km (Single-Mode)</td></tr><tr><td>EMI immunity</td><td>Susceptible to EMI</td><td>Completely immune to EMI</td></tr><tr><td>Security</td><td>Signal can leak — can be tapped</td><td>No signal leakage — cannot be passively tapped</td></tr><tr><td>Cost</td><td>Lower</td><td>Higher, especially SMF (Single-Mode Fiber)</td></tr><tr><td>Connector type</td><td>RJ-45</td><td>LC, SC, or ST — requires SFP transceiver on the device</td></tr></tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="network-devices-at-layer-1">Network Devices</h3>
 <p class="body-line">Layer 1 devices operate purely on raw signals — they have no understanding of addresses or any higher-layer information. They simply receive a signal and retransmit it.</p>
-</ul><aside class="figure-block"><img src="assets/hub.png" alt=""></aside>
+</ul><aside class="figure-block"><img src="assets/hub.png" alt="Hub Device"></aside>
 <ul class="doc-list">
   <li>Hub: a basic Layer 1 device that connects multiple devices. When any device sends a signal, the hub amplifies and repeats it out of every other port with no intelligence about the intended destination. All devices share the same physical medium. Hubs are legacy technology replaced by switches.</li>
   <li>Repeater: receives a signal, amplifies it to restore signal strength lost over distance, and retransmits it. Used to extend the maximum cable length of a network segment.</li>
@@ -296,26 +296,18 @@
 </ul><aside class="callout"><strong>Note:</strong><p>Carrier Sense Multiple Access with Collision Detection (CSMA/CD) only applies in half-duplex environments with shared collision domains. Modern switch-connected devices run full-duplex — CSMA/CD is disabled entirely.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 </ul><div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="media-access-control-mac-addresses">MAC (Media Access Control) Addresses:-</h4>
+<h3 class="subheading" id="media-access-control-mac-addresses">MAC Addresses</h3>
 <p class="body-line">Every network interface card (NIC) — in a laptop, phone, server, switch, or any networked device — has a MAC (Media Access Control) address permanently embedded by the manufacturer. The MAC address is how Layer 2 identifies devices on a local network.</p>
 <ul class="doc-list">
   <li>48 bits long (6 bytes) — written as 12 hexadecimal characters, for example AA:BB:CC:11:22:33.</li>
   <li>Burned-In Address (BIA): permanently written into the hardware at the factory. Cannot be changed by software, though it can be spoofed at the operating system level.</li>
   <li>Globally unique: no two network interface cards in the world should share the same MAC address.</li>
-</ul><aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: MAC address AA:BB:CC:11:22:33 — first 3 bytes (AA:BB:CC) highlighted as Organizationally Unique Identifier (OUI), last 3 bytes (11:22:33) as unique device identifier ]</p></aside>
+<!-- </ul><aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: MAC address AA:BB:CC:11:22:33 — first 3 bytes (AA:BB:CC) highlighted as Organizationally Unique Identifier (OUI), last 3 bytes (11:22:33) as unique device identifier ]</p></aside> -->
 <div class="doc-spacer" aria-hidden="true"></div>
 <div class="table-wrap"><table><thead><tr><th>Portion</th><th>Bytes</th><th>Name</th><th>Purpose</th></tr></thead><tbody><tr><td>First half (6 hex chars)</td><td>Bytes 1–3</td><td>Organizationally Unique Identifier (OUI)</td><td>Identifies the manufacturer. Every NIC made by Cisco shares the same OUI; Intel NICs share a different OUI.</td></tr><tr><td>Second half (6 hex chars)</td><td>Bytes 4–6</td><td>Device Identifier</td><td>Uniquely identifies this specific device within that manufacturer&#x27;s product range.</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="the-ethernet-frame-structure">The Ethernet Frame Structure:-</h4>
-<p class="body-line">Ethernet is the dominant Layer 2 protocol in wired local area networks. When a Layer 3 packet arrives at Layer 2, it is wrapped in an Ethernet frame — a structured container with a header at the front and a trailer at the back.</p>
-<aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Ethernet frame layout: [Preamble 7B | Start Frame Delimiter 1B | Destination MAC 6B | Source MAC 6B | Type/Length 2B | Payload 46–1500B | Frame Check Sequence 4B] ]</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody><tr><td>Preamble</td><td>7 bytes</td><td>Alternating 1s and 0s (10101010 repeated). Allows receiving devices to synchronize their clock to the incoming bit stream before the actual frame begins.</td></tr><tr><td>Start Frame Delimiter (SFD)</td><td>1 byte</td><td>The bit pattern 10101011. Signals the end of the preamble — the very next byte is the start of the Destination MAC Address field.</td></tr><tr><td>Destination MAC Address</td><td>6 bytes</td><td>MAC address of the intended recipient. Can be unicast (one device), multicast (a group), or broadcast (FF:FF:FF:FF:FF:FF — all devices on the local network).</td></tr><tr><td>Source MAC Address</td><td>6 bytes</td><td>MAC address of the sending device&#x27;s network interface card (NIC).</td></tr><tr><td>Type / Length</td><td>2 bytes</td><td>Value 1536 (0x0600) or higher: identifies the Layer 3 protocol — 0x0800 = IPv4 (Internet Protocol version 4), 0x86DD = IPv6. Value below 1536: indicates the byte length of the payload.</td></tr><tr><td>Payload (Data)</td><td>46–1500 bytes</td><td>The encapsulated Layer 3 data — usually an IP packet (L3PDU). Minimum 46 bytes. If the actual data is shorter than 46 bytes, the switch appends padding bytes (zeros) to reach the minimum. This 64-byte minimum total frame size is required for correct collision detection on half-duplex links.</td></tr><tr><td>FCS (Frame Check Sequence)</td><td>4 bytes</td><td>A Cyclic Redundancy Check (CRC) value. The receiver recalculates it — if it does not match, the frame was corrupted and is discarded.</td></tr></tbody></table></div>
-<aside class="callout"><strong>Important:</strong><p>The Preamble and Start Frame Delimiter (SFD) are not counted in the Ethernet frame size. The 64-byte minimum applies from Destination MAC through FCS (Frame Check Sequence): 6 + 6 + 2 + 46 + 4 = 64 bytes.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="mac-address-table-switch-learning-and-forwarding">MAC Address Table — Switch Learning and Forwarding:-</h4>
+<h4 class="subheading" id="mac-address-table-switch-learning-and-forwarding">MAC Address Table</h4>
 <p class="body-line">A switch maintains a MAC address table (also called a CAM (Content Addressable Memory) table) that maps each known MAC address to the switch port it was learned from. This table is built dynamically as frames arrive.</p>
-<aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Switch learning: PC-A sends a frame with source MAC AA:BB:CC → switch records &#x27;AA:BB:CC = Port 1&#x27; in its MAC table → switch looks up destination MAC → forwards only out the correct port ]</p></aside>
+<!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Switch learning: PC-A sends a frame with source MAC AA:BB:CC → switch records &#x27;AA:BB:CC = Port 1&#x27; in its MAC table → switch looks up destination MAC → forwards only out the correct port ]</p></aside> -->
 <div class="doc-spacer" aria-hidden="true"></div>
 <ul class="doc-list">
   <li>Learn: when a frame arrives, the switch reads the source MAC address and records it with the incoming port number in the MAC address table.</li>
@@ -327,9 +319,17 @@
 <pre class="command-line"><code>clear mac address-table dynamic address &lt;MAC&gt;      → remove one specific entry by MAC address</code></pre>
 <pre class="command-line"><code>clear mac address-table dynamic interface &lt;INT&gt;    → remove all entries learned on one interface</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="vlans">VLANs and Trunking</h3>
+<h3 class="subheading" id="the-ethernet-frame-structure">Ethernet Frame Structure</h3>
+<p class="body-line">Ethernet is the dominant Layer 2 protocol in wired local area networks. When a Layer 3 packet arrives at Layer 2, it is wrapped in an Ethernet frame — a structured container with a header at the front and a trailer at the back.</p>
+<!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Ethernet frame layout: [Preamble 7B | Start Frame Delimiter 1B | Destination MAC 6B | Source MAC 6B | Type/Length 2B | Payload 46–1500B | Frame Check Sequence 4B] ]</p></aside> -->
+<div class="doc-spacer" aria-hidden="true"></div>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody><tr><td>Preamble</td><td>7 bytes</td><td>Alternating 1s and 0s (10101010 repeated). Allows receiving devices to synchronize their clock to the incoming bit stream before the actual frame begins.</td></tr><tr><td>Start Frame Delimiter (SFD)</td><td>1 byte</td><td>The bit pattern 10101011. Signals the end of the preamble — the very next byte is the start of the Destination MAC Address field.</td></tr><tr><td>Destination MAC Address</td><td>6 bytes</td><td>MAC address of the intended recipient. Can be unicast (one device), multicast (a group), or broadcast (FF:FF:FF:FF:FF:FF — all devices on the local network).</td></tr><tr><td>Source MAC Address</td><td>6 bytes</td><td>MAC address of the sending device&#x27;s network interface card (NIC).</td></tr><tr><td>Type / Length</td><td>2 bytes</td><td>Value 1536 (0x0600) or higher: identifies the Layer 3 protocol — 0x0800 = IPv4 (Internet Protocol version 4), 0x86DD = IPv6. Value below 1536: indicates the byte length of the payload.</td></tr><tr><td>Payload (Data)</td><td>46–1500 bytes</td><td>The encapsulated Layer 3 data — usually an IP packet (L3PDU). Minimum 46 bytes. If the actual data is shorter than 46 bytes, the switch appends padding bytes (zeros) to reach the minimum. This 64-byte minimum total frame size is required for correct collision detection on half-duplex links.</td></tr><tr><td>FCS (Frame Check Sequence)</td><td>4 bytes</td><td>A Cyclic Redundancy Check (CRC) value. The receiver recalculates it — if it does not match, the frame was corrupted and is discarded.</td></tr></tbody></table></div>
+<aside class="callout"><strong>Important:</strong><p>The Preamble and Start Frame Delimiter (SFD) are not counted in the Ethernet frame size. The 64-byte minimum applies from Destination MAC through FCS (Frame Check Sequence): 6 + 6 + 2 + 46 + 4 = 64 bytes.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="subheading" id="vlans">VLANs and Trunking</h3>
 <p class="body-line">All devices on a switch by default share the same local network and broadcast domain. VLANs (Virtual Local Area Networks) divide a single physical switch into multiple isolated logical networks. To carry traffic from multiple VLANs across one cable, switches use trunking.</p>
-<h4 class="subheading" id="local-area-network-lan-and-broadcast-domain">LAN (Local Area Network) and Broadcast Domain:-</h4>
+<h4 class="subheading" id="local-area-network-lan-and-broadcast-domain">LAN and Broadcast Domain</h4>
 <ul class="doc-list">
   <li>LAN (Local Area Network): a group of devices in a single location that are all part of the same network and can communicate directly at Layer 2.</li>
   <li>Broadcast Domain: the set of all devices that receive a broadcast frame (destination MAC FF:FF:FF:FF:FF:FF) sent by any one member. By default, all ports on a switch are in the same broadcast domain.</li>
@@ -358,14 +358,14 @@
 <pre class="command-line"><code>show vlan brief                  → view all VLANs and which access ports belong to each</code></pre>
 <aside class="callout"><strong>Note:</strong><p>&#x27;show vlan brief&#x27; shows access ports only — trunk ports do not appear here. Use &#x27;show interfaces trunk&#x27; to see trunk information.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="trunk-ports">Trunk Ports:-</h4>
+<h4 class="subheading" id="trunk-ports">Trunk Ports</h4>
 <p class="body-line">A trunk port carries traffic from multiple VLANs (Virtual Local Area Networks) over a single physical cable. Trunk ports are used on switch-to-switch and switch-to-router links where traffic from many VLANs must travel on the same connection.</p>
 <ul class="doc-list">
   <li>Access ports: untagged — carry traffic for a single VLAN. Connect to end hosts.</li>
   <li>Trunk ports: tagged — carry traffic for multiple VLANs simultaneously. Connect to other switches or routers.</li>
 </ul><aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Two switches connected by a trunk link. VLAN 10, 20, and 30 traffic all travels on the same cable. Each frame is tagged with its VLAN ID so the receiving switch knows which VLAN it belongs to. ]</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="ieee-802-1q-trunking-protocol">IEEE 802.1Q Trunking Protocol:-</h4>
+<h4 class="subheading" id="ieee-802-1q-trunking-protocol">IEEE 802.1Q Trunking Protocol</h4>
 <p class="body-line">Two trunking protocols exist: the old Cisco-proprietary ISL (Inter-Switch Link), and the modern industry-standard IEEE 802.1Q (dot1q). IEEE 802.1Q is universal and used in all modern networks.</p>
 <p class="body-line">When a switch sends a frame out a trunk port, it inserts a 4-byte IEEE 802.1Q tag into the Ethernet frame between the Source MAC Address and the Type/Length field. The receiving switch reads the tag to determine the VLAN, then strips it before delivering the frame to the destination host.</p>
 <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Ethernet frame with 802.1Q tag inserted between Source MAC and Type/Length: [Destination MAC | Source MAC | 802.1Q Tag 4B | Type/Length | Payload | FCS] ]</p></aside>
@@ -379,7 +379,7 @@
   <li>Must match: the native VLAN must be configured identically on both ends of a trunk link. A mismatch sends frames to the wrong VLAN.</li>
   <li>Security best practice: change the native VLAN to an unused VLAN (such as VLAN 1001) to prevent VLAN hopping attacks.</li>
 </ul><div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="configuring-trunk-ports">Configuring Trunk Ports:-</h4>
+<h4 class="subheading" id="configuring-trunk-ports">Configuring Trunk Ports</h4>
 <pre class="command-line"><code>int g0/1</code></pre>
 <pre class="command-line"><code>switchport trunk encapsulation dot1q   → set encapsulation to IEEE 802.1Q (required on switches that support both ISL and dot1q)</code></pre>
 <pre class="command-line"><code>switchport mode trunk                  → configure the port as a trunk</code></pre>
@@ -388,7 +388,7 @@
 <div class="doc-spacer" aria-hidden="true"></div>
 <pre class="command-line"><code>show interfaces trunk                  → view trunk ports, allowed VLANs, and native VLAN</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="dynamic-trunking-protocol-dtp">DTP (Dynamic Trunking Protocol):-</h4>
+<h4 class="subheading" id="dynamic-trunking-protocol-dtp">Dynamic Trunking Protocol</h4>
 <p class="body-line">DTP (Dynamic Trunking Protocol) is a Cisco-proprietary protocol that allows Cisco switches to automatically negotiate whether an interface should be access or trunk — without manual configuration. It is enabled by default.</p>
 <aside class="callout"><strong>Security Warning:</strong><p>DTP (Dynamic Trunking Protocol) should be disabled on all switch ports. Automatic negotiation can be exploited to establish unauthorized trunk links. Always manually configure every port and disable DTP.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
@@ -409,7 +409,7 @@
 <p class="body-line">When encapsulation is set to negotiate, ISL (Inter-Switch Link) is preferred over IEEE 802.1Q — if both switches support ISL, it will be selected. Regarding DTP frame placement: DTP frames are sent in VLAN 1 when using ISL (Inter-Switch Link), or in the native VLAN when using IEEE 802.1Q (the default native VLAN is VLAN 1, so in practice both default to VLAN 1).</p>
 <aside class="callout"><strong>Best Practice:</strong><p>always set the trunk encapsulation explicitly with &#x27;switchport trunk encapsulation dot1q&#x27; rather than relying on automatic negotiation. This ensures predictable behavior regardless of what the connected switch supports.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="vlan-trunking-protocol-vtp">VTP (VLAN Trunking Protocol):-</h4>
+<h4 class="subheading" id="vlan-trunking-protocol-vtp">VLAN Trunking Protocol</h4>
 <pre class="command-line"><code>VTP (VLAN Trunking Protocol) is a Cisco-proprietary protocol that distributes VLAN configuration from a central VTP server switch to all VTP client switches in the same domain — eliminating the need to configure VLANs individually on every switch.</code></pre>
 <aside class="callout"><strong>Important:</strong><p>VTP (VLAN Trunking Protocol) is rarely used in modern networks and is generally not recommended. A switch with a higher revision number can overwrite the VLAN database on all connected switches, potentially destroying the network configuration. Manual VLAN configuration per switch is the safer approach.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
@@ -422,7 +422,7 @@
   <li>Auto-join risk: a switch with no VTP domain (NULL) that receives a VTP advertisement automatically adopts that domain and revision number — a potential security risk.</li>
 </ul><pre class="command-line"><code>VTP versions: VTPv1 and VTPv2 support only normal VLANs (1–1,005). VTPv3 adds support for extended VLANs (1,006–4,094). VTPv2 adds Token Ring VLAN support over VTPv1 but is otherwise nearly identical.</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="stp">STP (Spanning Tree Protocol)</h3>
+<h3 class="subheading" id="stp">Spanning Tree Protocol</h3>
 <pre class="command-line"><code>Network redundancy is critical — if one switch or link fails, traffic must continue through an alternate path. However, redundant Layer 2 links create loops, and loops are catastrophic in Ethernet networks. STP (Spanning Tree Protocol) automatically blocks redundant paths to prevent loops while keeping those paths on standby as instant backups.</code></pre>
 <h4 class="subheading" id="the-problem-with-redundant-links">The Problem with Redundant Links:-</h4>
 <p class="body-line">Unlike IP (Internet Protocol) packets at Layer 3, Ethernet frames have no TTL (Time to Live) field — nothing naturally stops them from circulating forever in a loop.</p>
@@ -438,10 +438,10 @@
 <pre class="command-line"><code>spanning-tree mode pvst            → classic PVST+ (Per-VLAN Spanning Tree Plus)</code></pre>
 <pre class="command-line"><code>spanning-tree mode rapid-pvst      → Rapid PVST+ (default on modern Cisco switches)</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="per-vlan-spanning-tree-plus-pvst-and-stp-load-balancing">PVST+ (Per-VLAN Spanning Tree Plus) and STP Load Balancing:-</h4>
+<h4 class="subheading" id="per-vlan-spanning-tree-plus-pvst-and-stp-load-balancing">PVST+ and STP Load Balancing</h4>
 <p class="body-line">Cisco switches run PVST+ (Per-VLAN Spanning Tree Plus) — a separate STP (Spanning Tree Protocol) instance runs independently for each VLAN. Different ports can be forwarding in VLAN 10 while blocking in VLAN 20. By assigning different root bridges per VLAN, traffic from different VLANs uses different physical paths — avoiding wasted redundant links and congestion on a single connection. This is called STP Load Balancing.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="spanning-tree-protocol-stp-ieee-802-1d">STP (Spanning Tree Protocol) — IEEE 802.1D:-</h4>
+<h4 class="subheading" id="spanning-tree-protocol-stp-ieee-802-1d">IEEE 802.1D</h4>
 <p class="body-line">Classic STP (Spanning Tree Protocol), defined in IEEE 802.1D, is enabled by default on switches from all vendors. STP prevents Layer 2 loops by placing selected ports into a blocking state — disabling them from forwarding regular traffic. Blocked ports act as standby links that can activate if the primary path fails.</p>
 <div class="table-wrap"><table><thead><tr><th>Port State</th><th>Forwards Traffic?</th><th>Processes BPDUs?</th><th>Description</th></tr></thead><tbody><tr><td>Forwarding</td><td>Yes</td><td>Yes</td><td>Normal operation — forwards all traffic and participates fully in Spanning Tree Protocol.</td></tr><tr><td>Blocking</td><td>No</td><td>Yes (receives only)</td><td>Discards all regular traffic. Listens for BPDUs (Bridge Protocol Data Units) to detect topology changes. Activates if the active path fails.</td></tr></tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
@@ -1103,6 +1103,7 @@
   <script src="network.js"></script>
 </body>
 </html>
+
 
 
 

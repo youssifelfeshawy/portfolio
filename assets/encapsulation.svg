@@ -1,28 +1,122 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 230">
-<rect width="820" height="230" rx="28" fill="#0d1d2d"/>
-<g font-family="Arial, sans-serif" text-anchor="middle">
-  <rect x="40" y="86" width="130" height="60" rx="14" fill="#12324a" stroke="#63e6ff"/>
-  <text x="105" y="112" fill="#63e6ff" font-size="16">Application</text>
-  <text x="105" y="136" fill="#edf6fb" font-size="21" font-weight="700">Data</text>
-  <text x="205" y="122" fill="#63e6ff" font-size="32">→</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Simple network encapsulation diagram</title>
+  <desc id="desc">A vertically aligned encapsulation diagram showing a payload growing as each new header is added, ending with a trailer and binary data.</desc>
 
-  <rect x="245" y="70" width="140" height="92" rx="14" fill="#16324a" stroke="#63e6ff"/>
-  <text x="315" y="95" fill="#63e6ff" font-size="14">Layer 4</text>
-  <text x="315" y="122" fill="#edf6fb" font-size="20" font-weight="700">Segment</text>
-  <text x="315" y="147" fill="#98a8b8" font-size="15">+ TCP / UDP header</text>
-  <text x="420" y="122" fill="#63e6ff" font-size="32">→</text>
+  <defs>
+    <marker id="arrowhead" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto">
+      <path d="M1,1 L11,6 L1,11 Z" fill="#111827"/>
+    </marker>
 
-  <rect x="455" y="70" width="140" height="92" rx="14" fill="#16324a" stroke="#63e6ff"/>
-  <text x="525" y="95" fill="#63e6ff" font-size="14">Layer 3</text>
-  <text x="525" y="122" fill="#edf6fb" font-size="20" font-weight="700">Packet</text>
-  <text x="525" y="147" fill="#98a8b8" font-size="15">+ IP header</text>
-  <text x="630" y="122" fill="#63e6ff" font-size="32">→</text>
+    <clipPath id="row2clip">
+      <rect x="450" y="220" width="700" height="90" rx="18"/>
+    </clipPath>
+    <clipPath id="row3clip">
+      <rect x="350" y="400" width="900" height="90" rx="18"/>
+    </clipPath>
+    <clipPath id="row4clip">
+      <rect x="250" y="580" width="1100" height="90" rx="18"/>
+    </clipPath>
+  </defs>
 
-  <rect x="665" y="56" width="115" height="120" rx="14" fill="#16324a" stroke="#63e6ff"/>
-  <text x="722.5" y="82" fill="#63e6ff" font-size="14">Layer 2</text>
-  <text x="722.5" y="106" fill="#edf6fb" font-size="18" font-weight="700">Frame</text>
-  <text x="722.5" y="129" fill="#98a8b8" font-size="13">+ Ethernet header</text>
-  <text x="722.5" y="147" fill="#98a8b8" font-size="13">+ FCS trailer</text>
-  <text x="722.5" y="186" fill="#7fb2ff" font-size="14">Bits on the wire</text>
-</g>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <!-- Top payload -->
+  <rect x="550" y="60" width="500" height="90" rx="18" fill="#BFDFFD"/>
+  <text x="800" y="117"
+        text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="42"
+        font-weight="600"
+        fill="#111827">Payload</text>
+
+  <!-- Arrow 1 -->
+  <line x1="800" y1="165" x2="800" y2="202"
+        stroke="#111827" stroke-width="5"
+        marker-end="url(#arrowhead)"/>
+
+  <!-- Row 2 -->
+  <g clip-path="url(#row2clip)">
+    <rect x="450" y="220" width="150" height="90" fill="#1769D2"/>
+    <rect x="600" y="220" width="550" height="90" fill="#BFDFFD"/>
+  </g>
+  <text x="525" y="277"
+        text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="32"
+        font-weight="600"
+        fill="#FFFFFF">Header</text>
+  <text x="875" y="277"
+        text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="38"
+        font-weight="600"
+        fill="#111827">Payload</text>
+
+  <!-- Arrow 2 -->
+  <line x1="800" y1="325" x2="800" y2="382"
+        stroke="#111827" stroke-width="5"
+        marker-end="url(#arrowhead)"/>
+
+  <!-- Row 3 -->
+  <g clip-path="url(#row3clip)">
+    <rect x="350" y="400" width="150" height="90" fill="#1769D2"/>
+    <rect x="500" y="400" width="750" height="90" fill="#BFDFFD"/>
+  </g>
+  <text x="425" y="457"
+        text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="32"
+        font-weight="600"
+        fill="#FFFFFF">Header</text>
+  <text x="875" y="457"
+        text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="38"
+        font-weight="600"
+        fill="#111827">Payload</text>
+
+  <!-- Arrow 3 -->
+  <line x1="800" y1="505" x2="800" y2="562"
+        stroke="#111827" stroke-width="5"
+        marker-end="url(#arrowhead)"/>
+
+  <!-- Row 4 -->
+  <g clip-path="url(#row4clip)">
+    <rect x="250" y="580" width="150" height="90" fill="#1769D2"/>
+    <rect x="400" y="580" width="800" height="90" fill="#BFDFFD"/>
+    <rect x="1200" y="580" width="150" height="90" fill="#E4F1FD"/>
+  </g>
+  <text x="325" y="637"
+        text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="32"
+        font-weight="600"
+        fill="#FFFFFF">Header</text>
+  <text x="800" y="637"
+        text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="38"
+        font-weight="600"
+        fill="#111827">Payload</text>
+  <text x="1275" y="637"
+        text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="32"
+        font-weight="600"
+        fill="#111827">Trailer</text>
+
+  <!-- Arrow 4 -->
+  <line x1="800" y1="685" x2="800" y2="742"
+        stroke="#111827" stroke-width="5"
+        marker-end="url(#arrowhead)"/>
+
+  <!-- Binary output -->
+  <rect x="400" y="760" width="800" height="90" rx="18" fill="#ECEFF3"/>
+  <text x="800" y="817"
+        text-anchor="middle"
+        font-family="Courier New, monospace"
+        font-size="34"
+        font-weight="600"
+        letter-spacing="3"
+        fill="#111827">10110100 01101001 11001010</text>
 </svg>
