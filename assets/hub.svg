@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="321" viewBox="0 0 640 321" fill="none">
+  <!-- Transparent background -->
+
+  <!-- Colors -->
+  <defs>
+    <style>
+      .body { fill: #1377A7; }
+      .line { stroke: #FFFFFF; stroke-width: 5; stroke-linejoin: round; stroke-linecap: round; }
+      .port-outer { fill: #FFFFFF; }
+      .port-inner { fill: #1377A7; }
+      .arrow { fill: #FFFFFF; }
+    </style>
+  </defs>
+
+  <!-- Top face -->
+  <polygon class="body" points="117,8 611,8 574,147 10,147"/>
+
+  <!-- Right side face -->
+  <polygon class="body" points="611,8 611,151 577,291 577,149"/>
+
+  <!-- Front face -->
+  <rect class="body" x="8" y="153" width="568" height="151"/>
+
+  <!-- White separating edges -->
+  <line class="line" x1="10" y1="149" x2="574" y2="149"/>
+  <line class="line" x1="576" y1="149" x2="611" y2="15"/>
+  <line class="line" x1="576" y1="149" x2="576" y2="291"/>
+
+  <!-- Double-headed arrow on top -->
+  <g class="arrow">
+    <!-- shaft -->
+    <rect x="164" y="68" width="298" height="6" rx="3"/>
+    <!-- left head -->
+    <polygon points="123,71 167,49 145,71 167,93"/>
+    <!-- right head -->
+    <polygon points="514,71 470,49 492,71 470,93"/>
+  </g>
+
+  <!-- Ports -->
+  <g>
+    <rect class="port-outer" x="57" y="248" width="42" height="42"/>
+    <rect class="port-inner" x="65" y="256" width="26" height="26"/>
+
+    <rect class="port-outer" x="104" y="248" width="42" height="42"/>
+    <rect class="port-inner" x="112" y="256" width="26" height="26"/>
+
+    <rect class="port-outer" x="151" y="248" width="42" height="42"/>
+    <rect class="port-inner" x="159" y="256" width="26" height="26"/>
+
+    <rect class="port-outer" x="198" y="248" width="42" height="42"/>
+    <rect class="port-inner" x="206" y="256" width="26" height="26"/>
+
+    <rect class="port-outer" x="245" y="248" width="42" height="42"/>
+    <rect class="port-inner" x="253" y="256" width="26" height="26"/>
+
+    <rect class="port-outer" x="292" y="248" width="42" height="42"/>
+    <rect class="port-inner" x="300" y="256" width="26" height="26"/>
+
+    <rect class="port-outer" x="339" y="248" width="42" height="42"/>
+    <rect class="port-inner" x="347" y="256" width="26" height="26"/>
+
+    <rect class="port-outer" x="386" y="248" width="42" height="42"/>
+    <rect class="port-inner" x="394" y="256" width="26" height="26"/>
+
+    <rect class="port-outer" x="433" y="248" width="42" height="42"/>
+    <rect class="port-inner" x="441" y="256" width="26" height="26"/>
+  </g>
+</svg>
