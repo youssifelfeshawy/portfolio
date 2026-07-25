@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Complete networking study documentation by Youssif Elfeshawy.">
   <meta name="theme-color" content="#07111f">
-  <title>Network Documentation — Youssif Elfeshawy</title>
+  <title>Network Documentation</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="network.css">
@@ -28,24 +28,24 @@
     <section class="network-hero">
       <div class="wrap network-hero-grid">
         <div>
-          <p class="label">NETWORK DOCUMENTATION</p>
-          <h1>The complete study guide,<span>rebuilt for professional web reading.</span></h1>
-          <p class="hero-description">
+          <!-- <p class="label">NETWORK DOCUMENTATION</p> -->
+          <h1>Network Documentation</h1>
+          <!-- <p class="hero-description">
             The complete source documentation is retained rather than summarized. Tables,
             commands, notes, figure descriptions, and every technical explanation are included,
             with only the requested ordering and duplication corrections applied.
-          </p>
+          </p> -->
         </div>
 
-        <aside class="doc-status">
+        <!-- <aside class="doc-status">
           <p class="label" style="margin-bottom:.4rem;">DOCUMENT STATUS</p>
-          <strong>FULL</strong>
-          <p>Complete documentation version</p>
+          <strong>Incompelete</strong>
+          <p>Documentation version 1</p>
           <p class="source-integrity">
             The OSI image is large and clickable. Layers 1–3 jump to their full chapters;
             Layers 4–7 jump to their original explanation sections.
           </p>
-        </aside>
+        </aside> -->
       </div>
     </section>
 
@@ -53,7 +53,7 @@
       <aside class="network-sidebar">
         <nav class="side-nav">
           <p>ON THIS PAGE</p>
-          <a href="#network-intro">Network</a>
+          <a href="#network-intro">Overview</a>
           <a href="#osi-model">OSI Model</a>
           <a href="#encapsulation">Encapsulation</a>
           <a href="#layer-1">Layer 1</a>
@@ -65,37 +65,20 @@
           <a href="#dynamic-routing">Dynamic Routing</a>
           <a href="#ospf">OSPF</a>
         </nav>
-        <div class="side-note">
-          <p>
-            Click directly on any layer in the large OSI graphic to move to its explanation.
-          </p>
-        </div>
       </aside>
 
       <article class="doc-document">
-        <div class="source-header">
-          <span>CCNA Complete Study Guide &nbsp; | &nbsp; Page</span>
-          <span>Source converted from DOCX</span>
-        </div>
-        <div class="doc-spacer" aria-hidden="true"></div>
-<p class="cover-mark">CCNA</p>
-<p class="cover-subtitle">Cisco Certified Network Associate</p>
-<p class="cover-title">Complete Study Guide</p>
-<p class="cover-release">Exam Release: February 3, 2027</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h1 class="major-heading" id="network-intro">Network</h1>
+<h2 class="major-heading" id="network-intro">Overview</h2>
 <p class="body-line">A network is a collection of devices connected together so they can communicate and share resources. It can be as small as two computers connected at home, or as large as millions of servers spread across the globe forming the Internet.</p>
-<aside class="figure-block figure-with-image"><img src="assets/network-types.svg" alt=""><p>[ Figure: Types of networks: home network, institutional network, regional ISP, global ISP, mobile network — all interconnected ]</p></aside>
-<p class="figure-caption-source">Types of networks: home network, institutional network, regional ISP, global ISP, mobile network — all interconnected</p>
+<img style="margin: auto;" src="assets/network_overview.png" alt="network_overview">
 <h2 class="topic-heading" id="osi-model">The Open Systems Interconnection (OSI) Model:-</h2>
 <p class="body-line">When two devices from different manufacturers need to communicate — a Cisco router with a Juniper router, a Windows PC with a Linux server — they can do so because everyone follows the same universal rules defined by the Open Systems Interconnection (OSI) model.</p>
 <p class="body-line">The OSI model divides the complex job of networking into 7 separate layers. Each layer has a specific responsibility and only communicates with the layers directly above and below it. This clean separation means manufacturers can build equipment for one layer without affecting how other layers work.</p>
-<div class="source-figure-line">[ Figure: OSI Model: 7 layers — data flows down the sender&#x27;s layers (encapsulation), across the wire, then back up the receiver&#x27;s layers (de-encapsulation) ]</div>
     <div class="interactive-osi-figure">
       <div class="osi-figure-heading">
         <div>
           <span>INTERACTIVE OSI MODEL</span>
-          <strong>Click a layer to open its explanation</strong>
+          <!-- <strong>Click a layer to open its explanation</strong> -->
         </div>
         <small>Layer 7 → Layer 1</small>
       </div>
@@ -203,7 +186,6 @@
       </svg>
     </div>
     
-<p class="figure-caption-source">OSI Model: 7 layers — data flows down the sender&#x27;s layers (encapsulation), across the wire, then back up the receiver&#x27;s layers (de-encapsulation)</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <article class="osi-text-card" id="layer-7"><span>7</span><p>Layer 7 — Application: provides the interfaces and protocols needed by the user&#x27;s software, enabling applications on different end-systems to communicate. Examples: Hypertext Transfer Protocol (HTTP), Domain Name System (DNS), File Transfer Protocol (FTP), Simple Mail Transfer Protocol (SMTP).</p></article>
 <article class="osi-text-card" id="layer-6"><span>6</span><p>Layer 6 — Presentation: translates data between the application&#x27;s format and a standard network format. Also handles encryption, decryption, compression, and decompression. Examples: Secure Sockets Layer / Transport Layer Security (SSL/TLS), JPEG, ASCII.</p></article>
