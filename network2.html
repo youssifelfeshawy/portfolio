@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -60,6 +60,83 @@
 <figure class="overview-figure-block figure-with-image">
   <img src="assets/network_overview.png" alt="Network Overview">
 </figure>
+<h3 class="topic-heading" id="network-devices">Network Devices</h3>
+<p class="body-line">Every device in a network is called a node. Nodes include routers, switches, firewalls, servers, and clients. Servers and clients are specifically called end hosts or endpoints.</p>
+<ul class="doc-list">
+  <li><strong>Client:</strong> a device that accesses a service made available by a server. Examples: a laptop browsing a website, a phone checking email.</li>
+  <li><strong>Server:</strong> a device that provides functions or services for clients. Examples: a web server, an email server, a file server.</li>
+  <li>The same device can be a client in some situations and a server in others — for example, a PC that hosts a local file share is acting as a server for that service while also being a client when it browses the internet.</li>
+  <li><strong>Switch:</strong> has many network interfaces/ports (usually 24+) for end hosts to connect to. Provides connectivity to hosts within the same LAN (Local Area Network). Does not provide connectivity between different LANs or over the internet.</li>
+  <li><strong>Router:</strong> has fewer network interfaces than a switch. Used to provide connectivity between LANs and to send data over the internet. Operates at Layer 3.</li>
+  <li><strong>Firewall:</strong> monitors and control network traffic based on configured security rules. Can be placed inside or outside the network perimeter. Known as a Next-Generation Firewall (NGFW) when it includes more modern and advanced filtering capabilities.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="firewall-types">Firewall Types</h4>
+<ul class="doc-list">
+  <li><strong>Network Firewall:</strong> a hardware device that filters traffic between networks. Sits at the boundary between a private network and the internet (or between internal network segments).</li>
+  <li><strong>Host-Based Firewall:</strong> a software application that filters traffic entering and exiting a single host machine, such as a PC. Even with a network firewall in place, each host should have its own firewall as an extra line of defense.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="bits-bytes-and-speed">Bits, Bytes, and Speed</h3>
+<ul class="doc-list">
+  <li>8 bits = 1 byte. Data sizes (file sizes) are typically measured in bytes. Network speeds are measured in bits per second — not bytes per second.</li>
+  <li>Speed units: Kbps (kilobits per second), Mbps (megabits per second), Gbps (gigabits per second), Tbps (terabits per second).</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<div class="table-wrap"><table><thead><tr><th>Unit</th><th>Symbol</th><th>Value</th></tr></thead><tbody>
+<tr><td>Kilobit</td><td>Kb</td><td>1,000 bits (10³)</td></tr>
+<tr><td>Megabit</td><td>Mb</td><td>1,000,000 bits (10⁶)</td></tr>
+<tr><td>Gigabit</td><td>Gb</td><td>1,000,000,000 bits (10⁹)</td></tr>
+<tr><td>Terabit</td><td>Tb</td><td>1,000,000,000,000 bits (10¹²)</td></tr>
+<tr><td>Petabit</td><td>Pb</td><td>10¹⁵ bits</td></tr>
+<tr><td>Exabit</td><td>Eb</td><td>10¹⁸ bits</td></tr>
+<tr><td>Zettabit</td><td>Zb</td><td>10²¹ bits</td></tr>
+<tr><td>Yottabit</td><td>Yb</td><td>10²⁴ bits</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="ethernet-standards">Ethernet Standards</h4>
+<p class="body-line">Ethernet was defined in the IEEE 802.3 standard, first published in 1983. IEEE stands for Institute of Electrical and Electronics Engineers — the organization that defines and maintains networking and electrical standards used worldwide.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="console-port-and-cli">Console Port and Cisco IOS CLI</h3>
+<h4 class="subheading" id="console-port">Console Port</h4>
+<p class="body-line">Network devices such as Cisco routers and switches have a console port that allows direct out-of-band access to the device — meaning you can configure it even without a network connection. This is used for initial setup, recovery, and troubleshooting.</p>
+<ul class="doc-list">
+  <li>The console port is an RJ-45 port on the network device.</li>
+  <li>The cable used is called a rollover cable — the pins are reversed end-to-end: pin 1 connects to pin 8, pin 2 to pin 7, and so on.</li>
+  <li>The other end of the rollover cable connects to your PC via a DB9 (serial) connector, or via a USB-to-serial adapter on modern PCs.</li>
+  <li>You need a terminal emulator application (such as PuTTY) on your PC to access and configure the device through the console port.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<p class="body-line">Terminal emulator settings for a Cisco console connection:</p>
+<ul class="doc-list">
+  <li>Speed (Baud Rate): 9600</li>
+  <li>Data Bits: 8</li>
+  <li>Stop Bits: 1 — one stop bit is sent after every 8 data bits to mark the end of each byte.</li>
+  <li>Parity: None</li>
+  <li>Flow Control: None</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="cisco-ios-cli-modes">Cisco IOS CLI Modes</h4>
+<p class="body-line">Cisco IOS (Internetwork Operating System) organizes its command-line interface into different access levels called modes. Each mode controls what commands are available and what changes can be made.</p>
+<ul class="doc-list">
+  <li><strong>User EXEC Mode</strong> — prompt: <code>Router&gt;</code>: the initial mode when you log in. Very limited — you can view some basic information but cannot make any configuration changes. Also called "user mode".</li>
+  <li><strong>Privileged EXEC Mode</strong> — prompt: <code>Router#</code>: entered by typing <code>enable</code> from User EXEC mode. Provides complete access to view the device configuration, restart the device, and save configurations. Cannot change the configuration directly, but can change the system clock, save config files, etc.</li>
+  <li><strong>Global Configuration Mode</strong> — prompt: <code>Router(config)#</code>: entered by typing <code>configure terminal</code> from Privileged EXEC mode. This is where you make configuration changes that affect the entire device.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<p class="body-line">Use a question mark (<code>?</code>) at any point in the CLI to view the available commands or options for the current mode or partial command.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="password-security">Password Security</h4>
+<p class="body-line">Cisco IOS provides several commands to protect access to the device. Passwords are case-sensitive.</p>
+<ul class="doc-list">
+  <li><strong>enable password &lt;password&gt;:</strong> sets a password required to enter Privileged EXEC mode. Stored using Cisco's proprietary Type 7 encryption — weak, easily reversible.</li>
+  <li><strong>service password-encryption:</strong> encrypts all currently configured plaintext passwords (and all future passwords) using Type 7 encryption. Does not affect the <code>enable secret</code> command.</li>
+  <li><strong>enable secret &lt;password&gt;:</strong> sets a password for Privileged EXEC mode using MD5 hashing (Type 5) — significantly more secure than Type 7. If both <code>enable password</code> and <code>enable secret</code> are configured, the <code>enable password</code> is ignored — only the secret is used.</li>
+  <li><strong>no &lt;command&gt;:</strong> prefixing any command with <code>no</code> removes or disables it.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>If you disable <code>service password-encryption</code> with <code>no service password-encryption</code>, currently encrypted passwords will NOT be decrypted — they stay encrypted. Future passwords will simply not be encrypted. The <code>enable secret</code> is always MD5-hashed regardless of this setting.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="topic-heading" id="osi-model">OSI Model</h3>
 <p class="body-line">When two devices from different manufacturers need to communicate — a Cisco router with a Juniper router, a Windows PC with a Linux server — they can do so because everyone follows the same universal rules defined by the OSI (Open Systems Interconnection) model.</p>
 <p class="body-line">The OSI model divides the complex job of networking into 7 separate layers. Each layer has a specific responsibility and only communicates with the layers directly above and below it. This clean separation means manufacturers can build equipment for one layer without affecting how other layers work.</p>
@@ -1074,8 +1151,3 @@ show ip protocols                         → view active routing protocol confi
   <script src="network.js"></script>
 </body>
 </html>
-
-
-
-
-
