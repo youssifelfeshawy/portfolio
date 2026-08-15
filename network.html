@@ -60,6 +60,75 @@
 <figure class="overview-figure-block figure-with-image">
   <img src="assets/network_overview.png" alt="Network Overview">
 </figure>
+<h3 class="topic-heading" id="network-devices">Network Devices</h3>
+<p class="body-line">Every device in a network is called a node. Nodes include routers, switches, firewalls, servers, and clients. Servers and clients are specifically called end hosts or endpoints.</p>
+<ul class="doc-list">
+  <li><strong>Client:</strong> a device that accesses a service made available by a server. Examples: a laptop browsing a website, a phone checking email.</li>
+  <li><strong>Server:</strong> a device that provides functions or services for clients. Examples: a web server, an email server, a file server.</li>
+  <li><strong>Switch:</strong> has many network interfaces/ports (usually 24+) for end hosts to connect to. Provides connectivity to hosts within the same LAN (Local Area Network). Does not provide connectivity between different LANs or over the internet.</li>
+  <li><strong>Router:</strong> has fewer network interfaces than a switch. Used to provide connectivity between LANs and to send data over the internet.</li>
+  <li><strong>Firewall:</strong> monitors and control network traffic based on configured security rules. Can be placed inside or outside the network perimeter. Known as a Next-Generation Firewall (NGFW) when it includes more modern and advanced filtering capabilities.</li>
+</ul>
+
+<div class="doc-spacer" aria-hidden="true"></div>
+<div class="table-wrap"><table><thead><tr><th style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">Firewall Types</th><th style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">Description</th></tr></thead><tbody>
+<tr><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;"><strong>Network Firewall</strong></td><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">A hardware device that filters traffic between networks. Sits at the boundary between a private network and the internet (or between internal network segments).</td></tr>
+<tr><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;"><strong>Host-Based Firewall</strong></td><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">A software application that filters traffic entering and exiting a single host machine, such as a PC. Even with a network firewall in place, each host should have its own firewall as an extra line of defense.</td></tr>
+</tbody></table></div>
+
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>The same device can be a client in some situations and a server in others — for example, a PC that hosts a local file share is acting as a server for that service while also being a client when it browses the internet.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="bits-bytes-and-speed">Bits & Bytes</h3>
+<ul class="doc-list">
+  <li>8 bits = 1 byte. Data sizes (file sizes) are typically measured in bytes while network speeds are measured in bits per second — not bytes per second.</li>
+</ul>
+<div class="table-wrap"><table><thead><tr><th>Speed Units</th><th>Symbol</th><th>Value</th></tr></thead><tbody>
+<tr><td>Kilobit</td><td>Kb</td><td>1,000 bits (10³)</td></tr>
+<tr><td>Megabit</td><td>Mb</td><td>1,000,000 bits (10⁶)</td></tr>
+<tr><td>Gigabit</td><td>Gb</td><td>1,000,000,000 bits (10⁹)</td></tr>
+<tr><td>Terabit</td><td>Tb</td><td>1,000,000,000,000 bits (10¹²)</td></tr>
+<tr><td>Petabit</td><td>Pb</td><td>10¹⁵ bits</td></tr>
+<tr><td>Exabit</td><td>Eb</td><td>10¹⁸ bits</td></tr>
+<tr><td>Zettabit</td><td>Zb</td><td>10²¹ bits</td></tr>
+<tr><td>Yottabit</td><td>Yb</td><td>10²⁴ bits</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="console-port">Console Port</h4>
+<p class="body-line">Network devices such as Cisco routers and switches have a console port that allows direct out-of-band access to the device — meaning you can configure it even without a network connection. This is used for initial setup, recovery, and troubleshooting.</p>
+<ul class="doc-list">
+  <li>The cable used is called a rollover cable — the pins are reversed end-to-end: pin 1 connects to pin 8, pin 2 to pin 7, and so on.</li>
+  <li>The rollover cable has one end with an RJ-45 connector that connects to the network device, while the other end has a DB9 (serial) connector that connects to the PC, or uses a USB-to-serial adapter on modern PCs.</li>
+  <li>You need a terminal emulator application (such as PuTTY) on your PC to access and configure the device through the console port.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<p class="body-line">Terminal emulator settings for a Cisco console connection:</p>
+<ul class="doc-list">
+  <li>Speed (Baud Rate): 9600</li>
+  <li>Data Bits: 8</li>
+  <li>Stop Bits: 1 — one stop bit is sent after every 8 data bits to mark the end of each byte.</li>
+  <li>Parity: None</li>
+  <li>Flow Control: None</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="cisco-ios-cli-modes">Cisco IOS CLI Modes</h4>
+<p class="body-line">Cisco IOS (Internetwork Operating System) organizes its command-line interface into different access levels called modes. Each mode controls what commands are available and what changes can be made.</p>
+<ul class="doc-list">
+  <li><strong>User EXEC Mode</strong> — prompt: <code>Router&gt;</code>: the initial mode when you log in. Very limited — you can view some basic information but cannot make any configuration changes. Also called "user mode".</li>
+  <li><strong>Privileged EXEC Mode</strong> — prompt: <code>Router#</code>: entered by typing <code>enable</code> from User EXEC mode. Provides complete access to view the device configuration, restart the device, and save configurations. Cannot change the configuration directly, but can change the system clock, save config files, etc.</li>
+  <li><strong>Global Configuration Mode</strong> — prompt: <code>Router(config)#</code>: entered by typing <code>configure terminal</code> from Privileged EXEC mode. This is where you make configuration changes that affect the entire device.</li>
+</ul>
+<aside class="callout"><strong>Note:</strong><p>Use a question mark (<code>?</code>) at any point in the CLI to view the available commands or options for the current mode or partial command.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="password-security">Password Security</h4>
+<p class="body-line">Cisco IOS provides several commands to protect access to the device. Passwords are case-sensitive.</p>
+<ul class="doc-list">
+  <li><strong>enable password &lt;password&gt;:</strong> sets a password required to enter Privileged EXEC mode. Stored using Cisco's proprietary Type 7 encryption — weak, easily reversible.</li>
+  <li><strong>enable secret &lt;password&gt;:</strong> sets a password for Privileged EXEC mode using MD5 hashing (Type 5) — significantly more secure than Type 7. If both <code>enable password</code> and <code>enable secret</code> are configured, the <code>enable password</code> is ignored — only the secret is used.</li>
+  <li><strong>service password-encryption:</strong> encrypts all currently configured plaintext passwords (and all future passwords) using Type 7 encryption. Does not affect the <code>enable secret</code> command.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>In Cisco IOS, prefixing a command with <code>no</code> removes or disables that command. For example, <code>no service password-encryption</code> disables password encryption for future passwords, but passwords that are already encrypted remain encrypted and are not decrypted. The <code>enable secret</code> password is always hashed regardless of this setting.</p></aside><div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="topic-heading" id="osi-model">OSI Model</h3>
 <p class="body-line">When two devices from different manufacturers need to communicate — a Cisco router with a Juniper router, a Windows PC with a Linux server — they can do so because everyone follows the same universal rules defined by the OSI (Open Systems Interconnection) model.</p>
 <p class="body-line">The OSI model divides the complex job of networking into 7 separate layers. Each layer has a specific responsibility and only communicates with the layers directly above and below it. This clean separation means manufacturers can build equipment for one layer without affecting how other layers work.</p>
@@ -186,7 +255,7 @@
 <div class="doc-spacer" aria-hidden="true"></div>
 <ul class="doc-list">
   <li>Segment (TCP) / Datagram (UDP): the L4PDU (Layer 4 Protocol Data Unit). Application data plus a TCP (Transmission Control Protocol) or UDP (User Datagram Protocol) header containing port numbers and transport information.</li>
-  <li>Packet: the L3PDU (Layer 3 Protocol Data Unit). The segment or datagram plus an IP (Internet Protocol) header containing source and destination IP addresses.</li>
+  <li>Packet: the L3PDU (Layer 3 Protocol Data Unit). The segment or datagram plus an IP header containing source and destination IP addresses.</li>
   <li>Frame: the L2PDU (Layer 2 Protocol Data Unit). The packet plus an Ethernet header (Media Access Control addresses) and a FCS (Frame Check Sequence) trailer for error detection.</li>
   <li>Bits: the L1PDU (Layer 1 Protocol Data Unit). The frame converted into raw electrical, light, or radio signals for physical transmission.</li>
 </ul><aside class="callout"><strong>Note:</strong><p>A payload at any layer means everything that layer is carrying, excluding its own header and trailer. For example, the payload of an Ethernet frame (L2PDU) is the IP packet (L3PDU) inside it.</p></aside>
@@ -199,7 +268,6 @@
 <ul class="doc-list">
   <li>Wired (guided) media: signals travel through a physical cable that guides the signal from source to destination. Examples: UTP (Unshielded Twisted Pair) copper cable, fiber optic cable, coaxial cable.</li>
   <li>Wireless (unguided) media: signals travel through the air as electromagnetic waves without any physical conductor. Examples: Wi-Fi local networks, cellular networks (4G/5G), satellite links, terrestrial microwave.</li>
-</ul><p class="body-line">The two main wired media used in modern networks are UTP (Unshielded Twisted Pair) copper cable and fiber optic cable. Each is covered in detail below.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="unshielded-twisted-pair-utp-copper-cables">UTP Cable</h4>
 <aside class="figure-block"><img src="assets/twisted_pair_cables.jpg" alt="UTP Cable"></aside>
@@ -245,7 +313,7 @@
 <h4 class="subheading" id="single-mode-vs-multi-mode-fiber">Single-Mode vs. Multi-Mode Fiber</h4>
 <ul class="doc-list">
   <li>MMF (Multi-Mode Fiber): uses a LED (Light Emitting Diode) light source and a wider core (50 or 62.5 micrometers). Light bounces along multiple paths (modes), which causes slight signal spreading (modal dispersion) that limits distance to roughly 550 meters. Cheaper than single-mode. Best suited for short distances inside buildings or data centers.</li>
-  <li>SMF (Single-Mode Fiber): uses a laser light source and an extremely narrow core (9 micrometers). Light travels in a single straight path with virtually no dispersion, enabling distances of 100 kilometers or more. More expensive. Used for long-distance runs between buildings, campuses, and WANs (Wide Area Networks).</li>
+  <li>SMF (Single-Mode Fiber): uses a laser light source and an extremely narrow core (9 micrometers). Light travels in a single straight path (mode) with virtually no dispersion, enabling distances of 100 kilometers or more. More expensive. Used for long-distance runs between buildings, campuses, and WANs (Wide Area Networks).</li>
 </ul><aside class="overview-figure-block figure-with-image"><img src="assets/Single_Mode_vs_Multimode_Fiber.jpg" alt="Single Mode vs Multimode Fiber"></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <div class="table-wrap"><table><thead><tr><th>Factor</th><th>UTP Copper</th><th>Fiber Optic</th></tr></thead><tbody><tr><td>Signal type</td><td>Electrical</td><td>Light (LED or laser)</td></tr><tr><td>Max distance</td><td>~100 m per segment</td><td>~550 m (Multi-Mode) to 100+ km (Single-Mode)</td></tr><tr><td>EMI immunity</td><td>Susceptible to EMI</td><td>Completely immune to EMI</td></tr><tr><td>Security</td><td>Signal can leak — can be tapped</td><td>No signal leakage — cannot be passively tapped</td></tr><tr><td>Cost</td><td>Lower</td><td>Higher, especially SMF (Single-Mode Fiber)</td></tr><tr><td>Connector type</td><td>RJ-45</td><td>LC, SC, or ST — requires SFP transceiver on the device</td></tr></tbody></table></div>
@@ -378,7 +446,7 @@ name Sales                       → assign a descriptive name to the VLAN</code
 <pre class="command-line"><code>int g0/1
 switchport trunk encapsulation dot1q       → set encapsulation to IEEE 802.1Q (required on switches that support both ISL and dot1q)
 switchport mode trunk                      → configure the port as a trunk
->switchport trunk allowed vlan 10,20,30    → restrict which VLANs are permitted on this trunk
+switchport trunk allowed vlan 10,20,30    → restrict which VLANs are permitted on this trunk
 switchport trunk native vlan 1001          → change native VLAN to an unused VLAN</code></pre>
 <pre class="command-line"><code>show interfaces trunk                      → view trunk ports, allowed VLANs, and native VLAN</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
@@ -1060,7 +1128,1591 @@ show ip ospf interface                    → view OSPF settings on all interfac
 show ip ospf interface &lt;int-id&gt;           → view OSPF settings on a specific interface
 show ip protocols                         → view active routing protocol configuration</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-      </article>
+
+<h3 class="topic-heading" id="fhrp">First Hop Redundancy Protocols (FHRP)</h3>
+<p class="body-line">A FHRP (First Hop Redundancy Protocol) is designed to protect the default gateway used on a subnet. If the router acting as the default gateway fails, the backup router automatically takes over the address — usually within a few seconds — so hosts continue to reach other networks without any manual reconfiguration.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="fhrp-how-it-works">How FHRPs Work</h4>
+<p class="body-line">Two or more routers share a virtual IP address and a virtual MAC address. One router is elected as active (or master) and handles all traffic sent to the virtual IP. The others are in standby. End hosts are configured to use the virtual IP as their default gateway — they are unaware of which physical router is currently active.</p>
+<ul class="doc-list">
+  <li>The active router replies to ARP requests using the virtual MAC address, so all traffic destined for other networks is sent to it.</li>
+  <li>If the active router fails, the standby router takes over and sends gratuitous ARP replies to all switches — broadcasting the virtual MAC address so that switch MAC address tables are updated to point to the new active router.</li>
+  <li><strong>Gratuitous ARP:</strong> an ARP reply sent without being requested by any ARP request. Frames are broadcast to FF:FF:FF:FF:FF:FF (unlike normal ARP replies which are unicast). Used by the new active router to immediately update switches.</li>
+  <li>FHRPs are non-preemptive by default — if the original active router comes back online, it will not automatically reclaim the active role. It becomes the standby instead. You can configure preemption to change this behavior and make the returning router take back its active role automatically.</li>
+  <li>In networks with multiple subnets or VLANs, you can configure a different active router per subnet to achieve load balancing across routers.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="fhrp-types">FHRP Types</h4>
+<div class="table-wrap"><table><thead><tr><th>Protocol</th><th>Standard</th><th>Active/Standby Terms</th><th>Multicast Address</th><th>Virtual MAC Format</th></tr></thead><tbody>
+<tr><td>HSRP v1</td><td>Cisco proprietary</td><td>Active / Standby</td><td>224.0.0.2</td><td>0000.0c07.acXX (XX = group number)</td></tr>
+<tr><td>HSRP v2</td><td>Cisco proprietary</td><td>Active / Standby</td><td>224.0.0.102</td><td>0000.0c9f.fXXX (XXX = group number). Adds IPv6 support and more groups.</td></tr>
+<tr><td>VRRP</td><td>Open standard</td><td>Master / Backup</td><td>224.0.0.18</td><td>0000.5e00.01XX (XX = group number)</td></tr>
+<tr><td>GLBP</td><td>Cisco proprietary</td><td>AVG + AVFs</td><td>224.0.0.102</td><td>0007.b400.XXYY (XX = group, YY = AVF number)</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<ul class="doc-list">
+  <li><strong>HSRP (Hot Standby Router Protocol):</strong> Cisco proprietary. Elects one active and one standby router. Version 1 and Version 2 are not compatible — all routers in the group must use the same version.</li>
+  <li><strong>VRRP (Virtual Router Redundancy Protocol):</strong> open standard (not Cisco proprietary). Same function as HSRP but uses "master" and "backup" terminology.</li>
+  <li><strong>GLBP (Gateway Load Balancing Protocol):</strong> Cisco proprietary. Unlike HSRP and VRRP, GLBP actively load-balances traffic across multiple routers within a single subnet simultaneously. An AVG (Active Virtual Gateway) is elected and assigns up to 4 AVFs (Active Virtual Forwarders) — each AVF handles traffic for a portion of the hosts. The AVG itself can also be an AVF.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="hsrp-configuration">HSRP Configuration</h4>
+<p class="body-line">Configure HSRP on the interface that connects to the local network (the interface hosts use as their default gateway — not the WAN/internet-facing interface).</p>
+<pre class="command-line"><code>int g#/#
+standby version &lt;1|2&gt;                          → set HSRP version (must match on all routers in the group)
+standby &lt;group-number&gt; ip &lt;virtual-ip&gt;         → set the shared virtual IP address for this group
+standby &lt;group-number&gt; priority &lt;value&gt;        → set priority (default 100); highest priority = active router
+standby &lt;group-number&gt; preempt                 → enable preemption — this router takes active role if it has higher priority</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>The active router is elected based on: 1 — Highest priority (default 100). 2 — Highest IP address (used as tiebreaker if priorities are equal). Preemption is disabled by default — the currently active router keeps its role even if a higher-priority router comes back online.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<pre class="command-line"><code>show standby                                   → view HSRP configuration and current active/standby status</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="layer-4">Layer 4: The Transport Layer</h2>
+<p class="body-line">The Transport Layer provides transparent, end-to-end transfer of data between applications on different hosts. Layers 1–3 move data across the network without understanding what that data is — Layer 4 is where the data becomes meaningful to applications. It provides port-based addressing, session multiplexing, and optionally: reliable delivery, error recovery, sequencing, and flow control.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="port-numbers">Port Numbers</h3>
+<p class="body-line">Layer 4 uses port numbers to identify which application a piece of data belongs to and to support session multiplexing — allowing multiple simultaneous sessions between the same two hosts (e.g., multiple browser tabs each with their own session).</p>
+<ul class="doc-list">
+  <li>Port numbers are NOT the physical ports on network devices — they are logical identifiers in the Layer 4 header.</li>
+  <li>The <strong>destination port</strong> identifies the application layer protocol the client wants to reach (e.g., port 80 for HTTP).</li>
+  <li>The <strong>source port</strong> is randomly chosen by the client and identifies which session the data belongs to — allowing the host to track multiple concurrent sessions.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<div class="table-wrap"><table><thead><tr><th>Range</th><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>0 – 1023</td><td>Well-Known Ports</td><td>Assigned by IANA (Internet Assigned Numbers Authority) to standard application protocols. Examples: HTTP (80), HTTPS (443), SSH (22).</td></tr>
+<tr><td>1024 – 49151</td><td>Registered Ports</td><td>Registered by software vendors for specific applications, but not as strictly controlled as well-known ports.</td></tr>
+<tr><td>49152 – 65535</td><td>Ephemeral / Dynamic Ports</td><td>Randomly assigned by the OS to clients as source ports for outgoing connections. Also called private ports.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="tcp">TCP — Transmission Control Protocol</h3>
+<p class="body-line">TCP (Transmission Control Protocol) is a connection-oriented, reliable transport protocol. Before sending any data, TCP establishes a connection between the two hosts. It then ensures every segment is received correctly, in order, and at an appropriate rate.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="tcp-features">TCP Features</h4>
+<ul class="doc-list">
+  <li><strong>Connection-oriented:</strong> a connection is established before data is sent (using the three-way handshake) and properly terminated when done (four-way handshake).</li>
+  <li><strong>Reliable delivery:</strong> the destination must acknowledge every TCP segment received. If a segment is not acknowledged within a timeout period, it is retransmitted.</li>
+  <li><strong>Sequencing:</strong> sequence numbers in the TCP header allow the destination to reassemble segments in the correct order, even if they arrive out of order.</li>
+  <li><strong>Flow control:</strong> the destination can signal the source to increase or decrease its sending rate using the Window Size field, preventing the receiver from being overwhelmed.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="tcp-header">TCP Header Fields</h4>
+<ul class="doc-list">
+  <li><strong>Source Port / Destination Port:</strong> each 16 bits = 65,536 (2¹⁶) possible port numbers.</li>
+  <li><strong>Sequence Number:</strong> identifies the position of this segment's data within the byte stream. Hosts set a random initial sequence number (ISN) at the start of the connection.</li>
+  <li><strong>Acknowledgment Number:</strong> indicates the next sequence number the sender expects to receive (forward acknowledgment). Confirms all bytes up to that number have been received.</li>
+  <li><strong>Flags (control bits):</strong> SYN (synchronize — used to establish connections), ACK (acknowledgment — confirms receipt), FIN (finish — used to terminate connections).</li>
+  <li><strong>Window Size:</strong> used for flow control — tells the sender how many bytes can be sent before waiting for an acknowledgment.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="tcp-handshakes">Connection Establishment and Termination</h4>
+<ul class="doc-list">
+  <li><strong>Three-Way Handshake (establishing a connection):</strong>
+    <ol style="margin-top:6px; padding-left:20px; color:#cbd5e1;">
+      <li>Client sends SYN → server</li>
+      <li>Server sends SYN + ACK → client</li>
+      <li>Client sends ACK → server — connection established</li>
+    </ol>
+  </li>
+  <li><strong>Four-Way Handshake (terminating a connection):</strong>
+    <ol style="margin-top:6px; padding-left:20px; color:#cbd5e1;">
+      <li>Initiator sends FIN</li>
+      <li>Receiver sends ACK</li>
+      <li>Receiver sends FIN</li>
+      <li>Initiator sends ACK — connection terminated</li>
+    </ol>
+  </li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>Acknowledging every single segment individually is inefficient. TCP uses a sliding window — the Window Size field allows multiple segments to be sent before an acknowledgment is required. The window size can be dynamically adjusted as the connection progresses to optimize throughput.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="udp">UDP — User Datagram Protocol</h3>
+<p class="body-line">UDP (User Datagram Protocol) is a connectionless, best-effort transport protocol. It sends data without establishing a connection first and provides no guarantees of delivery, ordering, or flow control. This makes UDP much faster and lower-overhead than TCP, at the cost of reliability.</p>
+<ul class="doc-list">
+  <li><strong>Not connection-oriented:</strong> data is sent immediately without a handshake.</li>
+  <li><strong>No reliable delivery:</strong> no acknowledgments are sent. If a segment is lost, UDP has no mechanism to detect or retransmit it.</li>
+  <li><strong>No sequencing:</strong> no sequence number field. If segments arrive out of order, UDP cannot reorder them.</li>
+  <li><strong>No flow control:</strong> no window size mechanism. Data is sent at whatever rate the application requests.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="udp-header">UDP Header</h4>
+<p class="body-line">The UDP header is minimal — just 4 fields, each 16 bits: Source Port, Destination Port, Length (total length of UDP header + data), and Checksum (error detection only — no correction).</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="tcp-vs-udp">TCP vs. UDP</h3>
+<div class="table-wrap"><table><thead><tr><th>Feature</th><th>TCP</th><th>UDP</th></tr></thead><tbody>
+<tr><td>Connection</td><td>Connection-oriented (handshake required)</td><td>Connectionless (no handshake)</td></tr>
+<tr><td>Reliability</td><td>Reliable — acknowledgments and retransmission</td><td>Best-effort — no acknowledgments</td></tr>
+<tr><td>Ordering</td><td>Sequence numbers ensure correct order</td><td>No sequencing</td></tr>
+<tr><td>Flow Control</td><td>Yes — Window Size field</td><td>No</td></tr>
+<tr><td>Speed / Overhead</td><td>Slower — more overhead</td><td>Faster — minimal overhead</td></tr>
+<tr><td>Use Cases</td><td>File transfers, web browsing, email — anything requiring reliability</td><td>Real-time voice, video, gaming, DNS — anything requiring speed</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>Some applications use UDP but implement their own reliability mechanisms at the application layer. Some applications use both TCP and UDP depending on the situation.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="well-known-ports">Well-Known Port Numbers</h3>
+<div class="table-wrap"><table><thead><tr><th>Port</th><th>Protocol</th><th>Transport</th><th>Description</th></tr></thead><tbody>
+<tr><td>20</td><td>FTP (Data)</td><td>TCP</td><td>File Transfer Protocol — data channel</td></tr>
+<tr><td>21</td><td>FTP (Control)</td><td>TCP</td><td>File Transfer Protocol — control channel</td></tr>
+<tr><td>22</td><td>SSH</td><td>TCP</td><td>Secure Shell — encrypted remote access</td></tr>
+<tr><td>23</td><td>Telnet</td><td>TCP</td><td>Remote access — unencrypted (legacy)</td></tr>
+<tr><td>25</td><td>SMTP</td><td>TCP</td><td>Simple Mail Transfer Protocol — sending email</td></tr>
+<tr><td>53</td><td>DNS</td><td>TCP &amp; UDP</td><td>Domain Name System — resolves hostnames to IP addresses</td></tr>
+<tr><td>67</td><td>DHCP (Server)</td><td>UDP</td><td>Dynamic Host Configuration Protocol — server port</td></tr>
+<tr><td>68</td><td>DHCP (Client)</td><td>UDP</td><td>Dynamic Host Configuration Protocol — client port</td></tr>
+<tr><td>69</td><td>TFTP</td><td>UDP</td><td>Trivial File Transfer Protocol</td></tr>
+<tr><td>80</td><td>HTTP</td><td>TCP</td><td>Hypertext Transfer Protocol — unencrypted web</td></tr>
+<tr><td>110</td><td>POP3</td><td>TCP</td><td>Post Office Protocol v3 — retrieving email</td></tr>
+<tr><td>161</td><td>SNMP (Agent)</td><td>UDP</td><td>Simple Network Management Protocol — agent port</td></tr>
+<tr><td>162</td><td>SNMP (Manager)</td><td>UDP</td><td>Simple Network Management Protocol — manager port</td></tr>
+<tr><td>443</td><td>HTTPS</td><td>TCP</td><td>HTTP Secure — encrypted web (TLS)</td></tr>
+<tr><td>514</td><td>Syslog</td><td>UDP</td><td>System logging protocol</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="wireshark">Wireshark</h3>
+<p class="body-line">Wireshark is a network packet capture and analysis tool. It captures all network traffic visible on an interface and lets you inspect every layer of every packet — from the physical frame up through the application layer. It supports filtering by protocol, IP address, port, and many other criteria, making it an essential tool for network troubleshooting, learning, and security analysis.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="ipv6">IPv6</h2>
+<p class="body-line">The fundamental reason for IPv6 is address exhaustion. IPv4 provides only 2³² = 4,294,967,296 addresses. When IPv4 was designed, no one anticipated the scale the Internet would reach. Short-term solutions like VLSM, private IPv4 addresses, and NAT have helped delay exhaustion, but the long-term solution is IPv6, which provides 2¹²⁸ = 340,282,366,920,938,463,463,374,607,431,768,211,456 addresses — effectively unlimited.</p>
+<p class="body-line">IPv4 address assignments are managed by IANA (Internet Assigned Numbers Authority), which distributes blocks to RIRs (Regional Internet Registries), which then assign them to organizations.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="ipv6-address-format">IPv6 Address Format</h3>
+<p class="body-line">An IPv6 address is 128 bits, written as 8 groups of 4 hexadecimal characters (quartets) separated by colons. There are no dotted-decimal subnet masks — prefix length notation (e.g. /64) is used instead.</p>
+<p class="body-line">Example: <code>2001:0DB8:5917:EABD:6562:17EA:C92D:59BD/64</code></p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="ipv6-abbreviation">Abbreviating IPv6 Addresses</h4>
+<ul class="doc-list">
+  <li><strong>Remove leading zeros</strong> in each quartet: <code>2001:0DB8:000A:001B:20A1:0020:0080:34BD</code> → <code>2001:DB8:A:1B:20A1:20:80:34BD</code></li>
+  <li><strong>Replace consecutive all-zero quartets</strong> with a double colon (::): <code>2001:0DB8:0000:0000:0000:0000:0080:34BD</code> → <code>2001:DB8::80:34BD</code></li>
+  <li>The :: can only be used <strong>once</strong> in an address. If there are two separate groups of all-zero quartets, only the longest group uses :: — the other uses explicit zeros. If both groups are equal length, use :: on the left one.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="ipv6-expanding">Expanding Shortened IPv6 Addresses</h4>
+<ul class="doc-list">
+  <li>Add leading zeros to each quartet until all have 4 hex digits.</li>
+  <li>Replace :: with the number of all-zero quartets needed to bring the total to 8 quartets.</li>
+  <li>Example: <code>FE80::2:0:0:FBE8</code> → 5 quartets written, so :: = 3 all-zero quartets → <code>FE80:0000:0000:0000:0002:0000:0000:FBE8</code></li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note — RFC 5952 (Standard Representation):</strong><p>Leading zeros MUST be removed. :: MUST be used for the longest string of all-zero quartets (if tied, use the leftmost). If there is only one all-zero quartet, do not use :: — write it as <code>0</code>. Hex letters a–f MUST be lowercase.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="ipv6-prefix">IPv6 Prefix Structure</h3>
+<p class="body-line">Enterprises typically receive a /48 block from their ISP and use /64 subnets internally, leaving 16 bits for subnet IDs and 64 bits for host (interface) identifiers.</p>
+<div class="table-wrap"><table><thead><tr><th>Portion</th><th>Bits</th><th>Description</th></tr></thead><tbody>
+<tr><td>Global Routing Prefix</td><td>48 bits (first 3 quartets)</td><td>Assigned by the ISP. Identifies the organization globally.</td></tr>
+<tr><td>Subnet Identifier</td><td>16 bits (4th quartet)</td><td>Used by the enterprise to create internal subnets.</td></tr>
+<tr><td>Interface Identifier</td><td>64 bits (last 4 quartets)</td><td>The host portion — uniquely identifies the interface within the subnet.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="ipv6-address-types">IPv6 Address Types</h3>
+<div class="table-wrap"><table><thead><tr><th>Type</th><th>Range / Block</th><th>Description</th></tr></thead><tbody>
+<tr><td>Global Unicast</td><td>2000::/3 (originally; now all non-reserved addresses)</td><td>Public, routable addresses — equivalent to public IPv4. Must be globally unique. Registered with IANA/RIRs.</td></tr>
+<tr><td>Unique Local</td><td>FC00::/7 (8th bit must be 1, so effectively FD00::/8)</td><td>Private, non-routable addresses — equivalent to RFC 1918 private IPv4. No registration needed. The first 2 digits are FD, followed by a randomly generated 40-bit global ID, then a 16-bit subnet ID, then a 64-bit interface identifier.</td></tr>
+<tr><td>Link-Local</td><td>FE80::/10 (FE80:: to FEBF::, but effectively always FE80:: in practice)</td><td>Automatically generated on every IPv6-enabled interface. Used only within a single link/subnet — routers do not forward packets with link-local destinations. Used by routing protocols, NDP, and next-hop addresses for static routes.</td></tr>
+<tr><td>Multicast</td><td>FF00::/8</td><td>One-to-many. Replaces broadcast in IPv6 — there is no broadcast in IPv6. Multiple scopes define how far the packet travels.</td></tr>
+<tr><td>Anycast</td><td>No specific range — uses regular unicast addresses</td><td>One-to-one-of-many. Multiple routers share the same address; traffic is forwarded to the nearest one by routing metric.</td></tr>
+<tr><td>Unspecified</td><td>::</td><td>Used when a device does not yet know its IPv6 address. Equivalent to 0.0.0.0 in IPv4.</td></tr>
+<tr><td>Loopback</td><td>::1</td><td>Tests the local protocol stack. Never leaves the device. Equivalent to 127.0.0.0/8 in IPv4.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h4 class="subheading" id="ipv6-multicast-scopes">Multicast Scopes</h4>
+<div class="table-wrap"><table><thead><tr><th>Scope</th><th>Prefix</th><th>Reach</th></tr></thead><tbody>
+<tr><td>Interface-local</td><td>FF01::</td><td>Stays on the local device only. Used for intra-device communication.</td></tr>
+<tr><td>Link-local</td><td>FF02::</td><td>Stays within the local subnet. Routers do not forward.</td></tr>
+<tr><td>Site-local</td><td>FF05::</td><td>Forwarded by routers within a single physical site. Not forwarded over WAN.</td></tr>
+<tr><td>Organization-local</td><td>FF08::</td><td>Forwarded across an entire organization.</td></tr>
+<tr><td>Global</td><td>FF0E::</td><td>No boundary — can be routed over the Internet.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="eui-64">EUI-64 Interface Identifier</h3>
+<p class="body-line">EUI-64 (Extended Unique Identifier — 64-bit) is a method of automatically generating the 64-bit host portion of an IPv6 address from the interface's 48-bit MAC address.</p>
+<h4 class="subheading" id="eui-64-conversion">Conversion Steps</h4>
+<ul class="doc-list">
+  <li><strong>Step 1 — Split the MAC address in half:</strong> <code>1234:5678:90AB</code> → <code>1234:56 | 78:90AB</code></li>
+  <li><strong>Step 2 — Insert FFFE in the middle:</strong> <code>1234:56FF:FE78:90AB</code></li>
+  <li><strong>Step 3 — Invert the 7th bit (U/L bit):</strong> <code>1234:56FF:FE78:90AB</code> → <code>1034:56FF:FE78:90AB</code></li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Why invert the 7th bit?</strong><p>The 7th bit is the U/L bit — Universal/Local. In MAC addresses: 0 = UAA (Universally Administered, manufacturer-assigned), 1 = LAA (Locally Administered, manually set). IPv6/EUI-64 reverses this meaning: 0 = made from an LAA, 1 = made from a UAA. Most real NICs have UAA addresses (bit = 0 in MAC), so after inversion the EUI-64 bit becomes 1.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="ipv6-configuration">Configuring IPv6</h3>
+<h4 class="subheading" id="ipv6-static">Static IPv6 Address</h4>
+<pre class="command-line"><code>ipv6 unicast-routing                               → enable IPv6 routing on the router (disabled by default)
+int &lt;interface&gt;
+ipv6 address &lt;ipv6-address/prefix-length&gt;          → assign a static IPv6 address
+no shutdown
+show ipv6 interface brief                          → view IPv6 addresses on all interfaces</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="ipv6-eui64-cmd">EUI-64 Address</h4>
+<pre class="command-line"><code>int &lt;interface&gt;
+ipv6 address &lt;network-prefix/prefix-length&gt; eui-64  → use MAC address to auto-generate the host portion
+no shutdown</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="ipv6-link-local-cmd">Enabling Link-Local Only</h4>
+<pre class="command-line"><code>int &lt;interface&gt;
+ipv6 enable                                        → enables IPv6 and generates a link-local address automatically (no global address needed)</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="slaac">SLAAC — Stateless Address Auto-configuration</h3>
+<p class="body-line">SLAAC (Stateless Address Auto-configuration) allows a host to automatically configure its own IPv6 address without a DHCPv6 server. The host uses NDP (Neighbor Discovery Protocol) to learn the network prefix from a local router, then generates the interface identifier using EUI-64 or a random value.</p>
+<pre class="command-line"><code>int &lt;interface&gt;
+ipv6 address autoconfig                            → enable SLAAC — device learns prefix via NDP and generates its own address</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="ndp">Neighbor Discovery Protocol (NDP)</h3>
+<p class="body-line">NDP (Neighbor Discovery Protocol) is IPv6's replacement for ARP. It uses ICMPv6 messages and solicited-node multicast addresses — instead of broadcasts — to discover the MAC addresses of neighboring devices and perform other network functions.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="ndp-mac-discovery">MAC Address Discovery (replaces ARP)</h4>
+<ul class="doc-list">
+  <li><strong>Neighbor Solicitation (NS) — ICMPv6 Type 135:</strong> sent to the solicited-node multicast address of the target. Asks "What is your MAC address?" Equivalent to an ARP Request.</li>
+  <li><strong>Neighbor Advertisement (NA) — ICMPv6 Type 136:</strong> the reply containing the sender's MAC address. Equivalent to an ARP Reply.</li>
+  <li>Results are stored in the IPv6 Neighbor Table (not an ARP table).</li>
+</ul>
+<pre class="command-line"><code>show ipv6 neighbor                                 → view the IPv6 neighbor table (equivalent to show arp for IPv4)</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="ndp-router-discovery">Router Discovery</h4>
+<ul class="doc-list">
+  <li><strong>Router Solicitation (RS) — ICMPv6 Type 133:</strong> sent to FF02::2 (all-routers multicast). Sent when an interface is enabled or a host joins a network. Asks routers to identify themselves and provide prefix information.</li>
+  <li><strong>Router Advertisement (RA) — ICMPv6 Type 134:</strong> sent to FF02::1 (all-nodes multicast). Routers send RAs in response to RS messages, and also periodically without being asked. Contains the network prefix, router address, and other link information used by SLAAC.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="ndp-solicited-node">Solicited-Node Multicast Address</h4>
+<p class="body-line">Each IPv6 unicast address has a corresponding solicited-node multicast address used by NDP. It is formed by taking the prefix <code>FF02::1:FF00:0000/104</code> and appending the last 24 bits (6 hex digits) of the unicast address.</p>
+<p class="body-line">Example: <code>2001:0DB8:0000:0001:0f2a:4fff:fea3:00b1</code> → solicited-node: <code>FF02::1:ffa3:b1</code></p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="dad">Duplicate Address Detection (DAD)</h4>
+<p class="body-line">DAD runs automatically whenever an IPv6 address is configured on an interface (whether manually, via SLAAC, or any other method). The host sends an NS message to its own solicited-node multicast address. If no NA reply is received, the address is unique and is assigned. If a reply is received, another device on the link already uses that address.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="ipv6-routing">IPv6 Routing</h3>
+<p class="body-line">IPv6 routing works the same way as IPv4 routing, but the two processes are completely separate — each has its own routing table. IPv4 routing is enabled by default; IPv6 routing must be explicitly enabled.</p>
+<pre class="command-line"><code>ipv6 unicast-routing                               → enable IPv6 routing (disabled by default)
+show ipv6 route                                    → view the IPv6 routing table</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>When IPv6 routing is disabled, the router can still send and receive IPv6 traffic on its own interfaces — it just will not forward (route) IPv6 packets between networks. A connected network route and a local host route are automatically added for each configured IPv6 address. Link-local addresses do NOT appear in the routing table.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="ipv6-static-routes">IPv6 Static Routes</h4>
+<pre class="command-line"><code>ipv6 route &lt;destination/prefix-length&gt; &lt;next-hop&gt;              → recursive static route (next-hop only)
+ipv6 route &lt;destination/prefix-length&gt; &lt;exit-interface&gt;        → directly attached static route (exit interface only — NOT valid on Ethernet interfaces)
+ipv6 route &lt;destination/prefix-length&gt; &lt;exit-interface&gt; &lt;next-hop&gt;  → fully specified static route (both — required when using link-local next-hop)
+ipv6 route ::/0 &lt;next-hop&gt;                                      → default route (::/0 is the IPv6 equivalent of 0.0.0.0/0)</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>When the next-hop address is a link-local address, you must use a fully specified static route (providing both the exit interface and the next-hop) — because link-local addresses are not unique across the whole router, the router needs the exit interface to know which link the next-hop belongs to.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<pre class="command-line"><code>tracert &lt;destination&gt;                              → (Windows) trace the hops a packet takes to reach the destination</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="ipv6-header">IPv6 Packet Header</h3>
+<p class="body-line">The IPv6 header is simpler and fixed at exactly 40 bytes (unlike IPv4 which varies from 20–60 bytes). Several fields from the IPv4 header were removed or simplified.</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Version</td><td>4 bits</td><td>Fixed value of 6 (0b0110) — identifies this as an IPv6 packet.</td></tr>
+<tr><td>Traffic Class</td><td>8 bits</td><td>Used for QoS — marks high-priority traffic (e.g., voice, live video) to be prioritized by routers. Equivalent to IPv4's DSCP field.</td></tr>
+<tr><td>Flow Label</td><td>20 bits</td><td>Identifies a specific traffic flow (communication between a specific source and destination) so routers can handle all packets of the same flow consistently.</td></tr>
+<tr><td>Payload Length</td><td>16 bits</td><td>Length of the payload (encapsulated Layer 4 segment) in bytes. The 40-byte IPv6 header itself is not included in this value.</td></tr>
+<tr><td>Next Header</td><td>8 bits</td><td>Identifies the type of the next header — the protocol of the encapsulated data (e.g., TCP = 6, UDP = 17). Equivalent to IPv4's Protocol field.</td></tr>
+<tr><td>Hop Limit</td><td>8 bits</td><td>Decremented by 1 at each router. Packet is discarded when it reaches 0. Equivalent to IPv4's TTL field.</td></tr>
+<tr><td>Source Address</td><td>128 bits</td><td>IPv6 address of the original sender.</td></tr>
+<tr><td>Destination Address</td><td>128 bits</td><td>IPv6 address of the intended recipient.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="number-systems">Number Systems</h3>
+<p class="body-line">Networking uses three number systems. Each has a standard prefix used in documentation:</p>
+<ul class="doc-list">
+  <li><strong>Binary (Base 2, prefix 0b):</strong> only digits 0 and 1. Used internally by all digital systems. IPv4 addresses, subnet masks, and MAC addresses are all binary at the hardware level.</li>
+  <li><strong>Decimal (Base 10, prefix 0d):</strong> digits 0–9. The standard human number system. IPv4 addresses are written in dotted decimal.</li>
+  <li><strong>Hexadecimal (Base 16, prefix 0x):</strong> digits 0–9 and letters A–F (or a–f). Compact representation of binary — one hex digit = 4 binary bits. MAC addresses and IPv6 addresses are written in hexadecimal.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="acls">Access Control Lists (ACLs)</h2>
+<p class="body-line">An Access Control List (ACL) functions as a packet filter on a router — it instructs the router to permit or deny specific traffic based on defined criteria. ACLs can filter based on source/destination IP addresses, Layer 4 protocol, source/destination port numbers, and more. An ACL is an ordered sequence of ACEs (Access Control Entries), processed top to bottom.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="acl-how-it-works">How ACLs Work</h3>
+<ul class="doc-list">
+  <li>Configuring an ACL in global config mode does not activate it — the ACL must be applied to an interface in a specific direction (inbound or outbound).</li>
+  <li>A maximum of one ACL per direction can be applied to a single interface (one inbound, one outbound).</li>
+  <li>The router checks each packet against the ACEs in order from top to bottom. When a match is found, the router takes the action (permit or deny) and stops — all remaining entries are ignored.</li>
+  <li><strong>Implicit Deny:</strong> every ACL has an invisible "deny all" entry at the very end. Any packet that does not match any ACE is denied. If you don't explicitly permit traffic, it will be blocked.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="acl-types">ACL Types</h3>
+<div class="table-wrap"><table><thead><tr><th>Type</th><th>Match Criteria</th><th>Number Range</th><th>Placement</th></tr></thead><tbody>
+<tr><td>Standard Numbered</td><td>Source IP address only</td><td>1–99 and 1300–1999</td><td>Close to the <strong>destination</strong> — standard ACLs are less specific, so applying near the source risks blocking more traffic than intended.</td></tr>
+<tr><td>Standard Named</td><td>Source IP address only</td><td>Any name</td><td>Close to the <strong>destination</strong></td></tr>
+<tr><td>Extended Numbered</td><td>Src/Dst IP, protocol, src/dst port</td><td>100–199 and 2000–2699</td><td>Close to the <strong>source</strong> — stops unwanted traffic as early as possible.</td></tr>
+<tr><td>Extended Named</td><td>Src/Dst IP, protocol, src/dst port</td><td>Any name</td><td>Close to the <strong>source</strong></td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="standard-acl">Standard ACLs</h3>
+<h4 class="subheading" id="standard-numbered-acl">Standard Numbered ACL</h4>
+<pre class="command-line"><code>access-list &lt;number&gt; {deny|permit} &lt;ip&gt; &lt;wildcard-mask&gt;   → add an ACE (use keyword 'any' to match all traffic)
+access-list &lt;number&gt; remark &lt;description&gt;                  → add a comment/description to the ACL
+show access-lists                                           → view all configured ACLs and their entries
+int &lt;interface&gt;
+ip access-group &lt;number&gt; {in|out}                          → apply the ACL to an interface</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="standard-named-acl">Standard Named ACL</h4>
+<pre class="command-line"><code>ip access-list standard &lt;name&gt;                              → enter standard named ACL config mode
+[&lt;seq-number&gt;] {deny|permit} &lt;ip&gt; &lt;wildcard-mask&gt;          → add an ACE (sequence number optional)
+int &lt;interface&gt;
+ip access-group &lt;name&gt; {in|out}                             → apply the ACL to an interface</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>Modern IOS also allows numbered ACLs to be configured using the named ACL syntax: <code>ip access-list standard &lt;number&gt;</code>. This gives access to named ACL subcommands (delete individual entries, insert by sequence number). In the running-config, the ACL will still display in the traditional numbered format.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="acl-editing">Editing ACLs</h4>
+<ul class="doc-list">
+  <li><strong>Delete individual entries (named/subcommand mode):</strong> <code>no &lt;sequence-number&gt;</code> inside the ACL config mode. When editing numbered ACLs from global config mode only, you cannot delete individual entries — you can only delete the entire ACL: <code>no access-list &lt;number&gt;</code>.</li>
+  <li><strong>Insert entries between existing ones:</strong> specify a sequence number between two existing entries to place a new ACE at that exact position.</li>
+</ul>
+<pre class="command-line"><code>ip access-list resequence &lt;acl-id&gt; &lt;starting-seq-num&gt; &lt;increment&gt;
+→ renumbers all entries starting from starting-seq-num, adding increment for each subsequent entry
+   (useful to create room for inserting new entries between existing ones)</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="extended-acl">Extended ACLs</h3>
+<p class="body-line">Extended ACLs match traffic based on multiple parameters simultaneously. A packet must match ALL specified parameters to match an entry — if even one parameter doesn't match, the entry is skipped and the next ACE is checked.</p>
+<h4 class="subheading" id="extended-numbered-acl">Extended Numbered ACL</h4>
+<pre class="command-line"><code>access-list &lt;number&gt; {permit|deny} &lt;protocol&gt; &lt;src-ip&gt; &lt;wildcard&gt; &lt;dst-ip&gt; &lt;wildcard&gt;</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="extended-named-acl">Extended Named ACL</h4>
+<pre class="command-line"><code>ip access-list extended {&lt;name&gt;|&lt;number&gt;}
+[&lt;seq-num&gt;] {permit|deny} &lt;protocol&gt; &lt;src-ip&gt; &lt;wildcard&gt; &lt;dst-ip&gt; &lt;wildcard&gt;</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="extended-acl-ports">Matching TCP/UDP Ports</h4>
+<p class="body-line">When the protocol is TCP or UDP, you can optionally specify source and/or destination ports after the IP addresses:</p>
+<pre class="command-line"><code>[seq-num] {permit|deny} &lt;protocol&gt; &lt;src-ip&gt; &lt;wildcard&gt; [port-op] &lt;dst-ip&gt; &lt;wildcard&gt; [port-op]</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<div class="table-wrap"><table><thead><tr><th>Operator</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>eq &lt;port&gt;</td><td>Equal to the specified port number</td></tr>
+<tr><td>gt &lt;port&gt;</td><td>Greater than the specified port number</td></tr>
+<tr><td>lt &lt;port&gt;</td><td>Less than the specified port number</td></tr>
+<tr><td>neq &lt;port&gt;</td><td>Not equal to the specified port number</td></tr>
+<tr><td>range &lt;p1&gt; &lt;p2&gt;</td><td>From port p1 to port p2 (inclusive)</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="discovery-protocols">Layer 2 Discovery Protocols</h2>
+<p class="body-line">Layer 2 discovery protocols allow directly connected network devices to automatically share information about themselves — hostname, IP address, device type, interface details, and more. Because they expose network topology information, they are a potential security risk and are often disabled in security-sensitive environments.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<div class="table-wrap"><table><thead><tr><th>Feature</th><th>CDP</th><th>LLDP</th></tr></thead><tbody>
+<tr><td>Standard</td><td>Cisco proprietary</td><td>Industry standard (IEEE 802.1AB)</td></tr>
+<tr><td>Default state on Cisco</td><td>Enabled globally and per-interface</td><td>Disabled — must be manually enabled</td></tr>
+<tr><td>Can run simultaneously?</td><td colspan="2" style="text-align:center">Yes — CDP and LLDP can run at the same time on the same device</td></tr>
+<tr><td>Multicast MAC address</td><td>0100.0CCC.CCCC</td><td>0180.C200.000E</td></tr>
+<tr><td>Message interval</td><td>60 seconds</td><td>30 seconds</td></tr>
+<tr><td>Holdtime</td><td>180 seconds</td><td>120 seconds</td></tr>
+<tr><td>Reinitialization delay</td><td>—</td><td>2 seconds (delays LLDP init after being enabled)</td></tr>
+<tr><td>Forwarded to other devices?</td><td>No — processed and discarded locally</td><td>No — processed and discarded locally</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="cdp">CDP — Cisco Discovery Protocol</h3>
+<p class="body-line">CDP is enabled globally and per-interface by default on all Cisco devices (routers, switches, firewalls, IP phones). CDPv2 is sent by default and provides more detailed device information than CDPv1.</p>
+<pre class="command-line"><code>[no] cdp run                     → enable/disable CDP globally
+[no] cdp enable                  → enable/disable CDP on a specific interface
+cdp timer &lt;seconds&gt;             → change the CDP message interval (default 60 s)
+cdp holdtime &lt;seconds&gt;          → change the holdtime (default 180 s — neighbor removed if no message received)
+[no] cdp advertise-v2           → enable/disable CDPv2 messages</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="lldp">LLDP — Link Layer Discovery Protocol</h3>
+<p class="body-line">LLDP must be manually enabled on Cisco devices. Unlike CDP which is controlled as a single on/off per interface, LLDP transmit and receive are configured independently on each interface.</p>
+<pre class="command-line"><code>[no] lldp run                    → enable/disable LLDP globally
+[no] lldp transmit               → enable/disable LLDP transmission on a specific interface
+[no] lldp receive                → enable/disable LLDP reception on a specific interface
+lldp timer &lt;seconds&gt;            → change the LLDP message interval (default 30 s)
+lldp holdtime &lt;seconds&gt;         → change the holdtime (default 120 s)
+lldp reinit &lt;seconds&gt;           → change the reinitialization delay (default 2 s)</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="cdp-lldp-show">CDP and LLDP Show Commands</h3>
+<pre class="command-line"><code>show cdp                         → global CDP configuration and status
+show cdp traffic                 → CDP packet send/receive statistics
+show cdp interface               → CDP status on each interface
+show cdp neighbors               → summary table of all CDP neighbors
+show cdp neighbors detail        → full details for all CDP neighbors (IP, platform, capabilities)
+show cdp entry &lt;name&gt;           → detailed info for one specific CDP neighbor
+
+show lldp                        → global LLDP configuration and status
+show lldp traffic                → LLDP packet send/receive statistics
+show lldp interface              → LLDP status on each interface
+show lldp neighbors              → summary table of all LLDP neighbors
+show lldp neighbors detail       → full details for all LLDP neighbors
+show lldp entry &lt;name&gt;          → detailed info for one specific LLDP neighbor</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="ntp">NTP — Network Time Protocol</h2>
+<p class="body-line">All network devices have an internal clock. Accurate time is critical for log correlation and troubleshooting — if devices have different times, it is very difficult to match events across them. Syslog is the protocol used to keep device logs.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="ntp-clocks">Hardware and Software Clocks</h3>
+<ul class="doc-list">
+  <li>Cisco IOS devices have two separate clocks: a <strong>software clock</strong> (used during operation) and a <strong>hardware calendar</strong> (battery-backed, persists across reboots). They can be configured independently and may drift apart over time.</li>
+  <li>The hardware clock is the default time source when the device boots, but it drifts over time and is not ideal for precision.</li>
+  <li><code>*</code> before the time in <code>show clock detail</code> output means the time is not considered authoritative.</li>
+</ul>
+<pre class="command-line"><code>show clock                                            → view the software clock
+show clock detail                                     → view the software clock and its time source
+show calendar                                         → view the hardware calendar
+show logging                                          → view device logs (syslog entries)
+clock set &lt;hh:mm:ss&gt; &lt;day&gt; &lt;month&gt; &lt;year&gt;           → manually set the software clock
+calendar set &lt;hh:mm:ss&gt; &lt;day&gt; &lt;month&gt; &lt;year&gt;        → manually set the hardware calendar
+clock update-calendar                                 → sync the hardware calendar to the software clock
+clock read-calendar                                   → sync the software clock to the hardware calendar
+clock timezone &lt;name&gt; &lt;hours-offset&gt;                → configure the time zone
+clock summer-time &lt;name&gt; recurring &lt;start&gt; &lt;end&gt;    → configure Daylight Saving Time</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="ntp-overview">NTP Overview</h3>
+<p class="body-line">NTP (Network Time Protocol) allows devices to automatically synchronize their clocks over a network, eliminating manual configuration and clock drift. NTP uses UDP port 123. A device can be both an NTP client and an NTP server at the same time.</p>
+<ul class="doc-list">
+  <li>Accuracy: ~1 millisecond within the same LAN, ~50 milliseconds over a WAN or internet connection.</li>
+  <li>An NTP client can synchronize to multiple NTP servers simultaneously.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="ntp-stratum">NTP Stratum Hierarchy</h4>
+<p class="body-line">Stratum indicates how many NTP hops a device is from the original reference clock. Lower stratum = more accurate and preferred. Servers lower stratum levels are preferred.</p>
+<div class="table-wrap"><table><thead><tr><th>Stratum</th><th>Description</th></tr></thead><tbody>
+<tr><td>0</td><td>Reference clock — atomic clock, GPS clock. Not an NTP participant directly; provides time to stratum 1 servers.</td></tr>
+<tr><td>1</td><td>Primary NTP servers — directly connected to a stratum 0 device. Also called primary servers.</td></tr>
+<tr><td>2–15</td><td>Secondary servers — get time from the level above and serve the level below. Stratum 15 is the maximum usable level.</td></tr>
+<tr><td>16</td><td>Unsynchronized — device is not considered reliable.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>Devices can also peer with devices at the same stratum level to improve accuracy — this is called symmetric active mode. When a router synchronizes to an external NTP server, it automatically becomes an NTP server itself at one stratum level higher than its source.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="ntp-config">Configuring NTP</h3>
+<pre class="command-line"><code>ntp server &lt;ip-address&gt; [prefer]            → sync to this NTP server (prefer = prioritize this server)
+ntp master [&lt;stratum-number&gt;]              → make this device an NTP master (no external source needed; default stratum 8)
+ntp peer &lt;ip-address&gt;                      → configure symmetric active mode (peer at the same stratum)
+ntp update-calendar                         → automatically update the hardware calendar from NTP time
+ntp source &lt;loopback-interface&gt;            → use a loopback as the NTP source address (ensures reachability even if one interface fails — same reason as OSPF loopbacks)
+show ntp associations                       → view all NTP servers/peers and their sync status
+show ntp status                             → view this device's NTP synchronization state and stratum</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="ntp-auth">NTP Authentication (Optional)</h4>
+<p class="body-line">NTP authentication ensures clients only sync to intended servers. Optional but recommended in secure environments.</p>
+<pre class="command-line"><code>ntp authenticate                                      → enable NTP authentication
+ntp authentication-key &lt;key-number&gt; md5 &lt;key&gt;        → create an MD5 authentication key
+ntp trusted-key &lt;key-number&gt;                          → mark a key as trusted
+ntp server &lt;ip-address&gt; key &lt;key-number&gt;              → specify which key to use for a server (configured on the client only)</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="dns">DNS — Domain Name System</h2>
+<p class="body-line">DNS (Domain Name System) resolves human-readable hostnames (like google.com) to IP addresses that machines can use. When you type a URL into a browser, your device queries a DNS server to get the IP address before connecting. DNS servers can be manually configured or learned via DHCP. DNS uses port 53 — UDP for queries under 512 bytes, TCP for larger messages.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dns-records">DNS Record Types</h3>
+<ul class="doc-list">
+  <li><strong>A record:</strong> maps a hostname to an IPv4 address.</li>
+  <li><strong>AAAA record:</strong> maps a hostname to an IPv6 address.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dns-cache">DNS Caching and Host Commands</h3>
+<p class="body-line">Devices cache DNS responses locally to avoid re-querying the server for every request to the same destination.</p>
+<pre class="command-line"><code>ipconfig /all                               → (Windows) view IP settings including DNS server
+nslookup &lt;domain-name&gt;                     → query DNS and view the resolved IP address
+ipconfig /displaydns                        → (Windows) view the local DNS cache
+ipconfig /flushdns                          → (Windows) clear the local DNS cache</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dns-cisco">Cisco Router as DNS Server / Client</h3>
+<p class="body-line">Routers forward DNS packets like any other traffic without special configuration. Optionally, a Cisco router can act as a DNS server or client.</p>
+<pre class="command-line"><code>ip dns server                               → configure this device to act as a DNS server
+ip host &lt;hostname&gt; &lt;ip-address&gt;            → add a static hostname-to-IP mapping to the local host table
+ip name-server &lt;ip-address&gt;                → configure an external DNS server to query for unknown records
+ip domain lookup                            → enable DNS queries (on by default; old syntax: ip domain-lookup)
+ip domain name &lt;domain-name&gt;               → set a default domain appended to unqualified hostnames (old syntax: ip domain-name)
+show hosts                                  → view static host entries and cached DNS records</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="dhcp">DHCP — Dynamic Host Configuration Protocol</h2>
+<p class="body-line">DHCP (Dynamic Host Configuration Protocol) allows hosts to automatically obtain their full network configuration — IP address, subnet mask, default gateway, DNS server, and more — without any manual setup. DHCP servers lease IP addresses to clients for a configurable duration. DHCP servers use UDP port 67; clients use UDP port 68.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dhcp-process">DHCP Message Process — DORA</h3>
+<div class="table-wrap"><table><thead><tr><th>Message</th><th>Direction</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><strong>Discover</strong></td><td>Client → Server</td><td>Broadcast</td><td>"Are there any DHCP servers? I need an IP address." Source IP is 0.0.0.0 — client has no address yet.</td></tr>
+<tr><td><strong>Offer</strong></td><td>Server → Client</td><td>Broadcast or Unicast</td><td>"How about this IP address?" — offers a specific lease. Broadcast used because some clients can't accept unicast before having an IP.</td></tr>
+<tr><td><strong>Request</strong></td><td>Client → Server</td><td>Broadcast</td><td>"I want to use the IP address you offered." Broadcast so all DHCP servers know which offer was accepted. Source IP still 0.0.0.0.</td></tr>
+<tr><td><strong>Ack</strong></td><td>Server → Client</td><td>Broadcast or Unicast</td><td>"OK, the address is yours." Confirms the lease is granted.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dhcp-server-config">Configuring a Cisco Router as a DHCP Server</h3>
+<pre class="command-line"><code>ip dhcp excluded-address &lt;start-ip&gt; &lt;end-ip&gt;   → exclude a range from being assigned (routers, servers, printers)
+ip dhcp pool &lt;pool-name&gt;                        → create a DHCP pool and enter pool config mode
+  network &lt;network-address&gt; &lt;subnet-mask&gt;       → the subnet to assign addresses from (excluding excluded addresses)
+  default-router &lt;ip-address&gt;                   → default gateway for clients
+  dns-server &lt;ip-address&gt;                       → DNS server for clients
+  domain-name &lt;domain-name&gt;                     → domain name for clients
+  lease &lt;days&gt; &lt;hours&gt; &lt;minutes&gt;               → lease duration (or 'lease infinite')
+show ip dhcp binding                            → view all active DHCP leases (client IP, MAC address, expiry)</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dhcp-relay">DHCP Relay Agent</h3>
+<p class="body-line">DHCP Discover messages are broadcasts and cannot cross router boundaries. When the DHCP server is on a different subnet than the clients, a DHCP relay agent configured on the router in the client's subnet forwards client broadcasts to the server as unicast messages.</p>
+<pre class="command-line"><code>int &lt;interface&gt;                              → select the interface facing the client subnet
+ip helper-address &lt;dhcp-server-ip&gt;          → forward DHCP broadcasts from clients to this server
+show ip interface &lt;interface&gt;               → verify the helper address configured on the interface</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dhcp-client-cmd">DHCP Client Commands</h3>
+<pre class="command-line"><code>int &lt;interface&gt;
+ip address dhcp                              → configure a router interface to get its IP via DHCP
+
+ipconfig /release                            → (Windows host) release the current DHCP-assigned IP address
+ipconfig /renew                              → (Windows host) request a new IP address from the DHCP server</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="snmp">SNMP — Simple Network Management Protocol</h2>
+<p class="body-line">SNMP (Simple Network Management Protocol) is used to monitor the status of network devices and make configuration changes remotely. It has two main device roles:</p>
+<ul class="doc-list">
+  <li><strong>Managed Devices:</strong> the network devices being monitored and managed — routers, switches, firewalls, etc.</li>
+  <li><strong>Network Management Station (NMS):</strong> the server-side device that manages the managed devices. Runs the SNMP Manager software.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="snmp-components">SNMP Components</h3>
+<ul class="doc-list">
+  <li><strong>SNMP Manager:</strong> software on the NMS that interacts with managed devices — sends requests for information, receives notifications, and sends configuration changes.</li>
+  <li><strong>SNMP Application:</strong> the interface on the NMS for network administrators. Displays alerts, statistics, charts, and allows interaction with the SNMP Manager.</li>
+  <li><strong>SNMP Agent:</strong> software running on each managed device. Sends notifications to the NMS and responds to requests from the SNMP Manager.</li>
+  <li><strong>Management Information Base (MIB):</strong> the structured database on each managed device containing all the variables that SNMP can monitor or modify. Each variable has a unique Object ID (OID). Example variables: interface status, traffic throughput, CPU usage, temperature. OIDs are organized in a hierarchical structure.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="snmp-operations">SNMP Operations</h3>
+<div class="table-wrap"><table><thead><tr><th>Operation Type</th><th>Direction</th><th>Description</th></tr></thead><tbody>
+<tr><td>Read (Get)</td><td>NMS → Managed Device</td><td>NMS requests information from the device. Example: "What is your current CPU usage?"</td></tr>
+<tr><td>Write (Set)</td><td>NMS → Managed Device</td><td>NMS changes a value on the device. Example: "Change this interface's IP address."</td></tr>
+<tr><td>Notification (Trap/Inform)</td><td>Managed Device → NMS</td><td>Device alerts the NMS about an event. Example: "An interface just went down."</td></tr>
+<tr><td>Response</td><td>Managed Device → NMS</td><td>Sent in response to a previous Read or Write request.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<ul class="doc-list">
+  <li>SNMP Agent listens on <strong>UDP port 161</strong>.</li>
+  <li>SNMP Manager (NMS) listens for notifications on <strong>UDP port 162</strong>.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="snmp-versions">SNMP Versions</h3>
+<div class="table-wrap"><table><thead><tr><th>Version</th><th>Description</th></tr></thead><tbody>
+<tr><td>SNMPv1</td><td>The original version. Uses community strings as passwords. Limited security.</td></tr>
+<tr><td>SNMPv2c</td><td>More efficient — the NMS can retrieve large amounts of information in a single request (GetBulk). The 'c' refers to community strings, which were removed from SNMPv2 but added back in v2c for backward compatibility.</td></tr>
+<tr><td>SNMPv3</td><td>Significantly more secure — supports strong authentication and encryption. Whenever possible, SNMPv3 should be used.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="syslog">Syslog</h2>
+<p class="body-line">Syslog is an industry-standard protocol for message logging on network devices. It records events such as interface status changes, OSPF neighbor state changes, system restarts, and more. Logs are essential for troubleshooting, incident analysis, and auditing. Syslog uses UDP port 514.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="syslog-format">Syslog Message Format</h3>
+<p class="body-line"><code>seq: timestamp: %facility-severity-MNEMONIC: description</code></p>
+<ul class="doc-list">
+  <li><strong>Sequence number:</strong> indicates the order messages were generated. May or may not be displayed depending on configuration.</li>
+  <li><strong>Timestamp:</strong> when the message was generated. May or may not be displayed depending on configuration.</li>
+  <li><strong>Facility:</strong> identifies which process on the device generated the message (e.g., OSPF, interface manager).</li>
+  <li><strong>Severity:</strong> a number (0–7) indicating how serious the event is — lower number = more severe.</li>
+  <li><strong>Mnemonic:</strong> a short code identifying what happened (e.g., UPDOWN, ADJCHG).</li>
+  <li><strong>Description:</strong> detailed information about the event.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="syslog-severity">Syslog Severity Levels</h3>
+<div class="table-wrap"><table><thead><tr><th>Level</th><th>Keyword</th><th>Description</th></tr></thead><tbody>
+<tr><td>0</td><td>emergencies</td><td>System is unusable.</td></tr>
+<tr><td>1</td><td>alerts</td><td>Immediate action required.</td></tr>
+<tr><td>2</td><td>critical</td><td>Critical conditions.</td></tr>
+<tr><td>3</td><td>errors</td><td>Error conditions.</td></tr>
+<tr><td>4</td><td>warnings</td><td>Warning conditions.</td></tr>
+<tr><td>5</td><td>notifications</td><td>Normal but significant events.</td></tr>
+<tr><td>6</td><td>informational</td><td>Informational messages.</td></tr>
+<tr><td>7</td><td>debugging</td><td>Debug-level messages — most verbose.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="syslog-destinations">Syslog Destinations</h3>
+<div class="table-wrap"><table><thead><tr><th>Destination</th><th>Description</th><th>Default</th></tr></thead><tbody>
+<tr><td>Console Line</td><td>Messages displayed in the CLI when connected via the console port.</td><td>All levels (0–7) enabled by default.</td></tr>
+<tr><td>VTY Lines</td><td>Messages displayed in the CLI when connected via Telnet or SSH.</td><td>Disabled by default.</td></tr>
+<tr><td>Buffer (RAM)</td><td>Messages saved in the device's RAM. Viewed with <code>show logging</code>.</td><td>All levels (0–7) enabled by default.</td></tr>
+<tr><td>External Server</td><td>Messages sent to a remote Syslog server over the network (UDP 514).</td><td>Not configured by default.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="syslog-config">Syslog Configuration</h3>
+<p class="body-line">When specifying a severity level, logging is enabled for that level AND all more severe levels (lower numbers). For example, configuring level 6 (informational) enables levels 0–6 and excludes level 7 (debugging).</p>
+<pre class="command-line"><code>logging console &lt;level&gt;                         → enable logging to the console (use level number or keyword)
+logging monitor &lt;level&gt;                         → enable logging to VTY lines (Telnet/SSH sessions)
+logging buffered [&lt;buffer-size-bytes&gt;] &lt;level&gt;  → enable logging to the RAM buffer
+logging [host] &lt;ip-address&gt;                     → send logs to an external Syslog server
+logging trap &lt;level&gt;                            → set the severity level for the external server
+show logging                                    → view buffered log messages and logging configuration</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>Even if <code>logging monitor</code> is configured, Syslog messages will NOT appear in a Telnet or SSH session by default. You must run <code>terminal monitor</code> each time you connect via Telnet/SSH to enable message display for that session.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<pre class="command-line"><code>line console 0
+  logging synchronous                           → prevents log messages from interrupting mid-typed commands — reprints the current line after a log message appears
+
+service timestamps log datetime                 → add date/time timestamps to log messages
+service timestamps log uptime                   → add device uptime timestamps instead of date/time
+service sequence-numbers                        → add sequence numbers to log messages</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="syslog-vs-snmp">Syslog vs. SNMP</h3>
+<div class="table-wrap"><table><thead><tr><th>Feature</th><th>Syslog</th><th>SNMP</th></tr></thead><tbody>
+<tr><td>Primary purpose</td><td>Message logging — recording events that occur on the device</td><td>Device monitoring and management — retrieving status and modifying variables</td></tr>
+<tr><td>Direction</td><td>Device → Server only. The server cannot pull information or push changes.</td><td>Bidirectional. NMS can Get (pull info) and Set (push changes) to managed devices.</td></tr>
+<tr><td>Data type</td><td>Human-readable event messages categorized by facility and severity</td><td>Structured variables with OIDs — interface status, CPU, temperature, traffic counters, etc.</td></tr>
+<tr><td>Use cases</td><td>Troubleshooting, incident analysis, audit trails, system management</td><td>Network monitoring dashboards, automated alerting, remote configuration</td></tr>
+<tr><td>Protocol / Port</td><td>UDP 514</td><td>UDP 161 (agent), UDP 162 (manager)</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="remote-access">Remote Access — Console, Telnet, and SSH</h2>
+<p class="body-line">Network devices can be accessed locally via the console port or remotely via the network using Telnet or SSH. Remote access requires the device to have an IP address reachable from the managing host.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="console-security">Console Line Security</h3>
+<p class="body-line">By default, no password is required to access the CLI via the console port. There is only one console line (always line 0), so only one direct connection can exist at a time.</p>
+<pre class="command-line"><code>line console 0
+  password &lt;password&gt;          → set a password for console access
+  login                        → require the configured password to enter the CLI
+  login local                  → require a locally configured username/password instead (overrides 'login' if both are set)
+  exec-timeout &lt;min&gt; &lt;sec&gt;    → automatically log out after the specified period of inactivity
+
+username &lt;username&gt; secret &lt;password&gt;   → create a local user account (used with 'login local')</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="switch-remote-access">Layer 2 Switch Remote Access (SVI)</h3>
+<p class="body-line">Layer 2 switches do not perform IP routing and do not build a routing table. However, you can assign an IP address to an SVI (Switch Virtual Interface) to allow remote Telnet or SSH connections to the switch's CLI. The switch also needs a default gateway configured to communicate with devices outside its local subnet.</p>
+<pre class="command-line"><code>interface vlan &lt;vlan-id&gt;
+  ip address &lt;ip-address&gt; &lt;subnet-mask&gt;
+  no shutdown
+ip default-gateway &lt;ip-address&gt;          → configure the switch's default gateway for remote reachability</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="telnet">Telnet</h3>
+<p class="body-line">Telnet (Teletype Network) is a protocol for remotely accessing a device's CLI over a network. Developed in 1969, it has been largely replaced by SSH because it sends all data — including passwords — in plain text with no encryption. The Telnet server listens on TCP port 23.</p>
+<pre class="command-line"><code>enable secret &lt;password&gt;                  → required — without this, privileged EXEC mode can't be reached via Telnet
+username &lt;username&gt; secret &lt;password&gt;    → configure a local user account
+access-list &lt;#&gt; permit host &lt;ip-address&gt; → (optional) ACL to restrict which hosts can connect
+
+line vty 0 15                             → configure all 16 VTY lines (up to 16 simultaneous remote sessions)
+  login local                             → require local username/password authentication
+  exec-timeout &lt;min&gt; &lt;sec&gt;              → auto-logout after inactivity
+  transport input {telnet|ssh|all|none}   → specify which protocols are allowed on the VTY lines
+  access-class &lt;#&gt; in                    → apply the ACL to restrict VTY connections (access-class = VTY; ip access-group = interface)</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="ssh">SSH — Secure Shell</h3>
+<p class="body-line">SSH (Secure Shell) was developed in 1995 to replace insecure protocols like Telnet. SSHv2 was released in 2006 as a major security revision. If a device supports both versions, it is said to run version 1.99. SSH provides data encryption and authentication — always prefer SSH over Telnet. The SSH server listens on TCP port 22.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="ssh-requirements">SSH Requirements</h4>
+<ul class="doc-list">
+  <li>Configure a hostname (not the default "Router" or "Switch").</li>
+  <li>Configure a DNS domain name — the FQDN (hostname + domain name) is used to name the RSA keys.</li>
+  <li>Generate an RSA key pair — used for encryption, decryption, and authentication.</li>
+  <li>Configure an enable password/secret and a local username/password.</li>
+  <li>Enable SSHv2 only (recommended).</li>
+  <li>Configure the VTY lines.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>IOS images that support SSH have 'K9' in their name. Cisco NPE (No Payload Encryption) images — exported to countries with encryption restrictions — do not support SSH or other cryptographic features.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="ssh-config">SSH Configuration</h4>
+<pre class="command-line"><code>ip domain name &lt;domain-name&gt;                    → set the domain name (used to form the FQDN for RSA key naming)
+crypto key generate rsa modulus &lt;length&gt;        → generate the RSA key pair (use 2048 bits for SSHv2; minimum 768 bits)
+ip ssh version 2                                → restrict SSH to version 2 only (recommended)
+
+enable secret &lt;password&gt;
+username &lt;username&gt; secret &lt;password&gt;
+access-list &lt;#&gt; permit host &lt;ip-address&gt;       → (optional) limit which hosts can connect
+
+line vty 0 15
+  login local                                   → SSH requires 'login local' — you cannot use 'login' alone (SSH needs a username)
+  exec-timeout &lt;min&gt; &lt;sec&gt;
+  transport input ssh                           → best practice: allow SSH only, not Telnet
+  access-class &lt;#&gt; in                          → (optional) apply ACL to VTY lines
+
+show ip ssh                                     → verify SSH is supported, check version and configuration
+show version                                    → check IOS image name — 'K9' = SSH supported</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<p class="body-line">To connect to a device via SSH from a PC:</p>
+<pre class="command-line"><code>ssh -l &lt;username&gt; &lt;ip-address&gt;     → connect using separate username flag
+ssh &lt;username&gt;@&lt;ip-address&gt;       → connect using combined username@address format</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="ftp-tftp">FTP and TFTP</h2>
+<p class="body-line">FTP (File Transfer Protocol) and TFTP (Trivial File Transfer Protocol) are standard protocols for transferring files over a network using a client-server model. As a network engineer, the most common use is upgrading the IOS (operating system) of a network device — downloading a newer IOS image from a server, then rebooting the device with the new image.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<div class="table-wrap"><table><thead><tr><th>Feature</th><th>TFTP</th><th>FTP</th></tr></thead><tbody>
+<tr><td>Protocol / Port</td><td>UDP port 69</td><td>TCP port 21 (control), TCP port 20 (data)</td></tr>
+<tr><td>Authentication</td><td>None — server responds to all requests</td><td>Username and password (no encryption in basic FTP)</td></tr>
+<tr><td>Encryption</td><td>None — plain text</td><td>None in basic FTP. Use FTPS (FTP over SSL/TLS) or SFTP for security.</td></tr>
+<tr><td>Functionality</td><td>Copy files to/from server only</td><td>Full file management: copy, navigate directories, add/remove dirs, list files</td></tr>
+<tr><td>Complexity</td><td>Simple — designed for lightweight, quick transfers in controlled environments</td><td>More complex — full-featured</td></tr>
+<tr><td>Connection type</td><td>Connectionless UDP, but uses internal lock-step acknowledgments and retransmissions</td><td>Connection-oriented TCP — two connections: control (21) and data (20)</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="tftp-details">TFTP Details</h3>
+<p class="body-line">TFTP uses a lock-step communication model — the client and server alternate sending a message and waiting for a reply. If an expected reply isn't received within a timeout, the waiting device retransmits. Every data message is acknowledged.</p>
+<p class="body-line">TFTP file transfers have three phases:</p>
+<ul class="doc-list">
+  <li><strong>Connection:</strong> the client sends a request; the server responds to initialize the connection.</li>
+  <li><strong>Data Transfer:</strong> one side sends data while the other sends acknowledgments, alternating back and forth.</li>
+  <li><strong>Termination:</strong> after the last data message, a final acknowledgment is sent to close the connection.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="ftp-details">FTP Details</h3>
+<p class="body-line">FTP uses two separate TCP connections: a persistent control connection (port 21) for sending commands and receiving replies, and temporary data connections (port 20) opened and closed as needed for actual file transfers.</p>
+<ul class="doc-list">
+  <li><strong>Active mode (default):</strong> the server initiates the data connection to the client.</li>
+  <li><strong>Passive mode:</strong> the client initiates the data connection. Used when the client is behind a firewall that blocks incoming connections from external devices.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="ios-file-system">Cisco IOS File System</h3>
+<p class="body-line">Cisco IOS organizes storage into different file system types:</p>
+<ul class="doc-list">
+  <li><strong>disk:</strong> storage devices such as flash memory — where the IOS image is stored.</li>
+  <li><strong>nvram:</strong> Non-Volatile RAM — where the startup-config is stored.</li>
+  <li><strong>opaque:</strong> used for internal logical functions, not actual storage.</li>
+  <li><strong>network:</strong> represents external file systems such as FTP or TFTP servers.</li>
+</ul>
+<pre class="command-line"><code>show file systems                                → view all available file systems on the device
+show version                                     → view the current IOS version and image name
+show flash                                       → view the contents of flash memory</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="ios-upgrade">Upgrading IOS with TFTP or FTP</h3>
+<pre class="command-line"><code>copy tftp flash                                  → copy a file from a TFTP server to flash
+  → you will be prompted for: TFTP server IP, source filename on the server, destination filename on flash (Enter to keep the same name)
+
+copy ftp flash                                   → copy a file from an FTP server to flash
+  → configure FTP credentials first:
+ip ftp username &lt;username&gt;
+ip ftp password &lt;password&gt;
+
+show flash                                       → confirm the new IOS image is present in flash
+boot system &lt;filepath&gt;                          → specify which IOS image to boot (e.g. flash:c2900-universalk9-mz.SPA.155-3.M4a.bin)
+                                                 → if not configured, the router uses the first IOS file found in flash
+write memory                                     → save the configuration including the boot system command
+reload                                           → restart the device to boot into the new IOS
+show version                                     → verify the new IOS version after reboot
+delete &lt;filepath&gt;                               → delete the old IOS image from flash after confirming the new one works</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="nat">NAT — Network Address Translation</h2>
+<p class="body-line">IPv4 does not provide enough addresses for all devices in the modern world. The long-term solution is IPv6. The three main short-term solutions are CIDR, private IPv4 addresses, and NAT. RFC 1918 defines the following ranges as private — free to use internally, not globally unique, and not routable on the internet:</p>
+<div class="table-wrap"><table><thead><tr><th>Range</th><th>CIDR Block</th><th>Address Space</th></tr></thead><tbody>
+<tr><td>Class A private</td><td>10.0.0.0/8</td><td>10.0.0.0 – 10.255.255.255</td></tr>
+<tr><td>Class B private</td><td>172.16.0.0/12</td><td>172.16.0.0 – 172.31.255.255</td></tr>
+<tr><td>Class C private</td><td>192.168.0.0/16</td><td>192.168.0.0 – 192.168.255.255</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<p class="body-line">NAT (Network Address Translation) modifies the source and/or destination IP addresses of packets as they pass through a router — most commonly to allow hosts with private IP addresses to communicate over the internet.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="nat-terminology">NAT Terminology</h3>
+<div class="table-wrap"><table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody>
+<tr><td>Inside Local</td><td>The IP address of an inside host from the perspective of the local (internal) network. Usually a private address — the address actually configured on the host.</td></tr>
+<tr><td>Inside Global</td><td>The IP address of an inside host from the perspective of outside hosts. The address after NAT translation — usually a public address.</td></tr>
+<tr><td>Outside Local</td><td>The IP address of an outside host from the perspective of the local network.</td></tr>
+<tr><td>Outside Global</td><td>The IP address of an outside host from the perspective of the outside network.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>Unless destination NAT is used, Outside Local and Outside Global will be the same address. The Inside/Outside portion refers to the location of the host. The Local/Global portion refers to the perspective from which the address is seen.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="static-nat">Static NAT</h3>
+<p class="body-line">Static NAT creates a permanent one-to-one mapping between a private inside local address and a public inside global address. This allows internal hosts to communicate over the internet, but because every internal host needs its own public IP, static NAT does not help conserve addresses. It also allows external hosts to initiate connections to the internal host via the inside global address.</p>
+<pre class="command-line"><code>int &lt;inside-interface&gt;
+  ip nat inside                                           → mark this interface as the inside (internal) interface
+
+int &lt;outside-interface&gt;
+  ip nat outside                                          → mark this interface as the outside (external) interface
+
+ip nat inside source static &lt;inside-local-ip&gt; &lt;inside-global-ip&gt;   → create a static one-to-one NAT mapping
+
+show ip nat translations                                  → view all static and dynamic NAT translation entries
+show ip nat statistics                                    → view NAT configuration summary and hit counts
+clear ip nat translation *                                → clear all dynamic NAT translation entries</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dynamic-nat">Dynamic NAT</h3>
+<p class="body-line">Dynamic NAT maps inside local addresses to inside global addresses automatically from a defined pool, as needed. Mappings are still one-to-one but are assigned dynamically rather than statically. An ACL determines which traffic should be translated — traffic permitted by the ACL is translated, traffic denied is NOT translated (but is also not dropped).</p>
+<ul class="doc-list">
+  <li>If all inside global addresses in the pool are in use, new packets requiring NAT are dropped — this is called <strong>NAT pool exhaustion</strong>. The host cannot access outside networks until an address becomes available.</li>
+  <li>Dynamic NAT entries time out automatically when not in use, or can be cleared manually.</li>
+</ul>
+<pre class="command-line"><code>int &lt;inside-interface&gt;
+  ip nat inside
+int &lt;outside-interface&gt;
+  ip nat outside
+
+access-list &lt;#&gt; permit &lt;ip-address&gt; &lt;wildcard-mask&gt;     → define which source IPs should be translated
+
+ip nat pool &lt;pool-name&gt; &lt;first-ip&gt; &lt;last-ip&gt; {prefix-length &lt;prefix&gt; | netmask &lt;mask&gt;}   → define the pool of public IPs
+
+ip nat inside source list &lt;#&gt; pool &lt;pool-name&gt;          → map the ACL to the pool (enable dynamic NAT)</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="pat">PAT — Port Address Translation (NAT Overload)</h3>
+<p class="body-line">PAT (also called NAT overload) translates both the IP address and the port number. By assigning a unique port number to each communication flow, a single public IP address can serve many internal hosts simultaneously. Port numbers are 16 bits, providing over 65,000 available port numbers. PAT is by far the most widely used form of NAT — it is what home and enterprise routers use to allow many devices to share one public IP address.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="pat-pool">PAT Using a Pool of Public IPs</h4>
+<pre class="command-line"><code>int &lt;inside-interface&gt;
+  ip nat inside
+int &lt;outside-interface&gt;
+  ip nat outside
+
+access-list &lt;#&gt; permit &lt;ip-address&gt; &lt;wildcard-mask&gt;
+
+ip nat pool &lt;pool-name&gt; &lt;first-ip&gt; &lt;last-ip&gt; {prefix-length &lt;prefix&gt; | netmask &lt;mask&gt;}
+
+ip nat inside source list &lt;#&gt; pool &lt;pool-name&gt; overload  → same as dynamic NAT but with 'overload' keyword to enable PAT</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="pat-interface">PAT Using the Router's Own Interface IP</h4>
+<p class="body-line">Instead of a pool, PAT can use the IP address of the router's outside interface directly — all internal hosts share the single public IP of that interface, differentiated only by port number. This is the most common configuration in small networks.</p>
+<pre class="command-line"><code>int &lt;inside-interface&gt;
+  ip nat inside
+int &lt;outside-interface&gt;
+  ip nat outside
+
+access-list &lt;#&gt; permit &lt;ip-address&gt; &lt;wildcard-mask&gt;
+
+ip nat inside source list &lt;#&gt; interface &lt;outside-interface&gt; overload   → use the interface's own IP as the public address with PAT</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="voice-vlans">Voice VLANs and IP Phones</h2>
+<p class="body-line">Traditional phones used the PSTN (Public Switched Telephone Network), also called POTS (Plain Old Telephone Service). IP phones use VoIP (Voice over IP) to make phone calls over an IP network. IP phones connect to a switch just like any other end host.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="ip-phone-internal-switch">IP Phone Internal Switch</h3>
+<p class="body-line">Each IP phone contains an internal 3-port switch, allowing a PC and the phone to share a single switch port:</p>
+<ul class="doc-list">
+  <li>Port 1 — uplink to the external (building) switch.</li>
+  <li>Port 2 — downlink to the connected PC.</li>
+  <li>Port 3 — internal connection to the phone itself.</li>
+</ul>
+<p class="body-line">Traffic from the PC passes through the IP phone to the switch. It is best practice to separate voice traffic (from the phone) and data traffic (from the PC) into different VLANs using a voice VLAN. PC traffic is sent untagged; phone traffic is tagged with the voice VLAN ID. Although traffic from two VLANs passes through the interface, it is still considered an access port — not a trunk port.</p>
+<pre class="command-line"><code>int &lt;interface&gt;
+  switchport mode access
+  switchport access vlan &lt;data-vlan&gt;       → assign the PC's data VLAN (traffic sent untagged)
+  switchport voice vlan &lt;voice-vlan&gt;       → the switch uses CDP to tell the phone to tag its traffic with this VLAN ID
+
+show interfaces &lt;interface&gt; switchport    → verify the access and voice VLAN configuration</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="poe">PoE — Power over Ethernet</h3>
+<p class="body-line">PoE allows a PSE (Power Sourcing Equipment — typically a switch) to supply DC power to PDs (Powered Devices — such as IP phones, IP cameras, and wireless access points) over the Ethernet cable, eliminating the need for a separate power supply for each device. The PSE converts AC power from the outlet to DC power for the PD.</p>
+<p class="body-line">When a device is connected to a PoE-enabled port, the switch sends low-power signals and monitors the response to determine whether the device needs power and how much. If power is needed, the switch supplies it and continues monitoring to ensure the PD does not draw more than its allocated amount.</p>
+<pre class="command-line"><code>power inline police                         → enable power policing with default settings: if the PD draws too much power, err-disable the port and send a Syslog message (equivalent to 'power inline police action err-disable')
+power inline police action log             → restart the interface (instead of err-disabling it) and send a Syslog message if the PD draws too much power
+show power inline police &lt;interface&gt;      → view PoE policing configuration on an interface</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="qos">QoS — Quality of Service</h2>
+<p class="body-line">Modern converged networks carry voice, video, and data traffic over the same IP infrastructure. This enables cost savings and advanced features (such as integration with collaboration tools like Cisco Webex or Microsoft Teams), but requires all traffic types to compete for the same bandwidth. QoS (Quality of Service) is a set of tools that allow network devices to treat different types of traffic differently — giving priority to delay-sensitive traffic like voice and video.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="qos-characteristics">Traffic Characteristics QoS Manages</h3>
+<div class="table-wrap"><table><thead><tr><th>Characteristic</th><th>Description</th></tr></thead><tbody>
+<tr><td>Bandwidth</td><td>The total capacity of the link in bits per second. QoS tools can reserve a percentage of bandwidth for specific traffic types (e.g., 20% voice, 30% critical data, 50% best-effort).</td></tr>
+<tr><td>Delay</td><td>One-way delay: time for traffic to travel from source to destination. Two-way delay: the round-trip time.</td></tr>
+<tr><td>Jitter</td><td>Variation in one-way delay between packets from the same application. IP phones use a jitter buffer to smooth out variable delays in audio.</td></tr>
+<tr><td>Loss</td><td>The percentage of sent packets that never arrive. Caused by faulty cables or by full packet queues forcing devices to discard packets.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Recommended standards for acceptable interactive audio (phone calls):</strong><p>One-way delay: 150 ms or less. Jitter: 30 ms or less. Loss: 1% or less. If these thresholds are exceeded, call quality noticeably degrades.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="qos-queuing">Queuing, Tail Drop, and TCP Global Synchronization</h3>
+<p class="body-line">When a device receives packets faster than it can forward them, packets are placed in a queue. By default, queues use FIFO (First In, First Out) — packets are forwarded in the order they arrived. When the queue is full, new packets are dropped. This is called <strong>tail drop</strong>.</p>
+<p class="body-line">Tail drop is harmful because it triggers <strong>TCP global synchronization</strong>: all TCP senders simultaneously detect loss, reduce their sending rate, then gradually ramp up again — causing congestion in waves. The solution is <strong>Random Early Detection (RED)</strong>: when the queue reaches a threshold, the device begins randomly dropping packets from select TCP flows before the queue is full, staggering the slowdowns across different flows instead of synchronizing them. <strong>Weighted Random Early Detection (WRED)</strong> improves on RED by allowing different drop probabilities for different traffic classes.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="qos-classification">Classification and Marking</h3>
+<p class="body-line">Before QoS can prioritize traffic, it must identify which traffic belongs to which class. This is called classification. Common methods:</p>
+<ul class="doc-list">
+  <li><strong>ACL:</strong> traffic permitted by the ACL receives specific treatment.</li>
+  <li><strong>NBAR (Network Based Application Recognition):</strong> performs deep packet inspection up to Layer 7 to identify the specific application or protocol.</li>
+  <li><strong>PCP (Priority Code Point) / CoS (Class of Service):</strong> the 3-bit PCP field in the 802.1Q tag. Only available on trunk links and access ports with a voice VLAN — not between routers (no 802.1Q tagging on routed links).</li>
+  <li><strong>DSCP (Differentiated Services Code Point):</strong> a 6-bit field in the IP header's ToS byte. Works at Layer 3, so it is available on all IP links including routed links between routers.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="qos-dscp">DSCP Marking Standards</h4>
+<div class="table-wrap"><table><thead><tr><th>Marking</th><th>DSCP Value</th><th>Use Case</th></tr></thead><tbody>
+<tr><td>Default Forwarding (DF)</td><td>0</td><td>Best-effort traffic — no special priority.</td></tr>
+<tr><td>Expedited Forwarding (EF)</td><td>46</td><td>Low loss, low latency, low jitter — typically used for voice traffic.</td></tr>
+<tr><td>Assured Forwarding (AF)</td><td>Multiple values</td><td>Four traffic classes (AF1x–AF4x), each with three drop precedence levels. Higher drop precedence = more likely to be dropped during congestion. Format: AFxy where x = class (1–4) and y = drop precedence (1–3). DSCP decimal = 8x + 2y.</td></tr>
+<tr><td>Class Selector (CS)</td><td>CS0–CS7</td><td>Eight values for backward compatibility with the older IP Precedence (IPP) field. The 3 bits added for DSCP are set to 0.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="qos-trust-boundary">Trust Boundary</h3>
+<p class="body-line">The trust boundary defines where a network device trusts the QoS markings on incoming packets. Inside the trust boundary, markings are accepted and forwarded unchanged. Outside the trust boundary, the device re-marks traffic according to its own policy.</p>
+<p class="body-line">When IP phones are connected to switch ports, the recommended practice is to move the trust boundary to the IP phone itself — the switch trusts the phone's markings but re-marks any traffic coming from the attached PC, preventing end users from arbitrarily marking their PC traffic with high priority.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="qos-scheduling">Queuing and Scheduling</h3>
+<p class="body-line">QoS uses multiple queues — traffic is classified and placed into the appropriate queue. A scheduler decides which queue to service next. Common scheduling methods:</p>
+<ul class="doc-list">
+  <li><strong>Weighted Round-Robin:</strong> packets are taken from each queue in turn (round-robin), but high-priority queues receive more data each time they are served (weighted).</li>
+  <li><strong>CBWFQ (Class-Based Weighted Fair Queuing):</strong> uses weighted round-robin and guarantees each queue a minimum percentage of the link's bandwidth during congestion.</li>
+  <li><strong>LLQ (Low Latency Queuing):</strong> designates one or more queues as strict priority queues. The scheduler always services the strict priority queue first — as long as it has traffic — before servicing other queues. This minimizes delay and jitter for voice/video. However, if the strict priority queue is always busy it can starve other queues. Policing is used to cap the amount of traffic allowed into the strict priority queue to prevent starvation.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="qos-shaping-policing">Traffic Shaping and Policing</h3>
+<p class="body-line">Both tools control the rate of traffic, but they respond to excess traffic differently:</p>
+<ul class="doc-list">
+  <li><strong>Shaping:</strong> buffers excess traffic in a queue until the rate drops back within the configured limit. Traffic is delayed, not dropped. Configured outbound.</li>
+  <li><strong>Policing:</strong> drops excess traffic (or optionally re-marks it) if the rate exceeds the configured limit. Configured inbound or outbound. Both shaping and policing allow short bursts above the configured rate to accommodate bursty data applications.</li>
+</ul>
+<aside class="callout"><strong>Practical example:</strong><p>If your ISP subscription is 300 Mbps, the ISP uses inbound policing to enforce that limit — traffic you send above 300 Mbps is dropped. On your side, you configure outbound shaping at 300 Mbps so your traffic never exceeds what the ISP will accept, avoiding drops entirely.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="port-security">Port Security</h2>
+<p class="body-line">Port security is a Cisco switch security feature that controls which source MAC addresses are allowed to enter a switchport. If an unauthorized source MAC address is detected, the switch takes a configured action — the default is to place the interface in an err-disabled state.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="port-security-how-it-works">How Port Security Works</h3>
+<ul class="doc-list">
+  <li>By default, port security allows only one MAC address on the interface.</li>
+  <li>The allowed MAC address can be configured manually, or the switch will learn the first MAC address it sees and lock to it.</li>
+  <li>The maximum number of allowed MAC addresses is configurable.</li>
+  <li>Port security can be enabled on access or trunk ports, but the port must be statically configured — not set to dynamic auto or dynamic desirable.</li>
+  <li>While manually specifying allowed MACs is an option, the more practical use of port security is limiting the total number of MAC addresses — this protects against attacks like DHCP starvation, where an attacker spoofs thousands of fake MAC addresses to exhaust the DHCP pool and fill the switch's MAC address table.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="port-security-config">Port Security Configuration</h3>
+<pre class="command-line"><code>int &lt;interface&gt;
+  switchport mode access                               → port must be statically set as access or trunk first
+  switchport port-security                             → enable port security (default: 1 MAC allowed, shutdown on violation)
+  switchport port-security maximum &lt;number&gt;           → change the maximum number of allowed MAC addresses
+  switchport port-security mac-address &lt;mac&gt;          → manually specify an allowed MAC address
+  switchport port-security violation {shutdown|restrict|protect}  → set the violation mode (see below)
+
+show port-security interface &lt;interface&gt;              → view port security configuration and status
+show mac address-table secure                          → view all secure MAC addresses in the MAC table</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="port-security-violation-modes">Violation Modes</h3>
+<div class="table-wrap"><table><thead><tr><th>Mode</th><th>Discards Unauthorized Traffic?</th><th>Disables Interface?</th><th>Syslog / SNMP?</th><th>Violation Counter</th></tr></thead><tbody>
+<tr><td><strong>Shutdown</strong> (default)</td><td>Yes — interface is err-disabled</td><td>Yes — err-disabled state</td><td>Yes — when interface is disabled</td><td>Set to 1 when interface is disabled</td></tr>
+<tr><td><strong>Restrict</strong></td><td>Yes — unauthorized frames discarded</td><td>No — authorized devices continue normally</td><td>Yes — for each unauthorized frame</td><td>Incremented for each unauthorized frame</td></tr>
+<tr><td><strong>Protect</strong></td><td>Yes — unauthorized frames discarded</td><td>No</td><td>No</td><td>Not incremented</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="port-security-re-enable">Re-enabling an Err-Disabled Port</h3>
+<ul class="doc-list">
+  <li><strong>Manual:</strong> disconnect the unauthorized device, then use <code>shutdown</code> followed by <code>no shutdown</code> on the interface.</li>
+  <li><strong>ErrDisable Recovery (automatic):</strong> the switch automatically re-enables the port after a timer. Useless without removing the unauthorized device first.</li>
+</ul>
+<pre class="command-line"><code>errdisable recovery cause psecure-violation           → enable automatic ErrDisable recovery for port security violations
+errdisable recovery interval &lt;seconds&gt;               → set the recovery timer (default 300 seconds / 5 minutes)</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="port-security-aging">Secure MAC Address Aging</h3>
+<p class="body-line">By default, secure MAC addresses never age out (aging time = 0). Aging can be configured to automatically remove learned MAC addresses after a set time.</p>
+<ul class="doc-list">
+  <li><strong>Absolute:</strong> the timer starts when the MAC is learned. The MAC is removed when the timer expires, even if the device is still actively sending frames.</li>
+  <li><strong>Inactivity:</strong> the timer starts when the MAC is learned but resets every time a frame from that MAC is received. The MAC is only removed after a period of actual inactivity.</li>
+  <li>Static MAC addresses (manually configured) do not age out by default — aging for static MACs must be explicitly enabled.</li>
+</ul>
+<pre class="command-line"><code>switchport port-security aging time &lt;minutes&gt;         → set the aging timer
+switchport port-security aging type {absolute|inactivity}  → set the aging type
+switchport port-security aging static                  → enable aging for static (manually configured) MAC addresses</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="sticky-mac">Sticky Secure MAC Addresses</h3>
+<p class="body-line">Sticky secure MAC learning combines the convenience of dynamic learning with the persistence of static configuration. When enabled, dynamically learned MAC addresses are written to the running-config as sticky entries and never age out.</p>
+<pre class="command-line"><code>switchport port-security mac-address sticky            → enable sticky MAC learning (all current dynamic entries become sticky immediately)
+no switchport port-security mac-address sticky         → disable sticky learning (all sticky entries revert to dynamic)</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>Sticky secure MAC addresses survive until the device restarts — they are in the running-config, not the startup-config. Run <code>write memory</code> (copy running-config startup-config) to make them permanent across reboots. In the MAC address table: sticky and static entries show type STATIC; dynamically learned secure entries show type DYNAMIC.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="dhcp-snooping">DHCP Snooping</h2>
+<p class="body-line">DHCP snooping is a switch security feature that filters DHCP messages received on untrusted ports. It protects against two main attacks:</p>
+<ul class="doc-list">
+  <li><strong>DHCP Starvation:</strong> an attacker floods DHCP Discover messages using spoofed MAC addresses. The DHCP server assigns IP addresses to all the fake MACs, exhausting its pool and causing a denial of service for legitimate clients. Note: attackers use the CHADDR (Client Hardware Address) field — not just the source MAC — because in routed networks the source MAC changes at each hop, while CHADDR preserves the original client MAC.</li>
+  <li><strong>DHCP Poisoning (Man-in-the-Middle):</strong> a rogue DHCP server responds to clients' Discover messages faster than the legitimate server and assigns them IP addresses — but configures the attacker's machine as the default gateway. Clients send all traffic to the attacker, who can inspect or modify it before forwarding it to the real gateway.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dhcp-snooping-trusted-untrusted">Trusted vs. Untrusted Ports</h3>
+<ul class="doc-list">
+  <li>All ports are untrusted by default.</li>
+  <li>Uplink ports (toward the legitimate DHCP server) are configured as trusted.</li>
+  <li>Downlink ports (toward clients) remain untrusted.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dhcp-snooping-filtering">DHCP Snooping Filtering Logic</h3>
+<div class="table-wrap"><table><thead><tr><th>Port Type</th><th>Message Type</th><th>Action</th></tr></thead><tbody>
+<tr><td>Trusted</td><td>Any DHCP message</td><td>Forward normally without inspection.</td></tr>
+<tr><td>Untrusted</td><td>Server messages (OFFER, ACK, NAK)</td><td>Discard — a server message arriving on a downlink port indicates a rogue DHCP server.</td></tr>
+<tr><td>Untrusted</td><td>DISCOVER / REQUEST</td><td>Check that the frame's source MAC address matches the CHADDR field in the DHCP message. Match = forward. Mismatch = discard (possible MAC spoofing attack).</td></tr>
+<tr><td>Untrusted</td><td>RELEASE / DECLINE</td><td>Check that the packet's source IP and incoming interface match the entry in the DHCP Snooping Binding Table. Match = forward. Mismatch = discard.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<p class="body-line">When a client successfully leases an IP address, a new entry is added to the DHCP Snooping Binding Table (client MAC, IP address, VLAN, interface, lease time).</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dhcp-snooping-config">DHCP Snooping Configuration</h3>
+<pre class="command-line"><code>ip dhcp snooping                                       → enable DHCP snooping globally
+ip dhcp snooping vlan &lt;vlan-id&gt;                       → enable DHCP snooping on a specific VLAN (repeat for each VLAN)
+no ip dhcp snooping information option                 → disable Option 82 insertion (required — see note below)
+
+int &lt;uplink-interface&gt;
+  ip dhcp snooping trust                               → configure this interface as a trusted port
+
+show ip dhcp snooping binding                          → view the DHCP Snooping Binding Table (leased IPs, MACs, VLANs, interfaces)</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Why 'no ip dhcp snooping information option' is needed:</strong><p>Option 82 (DHCP relay agent information) provides details about which relay agent received a client's DHCP message. When DHCP snooping is enabled, Cisco switches automatically add Option 82 to client DHCP messages — even when the switch is not acting as a relay agent. By default, Cisco switches also drop DHCP messages with Option 82 received on untrusted ports, which blocks legitimate client traffic. Disabling Option 82 insertion with <code>no ip dhcp snooping information option</code> prevents this problem.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dhcp-snooping-rate-limiting">DHCP Snooping Rate Limiting</h3>
+<p class="body-line">DHCP snooping can limit the rate of DHCP messages on an interface. If the rate exceeds the configured limit, the interface is err-disabled — protecting against DHCP starvation attacks.</p>
+<pre class="command-line"><code>int &lt;interface&gt;
+  ip dhcp snooping limit rate &lt;packets-per-second&gt;    → set the maximum DHCP message rate on this interface
+
+errdisable recovery cause dhcp-rate-limit              → enable automatic recovery for interfaces err-disabled by DHCP rate limiting</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="dai">DAI — Dynamic ARP Inspection</h2>
+<p class="body-line">DAI (Dynamic ARP Inspection) is a switch security feature that filters ARP messages on untrusted ports. It protects against ARP poisoning — an attack where an attacker sends Gratuitous ARP (GARP) messages using another device's IP address to manipulate targets' ARP tables, redirecting traffic through the attacker (Man-in-the-Middle).</p>
+<ul class="doc-list">
+  <li>All ports are untrusted by default. Ports connected to other network devices (switches, routers) should be trusted. Ports connected to end hosts remain untrusted.</li>
+  <li>DAI inspects ARP messages on untrusted ports by checking the sender MAC and sender IP fields against the DHCP Snooping Binding Table. Match = forward. No match = discard.</li>
+  <li>Messages on trusted ports are forwarded without inspection.</li>
+  <li>For devices with static IP addresses (not in the DHCP Snooping Binding Table), ARP ACLs must be configured manually — otherwise their ARP messages will be dropped.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dai-config">DAI Configuration</h3>
+<pre class="command-line"><code>ip arp inspection vlan &lt;vlan-id&gt;              → enable DAI on a VLAN (repeat for each VLAN; no global enable needed — unlike DHCP snooping)
+
+int &lt;uplink-interface&gt;
+  ip arp inspection trust                      → mark interface as trusted (ARP messages forwarded without inspection)
+
+show ip arp inspection                         → view DAI summary: forwarded/dropped ARP counts per VLAN
+show ip arp inspection interfaces              → view DAI configuration and rate-limit status per interface</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dai-rate-limiting">DAI Rate Limiting</h3>
+<p class="body-line">DAI rate limiting is enabled by default on untrusted ports (15 packets/second) and disabled on trusted ports. DHCP snooping rate limiting is disabled on all ports by default. If ARP messages exceed the configured rate, the interface is err-disabled.</p>
+<pre class="command-line"><code>int &lt;interface&gt;
+  ip arp inspection limit rate &lt;#&gt; burst interval &lt;seconds&gt;
+  → set max ARP packets per burst interval (burst interval is optional; defaults to 1 second if omitted)
+
+errdisable recovery cause arp-inspection       → enable automatic recovery for ports err-disabled by DAI rate limiting</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dai-optional-checks">DAI Optional Validation Checks</h3>
+<p class="body-line">Additional validation checks can be enabled. All specified checks must be entered in a single command — entering them separately causes each to overwrite the previous.</p>
+<pre class="command-line"><code>ip arp inspection validate dst-mac ip src-mac
+→ specify one, two, or all three in a single command (order does not matter)</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<div class="table-wrap"><table><thead><tr><th>Check</th><th>What it validates</th></tr></thead><tbody>
+<tr><td>dst-mac</td><td>Destination MAC in the Ethernet header matches the target MAC in the ARP body (for ARP replies). Drops packets where they differ.</td></tr>
+<tr><td>src-mac</td><td>Source MAC in the Ethernet header matches the sender MAC in the ARP body (for requests and replies). Drops packets where they differ.</td></tr>
+<tr><td>ip</td><td>ARP body sender/target IP addresses are valid — drops packets with invalid addresses such as 0.0.0.0, 255.255.255.255, or multicast addresses.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="dai-arp-acl">ARP ACLs for Static IP Hosts</h3>
+<p class="body-line">Hosts with static IP addresses do not appear in the DHCP Snooping Binding Table, so their ARP messages would be dropped by DAI. ARP ACLs manually map IP addresses to MAC addresses for DAI to check.</p>
+<pre class="command-line"><code>arp access-list &lt;acl-name&gt;
+  permit ip host &lt;ip-address&gt; mac host &lt;mac-address&gt;
+
+ip arp inspection filter &lt;acl-name&gt; vlan &lt;vlan-id&gt;    → apply the ARP ACL to a VLAN for DAI</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>If a static ARP ACL is applied, the implicit deny at the end of the ARP ACL takes effect — only entries in the ARP ACL are checked, and the DHCP Snooping Binding Table is not consulted. All ARP messages not explicitly permitted by the ARP ACL will be denied.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="network-design">Network Design and Topologies</h2>
+<p class="body-line">Network topology describes how devices are physically or logically connected to each other.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="topology-types">Topology Types</h3>
+<ul class="doc-list">
+  <li><strong>Star:</strong> multiple devices all connect to one central device. The most common LAN topology.</li>
+  <li><strong>Full Mesh:</strong> every device is directly connected to every other device. Maximum redundancy but high cost.</li>
+  <li><strong>Partial Mesh:</strong> some devices are directly connected to each other, but not all. A balance between cost and redundancy.</li>
+  <li><strong>Hub-and-Spoke:</strong> like a star topology but used in WAN contexts — multiple spoke sites connect to a central hub site.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="two-tier-lan">Two-Tier LAN Design (Collapsed Core)</h3>
+<p class="body-line">The two-tier design uses two hierarchical layers — Access and Distribution — and omits the Core layer found in three-tier designs. Sometimes called a "Collapsed Core" design because the Distribution layer also functions as the core.</p>
+<div class="table-wrap"><table><thead><tr><th>Layer</th><th>Role</th><th>Characteristics</th></tr></thead><tbody>
+<tr><td>Access Layer</td><td>End hosts connect here (PCs, printers, cameras, phones, APs)</td><td>Many ports for end hosts. QoS marking done here. Security (port security, DAI) applied here. PoE for wireless APs and IP phones.</td></tr>
+<tr><td>Distribution Layer</td><td>Aggregates access switches; border between Layer 2 and Layer 3</td><td>Connects to internet, WAN. Connections between Distribution switches are Layer 3. Routing protocols (e.g. OSPF) share routes between Distribution switches. Sometimes called the Core-Distribution Layer or Aggregation Layer.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="three-tier-lan">Three-Tier LAN Design</h3>
+<p class="body-line">For large networks with many Distribution switches (recommended when more than three Distribution layers exist in a single location), a Core layer is added.</p>
+<div class="table-wrap"><table><thead><tr><th>Layer</th><th>Role</th><th>Characteristics</th></tr></thead><tbody>
+<tr><td>Access Layer</td><td>End hosts connect here</td><td>Same as two-tier.</td></tr>
+<tr><td>Distribution Layer</td><td>Aggregates access switches</td><td>Same as two-tier.</td></tr>
+<tr><td>Core Layer</td><td>Connects Distribution layers together</td><td>Focuses on speed ("fast transport"). No CPU-intensive tasks (no QoS marking, no security). All connections are Layer 3 — no Spanning Tree. Must maintain connectivity even if devices fail.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="spine-leaf">Spine-Leaf Architecture (Data Centers)</h3>
+<p class="body-line">Traditional data centers used three-tier architecture, designed when most traffic was North-South (client to server via internet). With virtualization, traffic became predominantly East-West (server to server within the data center), causing bottlenecks and variable latency in the traditional design. Spine-Leaf (also called Clos) architecture was developed to solve this.</p>
+<ul class="doc-list">
+  <li>Every Leaf switch connects to every Spine switch.</li>
+  <li>Every Spine switch connects to every Leaf switch.</li>
+  <li>Leaf switches do not connect to other Leaf switches. Spine switches do not connect to other Spine switches.</li>
+  <li>End hosts (servers) only connect to Leaf switches.</li>
+  <li>Traffic between servers is load-balanced randomly across Spine switches. Every server is separated by the same number of hops (except servers on the same Leaf), providing consistent and predictable East-West latency.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="soho">SOHO Networks</h3>
+<p class="body-line">SOHO (Small Office/Home Office) networks serve small companies or home offices with few devices. All networking functions are typically provided by a single device — the home router or wireless router — which combines a router, switch, firewall, wireless access point, and modem into one unit.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="wan">WAN — Wide Area Networks</h2>
+<p class="body-line">A WAN (Wide Area Network) is a network that extends over a large geographic area, connecting geographically separate LANs — such as a company's offices, data centers, and remote sites. The Internet itself is a WAN, but the term typically refers to an enterprise's private connections between sites.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="wan-technologies">WAN Technologies</h3>
+<ul class="doc-list">
+  <li><strong>Leased Line:</strong> a dedicated physical connection between two sites. Uses serial connections with PPP or HDLC encapsulation. More expensive and slower to provision than Ethernet WAN options — becoming less common.</li>
+  <li><strong>MPLS (Multi-Protocol Label Switching):</strong> shared service provider infrastructure that creates private VPNs using labels rather than destination IPs for forwarding decisions. CE (Customer Edge), PE (Provider Edge), and P (Provider core) routers are the key components. Layer 3 MPLS VPN: CE and PE routers peer via routing protocols (e.g. OSPF) to share routes. Layer 2 MPLS VPN: the provider network is transparent — CE routers appear directly connected to each other and form routing adjacencies between themselves.</li>
+  <li><strong>DSL (Digital Subscriber Line):</strong> internet access over existing phone lines. Requires a DSL modem to convert data to a phone-line-compatible format.</li>
+  <li><strong>Cable Internet (CATV):</strong> internet access over cable TV lines. Requires a cable modem.</li>
+  <li><strong>Fiber Ethernet:</strong> growing in popularity for both enterprise and consumer access due to high speeds over long distances.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="internet-connectivity">Internet Connectivity Redundancy</h3>
+<div class="table-wrap"><table><thead><tr><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td>Single Homed</td><td>1 connection to 1 ISP — no redundancy</td></tr>
+<tr><td>Dual Homed</td><td>2 connections to 1 ISP — link redundancy, but single ISP is still a single point of failure</td></tr>
+<tr><td>Multihomed</td><td>1 connection to each of 2 ISPs — ISP redundancy</td></tr>
+<tr><td>Dual Multihomed</td><td>2 connections to each of 2 ISPs — maximum redundancy</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="vpn">VPNs — Virtual Private Networks</h2>
+<p class="body-line">Private WAN services (leased lines, MPLS) provide built-in security through dedicated connections or labels. When using the Internet as a WAN, VPNs (Virtual Private Networks) are used to provide secure, encrypted communications over the public network.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="site-to-site-vpn">Site-to-Site VPN (IPsec)</h3>
+<p class="body-line">A site-to-site VPN creates an encrypted tunnel between two routers (one at each site), allowing all devices at both sites to communicate securely over the Internet. The tunnel endpoints handle encryption and decryption — other devices at each site send unencrypted traffic to their local router as normal.</p>
+<ul class="doc-list">
+  <li>The original packet is encrypted using a session key, then encapsulated with a VPN header and a new IP header, and sent through the tunnel.</li>
+  <li>The receiving router decrypts the packet and forwards the original to its destination.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="ipsec-limitations">IPsec Limitations and Solutions</h4>
+<ul class="doc-list">
+  <li><strong>No broadcast/multicast support:</strong> IPsec only supports unicast — routing protocols like OSPF (which use multicast) cannot run over IPsec tunnels directly. Solution: <strong>GRE over IPsec</strong> — GRE encapsulates the packet (supporting broadcast/multicast and multiple Layer 3 protocols), then IPsec encrypts the GRE packet.</li>
+  <li><strong>Complex full-mesh configuration:</strong> manually configuring tunnels between many sites is labor-intensive. Solution: <strong>DMVPN (Dynamic Multipoint VPN)</strong> — a Cisco solution where routers only configure a tunnel to a hub; the hub provides each spoke with information to dynamically form direct spoke-to-spoke tunnels. Combines the simplicity of hub-and-spoke configuration with the efficiency of direct spoke-to-spoke communication.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="remote-access-vpn">Remote-Access VPN (TLS)</h3>
+<p class="body-line">Remote-access VPNs allow individual end devices (laptops, phones) to securely access company internal resources over the Internet — without being physically on the company network. VPN client software (e.g. Cisco AnyConnect) is installed on the device and forms an encrypted TLS tunnel to the company's router or firewall acting as a TLS server.</p>
+<p class="body-line">TLS (Transport Layer Security) is the protocol that also secures HTTPS. It was formerly known as SSL (Secure Sockets Layer), developed by Netscape, and renamed when standardized by the IETF.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="vpn-comparison">Site-to-Site vs Remote-Access VPN</h3>
+<div class="table-wrap"><table><thead><tr><th>Feature</th><th>Site-to-Site VPN</th><th>Remote-Access VPN</th></tr></thead><tbody>
+<tr><td>Protocol</td><td>IPsec</td><td>TLS</td></tr>
+<tr><td>Scope</td><td>Protects traffic for all devices at both connected sites</td><td>Protects traffic for one individual end device</td></tr>
+<tr><td>Setup</td><td>Configured on routers/firewalls at each site</td><td>VPN client software installed on the end device</td></tr>
+<tr><td>Use case</td><td>Permanently connecting two or more offices over the Internet</td><td>On-demand secure access for remote workers on untrusted networks</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="vrf">VRF — Virtual Routing and Forwarding</h2>
+<p class="body-line">VRF (Virtual Routing and Forwarding) divides a single router into multiple virtual routers, each with its own independent routing table — similar to how VLANs divide a single switch into multiple virtual switches. Traffic in one VRF cannot be forwarded out of an interface in another VRF unless VRF Leaking is configured. The type discussed here is VRF-lite — VRF without MPLS.</p>
+<ul class="doc-list">
+  <li>Layer 3 interfaces, SVIs, and routed ports on multilayer switches can all be assigned to a VRF.</li>
+  <li>Without VRF, two interfaces on the same router cannot be in the same subnet. VRF removes this limitation by isolating each VRF's routing table.</li>
+  <li>Common use: service providers use VRF so one device can carry traffic from multiple customers with each customer's traffic fully isolated. Customer IP address ranges can overlap without conflict.</li>
+  <li>When an interface is assigned to a VRF, any existing IP address on that interface is removed — re-configure the IP address after assigning the VRF.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="vrf-config">VRF Configuration</h3>
+<pre class="command-line"><code>ip vrf &lt;vrf-name&gt;                              → create a VRF instance
+
+int &lt;interface&gt;
+  ip vrf forwarding &lt;vrf-name&gt;                 → assign interface to the VRF (removes any existing IP address)
+  ip address &lt;ip&gt; &lt;mask&gt;                       → re-configure the IP address after VRF assignment
+
+show ip vrf                                    → view all VRF instances and their assigned interfaces
+show ip route vrf &lt;vrf-name&gt;                   → view the routing table for a specific VRF
+ping vrf &lt;vrf-name&gt; &lt;ip-address&gt;              → ping using a specific VRF's routing table</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="wireless">Wireless Networks — IEEE 802.11 / Wi-Fi</h2>
+<p class="body-line">Wireless LAN standards are defined by IEEE 802.11. Wi-Fi is a trademark of the Wi-Fi Alliance — an organization that tests and certifies equipment for 802.11 compliance and interoperability. The term Wi-Fi has become synonymous with 802.11 wireless networks.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="wireless-challenges">Wireless Challenges</h3>
+<ul class="doc-list">
+  <li><strong>Shared medium:</strong> all devices within range receive all frames — like an Ethernet hub. Privacy is a greater concern than in wired networks.</li>
+  <li><strong>Half-duplex:</strong> wireless uses CSMA/CA (Carrier Sense Multiple Access with Collision Avoidance). Unlike wired CSMA/CD which detects collisions after they happen, CSMA/CA avoids them by having devices wait until the medium is idle before transmitting.</li>
+  <li><strong>Regulatory restrictions:</strong> wireless frequencies and power levels are regulated internationally and nationally.</li>
+  <li><strong>Signal interference:</strong> other devices on the same channel — including neighboring networks — can interfere. Signal is also affected by absorption, reflection, refraction, diffraction, and scattering.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<div class="table-wrap"><table><thead><tr><th>Signal Effect</th><th>Description</th></tr></thead><tbody>
+<tr><td>Absorption</td><td>Signal passes through a material and is converted to heat, weakening the signal. Walls, floors, and human bodies absorb Wi-Fi signals.</td></tr>
+<tr><td>Reflection</td><td>Signal bounces off a material (e.g. metal). Common in elevators — metal walls reflect the signal, preventing penetration.</td></tr>
+<tr><td>Refraction</td><td>Signal bends when entering a medium where it travels at a different speed (e.g. glass, water).</td></tr>
+<tr><td>Diffraction</td><td>Signal bends around an obstacle, potentially creating blind spots behind it.</td></tr>
+<tr><td>Scattering</td><td>Signal scatters in multiple directions when it hits irregular surfaces or particles (dust, smog, rough surfaces).</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="wireless-frequencies">Frequency Bands and Channels</h3>
+<p class="body-line">Wi-Fi uses two primary frequency bands, with a third added by Wi-Fi 6:</p>
+<div class="table-wrap"><table><thead><tr><th>Band</th><th>Advantages</th><th>Disadvantages</th></tr></thead><tbody>
+<tr><td>2.4 GHz</td><td>Better range in open space. Better penetration through walls and obstacles.</td><td>More devices use this band — more interference. Channels overlap, so planning is critical.</td></tr>
+<tr><td>5 GHz</td><td>Less interference. Non-overlapping channels make planning easier.</td><td>Shorter range. Weaker penetration through obstacles.</td></tr>
+<tr><td>6 GHz (Wi-Fi 6/6E)</td><td>More available spectrum, less congestion.</td><td>Even shorter range than 5 GHz.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<p class="body-line">In the 2.4 GHz band, channels overlap — adjacent APs should use non-overlapping channels 1, 6, and 11 to avoid interference. The 5 GHz band uses non-overlapping channels throughout. Using channels 1, 6, and 11, APs can be arranged in a honeycomb pattern for seamless coverage.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="wireless-service-sets">Wireless Service Sets</h3>
+<p class="body-line">802.11 defines service sets — groups of wireless devices. All devices in a service set share the same SSID (Service Set Identifier) — the human-readable network name.</p>
+<div class="table-wrap"><table><thead><tr><th>Service Set</th><th>Full Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>IBSS</td><td>Independent Basic Service Set</td><td>Ad hoc — devices connect directly without an AP. Examples: AirDrop, direct file transfer. Not scalable.</td></tr>
+<tr><td>BSS</td><td>Basic Service Set</td><td>Infrastructure mode — clients connect via an AP. The AP is identified by its BSSID (the AP radio's MAC address). Coverage area = BSA (Basic Service Area).</td></tr>
+<tr><td>ESS</td><td>Extended Service Set</td><td>Multiple APs with their own BSSs, connected by a wired network, all sharing the same SSID but using different BSSIDs and non-overlapping channels. Enables roaming — clients move between APs without reconnecting. BSAs should overlap 10–15%.</td></tr>
+<tr><td>MBSS</td><td>Mesh Basic Service Set</td><td>APs use two radios: one for client BSS, one for wireless backhaul between APs. One RAP (Root Access Point) connects to the wired network; others are MAPs (Mesh Access Points).</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="wireless-ds">Distribution System and VLANs</h3>
+<p class="body-line">In 802.11, the upstream wired network is called the DS (Distribution System). Each BSS maps to a VLAN in the wired network. An AP can provide multiple wireless LANs simultaneously — each with a unique SSID, separate VLAN, and unique BSSID (usually the base MAC with the last digit incremented). The AP's wired port connects to the switch as a trunk to carry all VLANs.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="wireless-ap-modes">AP Operating Modes</h3>
+<div class="table-wrap"><table><thead><tr><th>Mode</th><th>Description</th></tr></thead><tbody>
+<tr><td>Standard AP (BSS)</td><td>Normal operation — provides wireless access for clients.</td></tr>
+<tr><td>Repeater</td><td>Extends BSS range by retransmitting signals. A single-radio repeater uses the same channel as the AP, halving throughput. A dual-radio repeater receives on one channel and retransmits on another.</td></tr>
+<tr><td>Workgroup Bridge (WGB)</td><td>Acts as a wireless client of an AP to give wired devices wireless access. Universal WGB (802.11 standard) bridges one wired device. Cisco WGB (proprietary) bridges multiple.</td></tr>
+<tr><td>Outdoor Bridge</td><td>Connects two networks over long distances using directional antennas. Can be point-to-point (two sites) or point-to-multipoint (multiple sites to one hub).</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="wireless-standards">Wi-Fi Standards</h3>
+<div class="table-wrap"><table><thead><tr><th>Standard</th><th>Wi-Fi Generation</th><th>Frequency</th><th>Max Speed</th></tr></thead><tbody>
+<tr><td>802.11</td><td>—</td><td>2.4 GHz</td><td>2 Mbps</td></tr>
+<tr><td>802.11b</td><td>—</td><td>2.4 GHz</td><td>11 Mbps</td></tr>
+<tr><td>802.11a</td><td>—</td><td>5 GHz</td><td>54 Mbps</td></tr>
+<tr><td>802.11g</td><td>—</td><td>2.4 GHz</td><td>54 Mbps</td></tr>
+<tr><td>802.11n</td><td>Wi-Fi 4</td><td>2.4 / 5 GHz</td><td>600 Mbps</td></tr>
+<tr><td>802.11ac</td><td>Wi-Fi 5</td><td>5 GHz</td><td>6.93 Gbps</td></tr>
+<tr><td>802.11ax</td><td>Wi-Fi 6 / 6E</td><td>2.4 / 5 / 6 GHz</td><td>9.6 Gbps</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="wireless-security">Wireless Security Standards</h3>
+<div class="table-wrap"><table><thead><tr><th>Standard</th><th>Encryption</th><th>Authentication</th><th>Notes</th></tr></thead><tbody>
+<tr><td>WEP (Wired Equivalent Privacy)</td><td>RC4</td><td>Open or Shared Key</td><td>Original 802.11 security. Easily cracked — do not use.</td></tr>
+<tr><td>WPA (Wi-Fi Protected Access)</td><td>TKIP (RC4-based)</td><td>PSK or 802.1X/EAP</td><td>Temporary fix for WEP weaknesses. Vulnerable — avoid.</td></tr>
+<tr><td>WPA2</td><td>CCMP / AES</td><td>PSK or 802.1X/EAP</td><td>Robust security. Widely deployed. Personal mode uses PSK; Enterprise uses 802.1X.</td></tr>
+<tr><td>WPA3</td><td>GCMP / AES</td><td>SAE or 802.1X/EAP</td><td>Current standard. SAE replaces PSK — stronger, protects against offline dictionary attacks. Also provides Forward Secrecy.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<ul class="doc-list">
+  <li><strong>Personal mode (PSK):</strong> uses a pre-shared key — everyone on the network uses the same password. For small/home networks.</li>
+  <li><strong>Enterprise mode (802.1X/EAP):</strong> each user authenticates with their own credentials via an Authentication Server (AS) — typically a RADIUS server. More secure. For enterprise networks.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="wireless-architecture">Wireless Deployment Architecture</h3>
+<h4 class="subheading" id="autonomous-ap">Autonomous APs</h4>
+<p class="body-line">Each AP is independently configured and managed. The AP connects to the wired network via a trunk port, provides one or more wireless LANs, and bridges wireless clients to the wired network. Management requires SSH/Telnet/console to each AP individually. Works well for small deployments but does not scale well as the number of APs grows.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="lightweight-ap">Lightweight APs (CAPWAP)</h4>
+<p class="body-line">In large enterprise deployments, Lightweight APs (LAPs) are managed centrally by a WLC (Wireless LAN Controller). The WLC handles all management, configuration, authentication, and security decisions. APs function as simple radio transceivers and forward all traffic to the WLC through a CAPWAP (Control And Provisioning of Wireless Access Points) tunnel — the AP does not directly bridge wireless to wired.</p>
+<ul class="doc-list">
+  <li>CAPWAP uses two UDP tunnels: UDP 5246 for control messages, UDP 5247 for data (client traffic).</li>
+  <li>The CAPWAP tunnel is encapsulated in IP, so the WLC does not need to be on the same subnet as the APs — they can be anywhere reachable over IP.</li>
+  <li>APs use an access port (not a trunk) on the switch — only one VLAN because all traffic goes through the CAPWAP tunnel to the WLC, where it is switched into the correct VLAN.</li>
+  <li>Split-MAC architecture: management functions (beacons, authentication, association responses) are handled by the WLC; real-time functions (transmitting/receiving frames) remain on the AP.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="cloud-ap">Cloud-Based APs</h4>
+<p class="body-line">Cloud-based APs (e.g. Cisco Meraki) are managed through a cloud platform over the internet. APs still locally switch client traffic — cloud management is only for control and configuration, not data forwarding. This provides central management like a WLC without requiring on-premises WLC hardware.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="wlc-config">WLC and Lightweight AP Configuration</h3>
+<h4 class="subheading" id="wlc-ports">WLC Port and Interface Types</h4>
+<div class="table-wrap"><table><thead><tr><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td>Service Port</td><td>Used for out-of-band management. Connected via a standard access port on the switch. Does not carry client data.</td></tr>
+<tr><td>Distribution System Port</td><td>The main uplink from the WLC to the network. Connects to a trunk port — carries all VLAN traffic. Typically configured as a LAG (Link Aggregation Group).</td></tr>
+<tr><td>Console Port</td><td>Direct CLI access — used for initial setup and recovery.</td></tr>
+<tr><td>Redundancy Port</td><td>Used for WLC-to-WLC heartbeat to support High Availability (HA).</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<div class="table-wrap"><table><thead><tr><th>WLC Interface</th><th>Description</th></tr></thead><tbody>
+<tr><td>Management Interface</td><td>Used for management traffic (SSH, HTTPS, RADIUS, NTP, etc.). A VLAN must be configured for this interface.</td></tr>
+<tr><td>Redundancy Management Interface</td><td>Used for communication between WLCs in a HA pair.</td></tr>
+<tr><td>Virtual Interface</td><td>Used for relay of DHCP requests from wireless clients and for web authentication of clients.</td></tr>
+<tr><td>Service-Port Interface</td><td>Corresponds to the physical Service Port. Used for out-of-band management.</td></tr>
+<tr><td>Dynamic Interface</td><td>Maps each wireless LAN (SSID) to a VLAN in the wired network — one Dynamic Interface per SSID/VLAN.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="wlc-ap-modes">WLC AP Modes</h4>
+<div class="table-wrap"><table><thead><tr><th>AP Mode</th><th>Description</th></tr></thead><tbody>
+<tr><td>Local</td><td>Default mode — serves clients normally while also scanning other channels briefly to detect rogue APs and interference.</td></tr>
+<tr><td>FlexConnect</td><td>Allows the AP to locally switch client traffic when the CAPWAP tunnel to the WLC is down — useful for branch offices. Can also locally switch traffic even when the WLC is reachable.</td></tr>
+<tr><td>Sniffer</td><td>Captures all 802.11 frames on a specific channel and forwards them to a device running Wireshark for analysis. Does not serve clients.</td></tr>
+<tr><td>Monitor</td><td>Passively scans all channels to detect rogue APs, interference, and security threats. Does not serve clients.</td></tr>
+<tr><td>Rogue Detector</td><td>Monitors wired traffic to detect APs connected to the wired network that are not managed by the WLC.</td></tr>
+<tr><td>Bridge / Mesh</td><td>Used for point-to-point or point-to-multipoint wireless bridging, and for Mesh APs (MAPs) in MBSS deployments.</td></tr>
+<tr><td>Flex+Bridge</td><td>Combines FlexConnect and Bridge/Mesh modes.</td></tr>
+<tr><td>SE-Connect</td><td>Dedicated to Spectrum Analysis — connects to Cisco CleanAir for RF spectrum monitoring and interference detection.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="wireless-frame">802.11 Frame Structure</h3>
+<p class="body-line">Depending on the 802.11 version and message type, some fields may not be present. For example, not all messages use all four address fields.</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody>
+<tr><td>Frame Control</td><td>Provides information about the message type and subtype.</td></tr>
+<tr><td>Duration / ID</td><td>Can indicate the time (in microseconds) the channel will be dedicated for transmission, or an identifier for the association (connection), depending on the message type.</td></tr>
+<tr><td>Addresses (up to 4)</td><td>Which addresses are present and their order depends on the message type: <strong>DA</strong> (Destination Address — final recipient), <strong>SA</strong> (Source Address — original sender), <strong>RA</strong> (Receiver Address — immediate recipient), <strong>TA</strong> (Transmitter Address — immediate sender).</td></tr>
+<tr><td>Sequence Control</td><td>Used to reassemble fragments and eliminate duplicate frames.</td></tr>
+<tr><td>QoS Control</td><td>Used in QoS to prioritize certain traffic types.</td></tr>
+<tr><td>HT Control</td><td>Added in 802.11n (High Throughput / HT Wi-Fi) to enable High Throughput operations. 802.11ac is also known as VHT (Very High Throughput) Wi-Fi.</td></tr>
+<tr><td>FCS (Frame Check Sequence)</td><td>Same purpose as in Ethernet frames — used to detect errors in the received frame.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="wireless-association">AP Association and Scanning</h3>
+<p class="body-line">APs bridge traffic between wireless stations and the wired network. For a station to send traffic through an AP, it must first be associated with it. There are three 802.11 connection states:</p>
+<ul class="doc-list">
+  <li>Not authenticated, not associated.</li>
+  <li>Authenticated, not associated.</li>
+  <li>Authenticated and associated — only in this state can a station send traffic through the AP.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<p class="body-line">There are two ways a station can scan for a BSS:</p>
+<ul class="doc-list">
+  <li><strong>Active Scanning:</strong> the station sends Probe Requests and listens for Probe Responses from APs.</li>
+  <li><strong>Passive Scanning:</strong> the station listens for Beacon messages periodically broadcast by APs to advertise the BSS.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="wireless-message-types">802.11 Message Types</h3>
+<div class="table-wrap"><table><thead><tr><th>Type</th><th>Purpose</th><th>Examples</th></tr></thead><tbody>
+<tr><td>Management</td><td>Used to manage the BSS — establishing and maintaining connections.</td><td>Beacon, Probe Request, Probe Response, Authentication, Association Request, Association Response</td></tr>
+<tr><td>Control</td><td>Controls access to the medium (radio frequency). Assists with delivery of management and data frames.</td><td>RTS (Request to Send), CTS (Clear to Send), ACK</td></tr>
+<tr><td>Data</td><td>Carries the actual data packets between stations and the AP.</td><td>Data frames</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="wireless-auth-deep">Wireless Authentication Methods</h3>
+<ul class="doc-list">
+  <li><strong>Open Authentication:</strong> the client sends an authentication request and the AP accepts it with no credentials. Not secure by itself, but can be combined with a secondary authentication step (e.g., web portal like a coffee shop Wi-Fi).</li>
+  <li><strong>WEP (Wired Equivalent Privacy):</strong> provides both authentication and encryption using the RC4 algorithm. A shared-key protocol — sender and receiver must share the same key (40-bit or 104-bit, combined with a 24-bit IV for 64-bit or 128-bit total). Easily cracked — do not use.</li>
+  <li><strong>EAP (Extensible Authentication Protocol):</strong> an authentication framework integrated with 802.1X for port-based network access control. Three entities: Supplicant (client device), Authenticator (AP or switch), Authentication Server (RADIUS). EAP defines common authentication functions used by EAP methods (LEAP, EAP-FAST, PEAP, EAP-TLS).</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<div class="table-wrap"><table><thead><tr><th>EAP Method</th><th>Certificate Required</th><th>Description</th></tr></thead><tbody>
+<tr><td>LEAP</td><td>None</td><td>Cisco proprietary. Username/password with mutual challenge phrases. Dynamic WEP keys. Vulnerable — do not use.</td></tr>
+<tr><td>EAP-FAST</td><td>None (uses PAC)</td><td>Cisco proprietary. Phase 1: PAC generated and sent to client. Phase 2: TLS tunnel established. Phase 3: Client authenticated inside the tunnel.</td></tr>
+<tr><td>PEAP</td><td>Server only</td><td>TLS tunnel established using the server's certificate. Client still authenticates inside the tunnel (e.g., MS-CHAP).</td></tr>
+<tr><td>EAP-TLS</td><td>Server AND client</td><td>Most secure. Both server and client present certificates — mutual authentication. No need to authenticate inside the tunnel. TLS tunnel still used for key exchange.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="wireless-encryption-deep">Wireless Encryption and Integrity Methods</h3>
+<div class="table-wrap"><table><thead><tr><th>Protocol</th><th>Used In</th><th>Encryption</th><th>MIC / Integrity</th><th>Notes</th></tr></thead><tbody>
+<tr><td>TKIP (Temporal Key Integrity Protocol)</td><td>WPA</td><td>RC4-based</td><td>MIC with sender MAC address</td><td>Temporary fix for WEP. Adds: MIC, per-frame key mixing, 48-bit IV (doubled from WEP's 24-bit), timestamp to prevent replay attacks, TKIP sequence number. Deprecated.</td></tr>
+<tr><td>CCMP (Counter/CBC-MAC Protocol)</td><td>WPA2</td><td>AES (Counter Mode)</td><td>CBC-MAC</td><td>Requires hardware support (cannot run on WEP/TKIP-only hardware). Significantly more secure than TKIP.</td></tr>
+<tr><td>GCMP (Galois/Counter Mode Protocol)</td><td>WPA3</td><td>AES (Counter Mode)</td><td>GMAC (Galois MAC)</td><td>More secure and efficient than CCMP. Higher throughput. Supports Forward Secrecy.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<ul class="doc-list">
+  <li><strong>MIC (Message Integrity Check):</strong> added to messages to verify they were not modified in transit by a third party.</li>
+  <li><strong>Group key:</strong> the AP uses a group key to encrypt traffic sent to all clients simultaneously. All associated clients hold this key to decrypt it.</li>
+  <li><strong>PMF (Protected Management Frames):</strong> added in WPA3 — protects 802.11 management frames from eavesdropping and forgery.</li>
+  <li><strong>SAE (Simultaneous Authentication of Equals):</strong> WPA3 Personal — replaces the PSK four-way handshake with a more secure mutual authentication method that protects against offline dictionary attacks.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="wlc-deployment">WLC Deployment Models</h3>
+<div class="table-wrap"><table><thead><tr><th>Model</th><th>Description</th><th>Max APs Supported</th></tr></thead><tbody>
+<tr><td>Unified</td><td>Hardware WLC appliance deployed in a central location.</td><td>~6,000 APs</td></tr>
+<tr><td>Cloud-Based WLC</td><td>WLC running as a VM in a private cloud data center. Different from cloud-based APs — this is still a centralized WLC, just virtualized.</td><td>~3,000 APs</td></tr>
+<tr><td>Embedded</td><td>WLC embedded within a switch.</td><td>~200 APs</td></tr>
+<tr><td>Mobility Express</td><td>WLC embedded within an AP itself.</td><td>~100 APs</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>Note:</strong><p>Cloud-based AP architecture (e.g. Cisco Meraki) is different from a cloud-based WLC. In cloud-based APs, only management/control traffic goes to the cloud — data traffic is switched locally on the AP, similar to autonomous APs. In a cloud-based WLC deployment, all client data is tunneled through CAPWAP to the WLC VM, just like any other split-MAC deployment.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<p class="body-line">Additional WLC notes:</p>
+<ul class="doc-list">
+  <li>The WLC connects to the switch via a LAG (Link Aggregation Group / EtherChannel). WLCs only support static LAG — PAgP and LACP are not supported.</li>
+  <li>DHCP Option 43 (<code>option 43 ip &lt;wlc-ip&gt;</code>) can be used in the DHCP pool to tell APs the IP address of their WLC. Not needed if APs and WLC are in the same subnet — the WLC hears the APs' broadcast CAPWAP discovery messages directly.</li>
+  <li>The WLC and lightweight APs authenticate each other using digital certificates (X.509 standard) installed on each device, ensuring only authorized APs can join the network.</li>
+  <li>CAPWAP is based on an older protocol called LWAPP (Lightweight Access Point Protocol). The control tunnel (UDP 5246) is encrypted by default. The data tunnel (UDP 5247) is not encrypted by default but can be encrypted with DTLS (Datagram Transport Layer Security).</li>
+  <li><strong>Web Authentication:</strong> after a wireless client gets an IP address and tries to access a web page, they must enter credentials to authenticate. <strong>Web Passthrough:</strong> similar, but only requires agreement to terms — no credentials.</li>
+  <li><strong>CPU ACLs:</strong> used on the WLC to limit which devices can connect to it via Telnet/SSH, HTTP/HTTPS, or retrieve SNMP information.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="network-planes">Network Device Planes</h2>
+<p class="body-line">The various functions of network devices are logically organized into three planes:</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="data-plane">Data Plane (Forwarding Plane)</h3>
+<p class="body-line">All tasks involved in forwarding user traffic from one interface to another. Examples: routing table lookups, MAC address table lookups, de-encapsulating and re-encapsulating Layer 2 headers, adding/removing 802.1Q VLAN tags, NAT (modifying src/dst addresses before forwarding), applying ACLs and port security. Because forwarding speed is critical, the data plane is handled by a dedicated ASIC (Application-Specific Integrated Circuit) — not the CPU — for maximum performance. The MAC address table (CAM table) and routing table are stored in TCAM (Ternary Content-Addressable Memory) for extremely fast lookups.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="control-plane">Control Plane</h3>
+<p class="body-line">Functions that build and maintain the tables used by the data plane. Examples: OSPF (builds the routing table), STP (determines which interfaces should forward), ARP (builds the ARP table). The control plane performs overhead work that controls what the data plane does. Processed by the CPU. In traditional networking, the control plane is distributed — each device has its own. SDN centralizes the control plane into a controller.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="management-plane">Management Plane</h3>
+<p class="body-line">Protocols used to manage and monitor devices — SSH, Telnet, Syslog, SNMP, NTP. Like the control plane, it runs on the CPU. Unlike the control plane, it does not directly affect how data is forwarded. When a device receives control or management traffic destined for itself, the CPU processes it. When it receives data traffic to be forwarded, the ASIC handles it.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="sdn">SDN — Software-Defined Networking</h2>
+<p class="body-line">SDN (Software-Defined Networking) — also called Software-Defined Architecture (SDA) or Controller-Based Networking — centralizes the control plane into an application called a controller. Traditional control planes are distributed: each router runs OSPF independently. An SDN controller centralizes these functions and interacts programmatically with network devices using APIs.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="sdn-layers">SDN Architecture Layers</h3>
+<ul class="doc-list">
+  <li><strong>Application Layer:</strong> scripts and applications that communicate the desired network behavior to the SDN controller.</li>
+  <li><strong>Control Layer:</strong> the SDN controller that receives instructions from the application layer and translates them into device configurations.</li>
+  <li><strong>Infrastructure Layer:</strong> the physical network devices that forward traffic based on instructions from the controller.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="sdn-interfaces">SBI and NBI</h3>
+<ul class="doc-list">
+  <li><strong>SBI (Southbound Interface):</strong> the communication protocol and API used between the controller and the managed network devices. The controller uses the SBI to gather device information, control data plane tables, and push configurations. Examples: OpenFlow, Cisco OpFlex, Cisco onePK, NETCONF.</li>
+  <li><strong>NBI (Northbound Interface):</strong> the interface that allows external applications and scripts to interact with the controller, access the data it has gathered, and make network-wide changes via the SBI. Typically a REST API. Data is exchanged in structured formats like JSON or XML.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="cisco-sd-access">Cisco SD-Access and DNA Center</h3>
+<ul class="doc-list">
+  <li><strong>Cisco SD-Access:</strong> Cisco's SDN solution for campus LANs. Uses Cisco DNA (Digital Network Architecture) Center as its controller.</li>
+  <li><strong>Cisco ACI (Application Centric Infrastructure):</strong> Cisco's SDN solution for data center networks.</li>
+  <li><strong>Cisco SD-WAN:</strong> Cisco's SDN solution for WANs.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="sd-access-fabric">SD-Access Underlay, Overlay, and Fabric</h4>
+<ul class="doc-list">
+  <li><strong>Underlay:</strong> the physical network of switches and connections providing IP connectivity. In a greenfield SD-Access deployment configured by DNA Center: all switches are Layer 3, using IS-IS as their routing protocol, all inter-switch links are routed ports (no STP needed), and edge nodes act as the default gateway for end hosts (routed access layer).</li>
+  <li><strong>Overlay:</strong> the virtual network built on top of the underlay using VXLAN (Virtual Extensible LAN) tunnels.</li>
+  <li><strong>Fabric:</strong> the combination of the underlay and overlay — the physical and virtual network together.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="sd-access-roles">SD-Access Node Roles</h4>
+<ul class="doc-list">
+  <li><strong>Edge Nodes:</strong> connect to end hosts.</li>
+  <li><strong>Border Nodes:</strong> connect to devices outside the SD-Access domain (e.g., WAN routers).</li>
+  <li><strong>Control Nodes:</strong> use LISP (Locator ID Separation Protocol) for control plane functions — maintaining mappings of EIDs (Endpoint Identifiers) to RLOCs (Routing Locators).</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="dna-center">Cisco DNA Center</h4>
+<p class="body-line">DNA Center is an application installed on Cisco UCS server hardware. It has a REST API and supports protocols including NETCONF, RESTCONF, SSH, Telnet, and SNMP over its SBI. DNA Center enables Intent-Based Networking (IBN) — the engineer communicates their intended network behavior, and DNA Center handles the actual device configurations and policy implementation. Traditional security policies using ACLs can become thousands of entries with forgotten intent — DNA Center allows policy intent to be specified at a high level and automatically implements it across all devices. DNA Center also centrally manages software versions, automatically pushing updates.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="rest-api">REST APIs and Data Formats</h2>
+<p class="body-line">An API (Application Programming Interface) is a software interface that allows two applications to communicate. In SDN, the NBI uses REST APIs; the SBI uses protocols like NETCONF and RESTCONF. REST (Representational State Transfer) is not a specific API — it describes a set of architectural constraints that APIs should follow.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="rest-crud">CRUD Operations and HTTP Methods</h3>
+<p class="body-line">CRUD (Create, Read, Update, Delete) describes the operations performed using REST APIs. HTTP methods map to these operations:</p>
+<div class="table-wrap"><table><thead><tr><th>CRUD Operation</th><th>HTTP Method</th><th>Description</th></tr></thead><tbody>
+<tr><td>Create</td><td>POST</td><td>Create a new resource or variable.</td></tr>
+<tr><td>Read</td><td>GET</td><td>Retrieve the value of a resource.</td></tr>
+<tr><td>Update</td><td>PUT / PATCH</td><td>Change the value of an existing resource.</td></tr>
+<tr><td>Delete</td><td>DELETE</td><td>Remove a resource.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="http-status-codes">HTTP Status Codes</h3>
+<div class="table-wrap"><table><thead><tr><th>Code Range</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>1xx</td><td>Informational — request received, continuing process.</td></tr>
+<tr><td>2xx</td><td>Successful — request received, understood, and accepted.</td></tr>
+<tr><td>3xx</td><td>Redirection — further action needed to complete the request.</td></tr>
+<tr><td>4xx</td><td>Client Error — bad syntax or request cannot be fulfilled.</td></tr>
+<tr><td>5xx</td><td>Server Error — server failed to fulfill an apparently valid request.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="rest-constraints">REST Constraints</h3>
+<ul class="doc-list">
+  <li><strong>Uniform Interface:</strong> consistent interface between client and server.</li>
+  <li><strong>Client-Server:</strong> client and server are separate — they can evolve independently without breaking the interface.</li>
+  <li><strong>Stateless:</strong> each API call is independent. The server stores no information about previous requests — the client must authenticate on every request. (TCP is stateful; REST APIs over HTTP are stateless at the application layer.)</li>
+  <li><strong>Cacheable:</strong> responses must declare whether they are cacheable. Cacheable responses improve performance and reduce server load.</li>
+  <li><strong>Layered System:</strong> the client doesn't need to know whether it communicates directly with the server or through intermediaries.</li>
+  <li><strong>Code-on-Demand (optional):</strong> the server can send executable code to the client.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="api-auth">API Authentication Methods</h3>
+<div class="table-wrap"><table><thead><tr><th>Method</th><th>How it works</th><th>Pros</th><th>Cons</th></tr></thead><tbody>
+<tr><td>Basic Authentication</td><td>Username and password encoded in Base64 sent in every request's HTTP header. Base64 is encoding — not encryption. Always use HTTPS.</td><td>Simple to implement.</td><td>Credentials sent every request — high risk if connection is not properly secured.</td></tr>
+<tr><td>Bearer Authentication (Token-based)</td><td>Client authenticates once to obtain a token, then includes the token in the Authorization header of each request. "Bearer" means anyone possessing the token can use it.</td><td>More secure — no repeated credential transmission. Tokens expire.</td><td>Stolen token valid until expiry. Tokens need periodic refresh.</td></tr>
+<tr><td>API Key Authentication</td><td>A static key issued by the API provider. Sent in the Authorization header (recommended), URL (not recommended — logged), or cookie.</td><td>Easy to implement. Good for usage tracking.</td><td>If stolen, grants access until manually revoked. No automatic expiry.</td></tr>
+<tr><td>OAuth 2.0</td><td>Access delegation framework. Third-party apps get limited access on behalf of the resource owner without sharing credentials. Access tokens expire; refresh tokens obtain new ones.</td><td>Secure — no credential sharing. Granular scope of access.</td><td>More complex to implement.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<p class="body-line">OAuth 2.0 six-step process: (1) Client requests authorization from resource owner → (2) Resource owner grants authorization → (3) Client exchanges authorization grant for access token → (4) Auth server provides access token → (5) Client sends access token to resource server → (6) Resource server validates token and returns the resource.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="data-serialization">Data Serialization Formats</h3>
+<p class="body-line">Data serialization is converting data into a standardized format that can be stored or transmitted and reconstructed by another application. REST APIs and automation tools use these formats to exchange structured data.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<div class="table-wrap"><table><thead><tr><th>Format</th><th>Full Name</th><th>Notes</th></tr></thead><tbody>
+<tr><td>JSON</td><td>JavaScript Object Notation</td><td>Open standard, human-readable. Used by REST APIs. Whitespace insignificant. Primitive types: string (double-quoted), number, boolean, null. Structured types: object (key-value pairs in curly braces <code>{}</code>), array (comma-separated values in square brackets <code>[]</code>). Keys are always strings; values can be any type.</td></tr>
+<tr><td>XML</td><td>Extensible Markup Language</td><td>Originally a markup language, now a general serialization format. Less human-readable than JSON. Whitespace insignificant. Syntax: <code>&lt;key&gt;value&lt;/key&gt;</code>. Often used by REST APIs and NETCONF.</td></tr>
+<tr><td>YAML</td><td>YAML Ain't Markup Language</td><td>Very human-readable. Whitespace and indentation are significant. Files start with <code>---</code>. Lists use <code>-</code>. Key-value pairs use <code>key: value</code>. Used by Ansible.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h2 class="major-heading" id="network-automation">Network Automation</h2>
+<p class="body-line">In traditional networking, devices are configured one-by-one via SSH or console. This is slow, error-prone, and does not scale. Network automation reduces human error, improves scalability, ensures policy compliance across all devices, and dramatically reduces the time needed for deployments and changes.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="config-drift">Configuration Drift and Provisioning</h3>
+<ul class="doc-list">
+  <li><strong>Configuration Drift:</strong> when individual changes made over time cause a device's configuration to deviate from the organization's standard templates. Records of changes and their reasons are often not kept, making future troubleshooting difficult.</li>
+  <li><strong>Configuration Provisioning:</strong> the process of applying configuration changes to devices — including configuring new devices. Traditionally done by connecting to each device one by one via SSH. Configuration management tools enable mass changes in a fraction of the time using templates and variables.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="automation-concepts">Automation Concepts</h3>
+<div class="table-wrap"><table><thead><tr><th>Concept</th><th>Description</th><th>Examples</th></tr></thead><tbody>
+<tr><td>Configuration Management</td><td>Manages existing infrastructure — installing software, configuring settings, enforcing consistency. Works on already-existing systems.</td><td>Ansible, Puppet, Chef</td></tr>
+<tr><td>Infrastructure Provisioning</td><td>Creates, modifies, and deletes infrastructure resources from scratch. Focuses on initial setup.</td><td>Terraform</td></tr>
+<tr><td>Mutable Infrastructure</td><td>Infrastructure can be modified after deployment — changes are made in place.</td><td>Ansible, Puppet, Chef</td></tr>
+<tr><td>Immutable Infrastructure</td><td>Infrastructure cannot be changed after deployment. "Changes" replace the resource with a new version — no configuration drift.</td><td>Terraform</td></tr>
+<tr><td>Procedural (Imperative)</td><td>Defines explicit steps in order to achieve the desired outcome. More control.</td><td>Ansible, Chef</td></tr>
+<tr><td>Declarative</td><td>Defines the desired end state — the tool figures out the steps. Easier to maintain.</td><td>Terraform, Puppet</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="ansible">Ansible</h3>
+<ul class="doc-list">
+  <li>Owned by Red Hat. Written in Python. <strong>Agentless</strong> — no special software required on managed devices. Uses SSH to connect and push changes. <strong>Push model.</strong></li>
+  <li>Procedural / mutable infrastructure approach.</li>
+</ul>
+<div class="table-wrap"><table><thead><tr><th>File</th><th>Format</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Playbooks</td><td>YAML</td><td>"Blueprints of automation tasks" — outlines the logic and actions Ansible should perform.</td></tr>
+<tr><td>Inventory</td><td>INI, YAML, or others</td><td>Lists the devices to be managed and their characteristics (role, group, etc.).</td></tr>
+<tr><td>Templates</td><td>Jinja2</td><td>Device configuration files with placeholders for variable values.</td></tr>
+<tr><td>Variables</td><td>YAML</td><td>Lists variables and their values — substituted into templates to produce complete configurations.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="puppet">Puppet</h3>
+<ul class="doc-list">
+  <li>Written in Ruby. Typically <strong>agent-based</strong> — requires software on managed devices (not all Cisco devices support the agent). Can run agentless via a proxy agent that uses SSH. Server called the <strong>Puppet Master</strong>. <strong>Pull model</strong> — clients pull configurations from the master using TCP port 8140.</li>
+  <li>Declarative / mutable infrastructure approach.</li>
+</ul>
+<div class="table-wrap"><table><thead><tr><th>File</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Manifest</td><td>Defines the desired configuration state of a network device. Uses Puppet's proprietary language.</td></tr>
+<tr><td>Templates</td><td>Used to generate Manifests.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="chef">Chef</h3>
+<ul class="doc-list">
+  <li>Written in Ruby. <strong>Agent-based</strong> — not all Cisco devices support the agent. <strong>Pull model.</strong> Server sends configurations using TCP port 10002. Uses a DSL (Domain-Specific Language) based on Ruby.</li>
+  <li>Procedural / mutable infrastructure approach.</li>
+</ul>
+<div class="table-wrap"><table><thead><tr><th>File</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Resources</td><td>The "ingredients" — individual configuration objects managed by Chef.</td></tr>
+<tr><td>Recipes</td><td>The "recipes" — outline the logic and actions performed on resources.</td></tr>
+<tr><td>Cookbooks</td><td>A set of related recipes grouped together.</td></tr>
+<tr><td>Run-list</td><td>An ordered list of recipes run to bring a device to the desired configuration state.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="terraform">Terraform</h3>
+<ul class="doc-list">
+  <li>Open-source IaC (Infrastructure as Code) tool by HashiCorp (acquired by IBM in 2025). Primarily a <strong>provisioning</strong> tool — deploys infrastructure on cloud and on-premises platforms (called providers). Supports 1000+ providers including AWS, Azure, GCP, Kubernetes, and Cisco platforms (Catalyst Center, ACI, IOS XE).</li>
+  <li><strong>Agentless. Push model.</strong> Declarative / immutable infrastructure approach.</li>
+  <li>Configuration files written in HCL (HashiCorp Configuration Language) — a DSL (Domain-Specific Language) that simplifies complex tasks compared to general-purpose languages.</li>
+</ul>
+<div class="table-wrap"><table><thead><tr><th>Step</th><th>Action</th></tr></thead><tbody>
+<tr><td>Write</td><td>Define the desired infrastructure state in configuration files.</td></tr>
+<tr><td>Plan</td><td>Preview the changes that will be made before applying them.</td></tr>
+<tr><td>Apply</td><td>Execute the plan to provision and manage the infrastructure.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+<aside class="callout"><strong>IaC Summary:</strong><p>Infrastructure as Code (IaC) uses machine-readable configuration files instead of manual CLI/GUI configuration. Terraform (provisioning) and Ansible (configuration management) work well together: Terraform provisions infrastructure (VMs, networks, storage), then Ansible configures and manages what was built.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+
     </section>
   </main>
 
@@ -1074,8 +2726,3 @@ show ip protocols                         → view active routing protocol confi
   <script src="network.js"></script>
 </body>
 </html>
-
-
-
-
-
