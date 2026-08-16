@@ -210,27 +210,65 @@ h1.major-heading {
   margin-top: 0;
   padding-top: 0;
   border-top: 0;
-  font-size: clamp(44.8px, 6vw, 89.6px);
+  font-size: clamp(40px, 5.5vw, 68px);
 }
 
 h2.major-heading {
-  font-size: clamp(33.6px, 4vw, 60.8px);
+  font-size: clamp(32px, 3.8vw, 44px);
 }
 
 .topic-heading {
   margin: 59.2px 0 16px;
-  font-size: clamp(30.4px, 3.3vw, 48px);
-  line-height: 1.12;
-  letter-spacing: -.035em;
+  font-size: clamp(24px, 2.8vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -.03em;
 }
 
 .subheading {
   scroll-margin-top: 95px;
   margin: 43.2px 0 13.6px;
   color: #f1f5f9;
-  font-size: 30px;
+  font-size: clamp(19px, 2.2vw, 24px);
   line-height: 1.25;
-  letter-spacing: -.018em;
+  letter-spacing: -.015em;
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 15px;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  padding: 2px 7px;
+  border-radius: 6px;
+  word-break: break-word;
+}
+
+.command-line,
+pre {
+  max-width: 940px;
+  margin: 14px 0;
+  padding: 16px 20px;
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: #090c12;
+  color: #e2e8f0;
+  font-family: var(--mono);
+  font-size: 16px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.command-line code,
+pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-size: 16px;
+  border-radius: 0;
 }
 
 .body-line,
@@ -286,20 +324,6 @@ h2.major-heading {
 .doc-spacer {
   height: 8px;
   clear: both;
-}
-
-.command-line {
-  max-width: 940px;
-  margin: 8.8px 0;
-  padding: 13.12px 16px;
-  overflow-x: auto;
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 12px;
-  background: #111318;
-  color: #e2e8f0;
-  font-family: var(--mono);
-  font-size: 12.16px;
-  white-space: pre-wrap;
 }
 
 .callout {
@@ -418,19 +442,21 @@ table {
 
 th,
 td {
-  padding: 13.12px 14.4px;
+  padding: 14px 16px;
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   text-align: left;
   vertical-align: top;
   color: #cbd5e1;
-  font-size: 12.48px;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 th {
   background: rgba(56,189,248,.08);
   color: #f8fafc;
   font-weight: 800;
+  font-size: 16px;
 }
 
 tr:last-child td {

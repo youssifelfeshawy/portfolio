@@ -78,7 +78,6 @@
 
 <div class="doc-spacer" aria-hidden="true"></div>
 <aside class="callout"><strong>Note:</strong><p>The same device can be a client in some situations and a server in others — for example, a PC that hosts a local file share is acting as a server for that service while also being a client when it browses the internet.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="topic-heading" id="bits-bytes-and-speed">Bits & Bytes</h3>
 <ul class="doc-list">
   <li>8 bits = 1 byte. Data sizes (file sizes) are typically measured in bytes while network speeds are measured in bits per second — not bytes per second.</li>
@@ -93,8 +92,7 @@
 <tr><td>Zettabit</td><td>Zb</td><td>10²¹ bits</td></tr>
 <tr><td>Yottabit</td><td>Yb</td><td>10²⁴ bits</td></tr>
 </tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="console-port">Console Port</h4>
+<h3 class="topic-heading" id="console-port">Console Port</h3>
 <p class="body-line">Network devices such as Cisco routers and switches have a console port that allows direct out-of-band access to the device — meaning you can configure it even without a network connection. This is used for initial setup, recovery, and troubleshooting.</p>
 <ul class="doc-list">
   <li>The cable used is called a rollover cable — the pins are reversed end-to-end: pin 1 connects to pin 8, pin 2 to pin 7, and so on.</li>
@@ -330,24 +328,25 @@
   <li>Runt: a frame smaller than the minimum valid Ethernet frame size of 64 bytes. Typically caused by a collision or a malfunctioning network interface card (NIC).</li>
   <li>Giant: a frame larger than the maximum valid Ethernet frame size of 1518 bytes (or 1522 bytes when an 802.1Q VLAN tag is present). Usually caused by a misconfigured device.</li>
 </ul><div class="doc-spacer" aria-hidden="true"></div>
-<h2 class="major-heading" id="layer-2">Layer 2: The Data Link Layer</h2>
-<p class="body-line">Layer 1 defines how raw bits travel across a physical medium. Layer 2 organizes those bits into structured frames and ensures they reach the correct device on the local network. It introduces hardware addressing, error detection, and the intelligent devices — switches — that make selective forwarding possible.</p>
-<ul class="doc-list">
+<h2 class="major-heading" id="layer-2">Layer 2: Data Link Layer</h2>
+<!-- <figure class="overview-figure-block figure-with-image"><img src="" alt="layer 2 header and trailer then these lists will exaplain each part of it"></figure> -->
+<p class="body-line">This layer takes network communication a step further by organizing data into structured frames and directing them to the correct device on the local network. It introduces hardware addressing, error detection, and switches, which make selective forwarding possible.</p><ul class="doc-list">
   <li>Framing: packages raw bits into structured units called frames, each with a defined start, hardware addressing, data payload, and error-check trailer.</li>
-  <li>MAC (Media Access Control) Addressing: every device has a unique hardware address. Layer 2 uses these addresses to identify the source and destination of each frame on the local network.</li>
+  <li><strong>MAC (Media Access Control):</strong> uses unique MAC addresses to identify the source and destination of each frame on the local network, while also defining how devices share access to the transmission medium and when each device is allowed to send data to help prevent collisions.</li>
   <li>Error Detection: a checksum in the frame trailer lets the receiving device verify the frame arrived uncorrupted.</li>
-  <li>Media Access Control: on shared media, Layer 2 defines the rules for which device may transmit at any given moment to prevent signal collisions.</li>
 </ul><aside class="callout"><strong>Note:</strong><p>Layer 2 only handles delivery between directly connected devices on the same local network. Delivering data across different networks is the job of Layer 3.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="switches-the-core-layer-2-device">Switches</h3>
 <aside class="figure-block"><img src="assets/cisco_switch.png" alt=""></aside>
-<p class="body-line">At Layer 1, a hub repeats every signal out of every port to every connected device — with no intelligence. If two devices transmit simultaneously, their signals collide on the shared medium and both transmissions are corrupted.</p>
+<p class="body-line">A hub repeats every signal out of every port to every connected device — with no intelligence. If two devices transmit simultaneously, their signals collide on the shared medium and both transmissions are corrupted.</p>
 <p class="body-line">A switch is the intelligent Layer 2 replacement for the hub. A switch reads the destination MAC (Media Access Control) address of each incoming frame and forwards it only out the correct port — toward the intended recipient, not every device.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="duplex-modes">Duplex Modes</h3>
 <ul class="doc-list">
-  <li>Half-Duplex: a device can either send or receive at any moment — never both simultaneously. Requires Carrier Sense Multiple Access with Collision Detection (CSMA/CD). Used with hubs and legacy equipment.</li>
+  <li>Half-Duplex: a device can either send or receive at any moment — never both simultaneously. Used with hubs and legacy equipment.</li>
   <li>Full-Duplex: a device can send and receive simultaneously on separate wire pairs. No collisions are possible. All modern switch-connected devices operate in full-duplex.</li>
+</ul>
+<!-- <pre class="command-line">changing to half or full duplex command</pre> -->
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="collision-domains">Collision Domains</h3>
 <p class="body-line">A collision domain is a network segment where two devices transmitting simultaneously cause a collision. The type of device determines the collision domain boundaries:</p>
@@ -362,9 +361,8 @@
   <li>Carrier Sense: before transmitting, a device listens to the medium to check that it is currently idle.</li>
   <li>Multiple Access: multiple devices share the same physical medium.</li>
   <li>Collision Detection: if two devices transmit simultaneously and a collision occurs, both immediately stop and broadcast a jamming signal to alert all devices. Each then waits a random back-off period before retrying.</li>
-</ul><aside class="callout"><strong>Note:</strong><p>Carrier Sense Multiple Access with Collision Detection (CSMA/CD) only applies in half-duplex environments with shared collision domains. Modern switch-connected devices run full-duplex — CSMA/CD is disabled entirely.</p></aside>
+</ul><aside class="callout"><strong>Note:</strong><p>CSMA/CD only applies in half-duplex environments with shared collision domains. Modern switch-connected devices run full-duplex — CSMA/CD is disabled entirely.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="media-access-control-mac-addresses">MAC Addresses</h3>
 <p class="body-line">Every network interface card (NIC) — in a laptop, phone, server, switch, or any networked device — has a MAC (Media Access Control) address permanently embedded by the manufacturer. The MAC address is how Layer 2 identifies devices on a local network.</p>
 <ul class="doc-list">
@@ -375,7 +373,7 @@
 <div class="table-wrap"><table><thead><tr><th>Portion</th><th>Bytes</th><th>Name</th><th>Purpose</th></tr></thead><tbody><tr><td>First half (6 hex chars)</td><td>Bytes 1–3</td><td>Organizationally Unique Identifier (OUI)</td><td>Identifies the manufacturer. Every NIC made by Cisco shares the same OUI; Intel NICs share a different OUI.</td></tr><tr><td>Second half (6 hex chars)</td><td>Bytes 4–6</td><td>Device Identifier</td><td>Uniquely identifies this specific device within that manufacturer&#x27;s product range.</td></tr></tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="mac-address-table-switch-learning-and-forwarding">MAC Address Table</h4>
-<p class="body-line">A switch maintains a MAC address table (also called a CAM (Content Addressable Memory) table) that maps each known MAC address to the switch port it was learned from. This table is built dynamically as frames arrive.</p>
+<p class="body-line">A switch maintains a MAC address table also called a CAM (Content Addressable Memory) table that maps each known MAC address to the switch port it was learned from. This table is built dynamically as frames arrive.</p>
 <!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Switch learning: PC-A sends a frame with source MAC AA:BB:CC → switch records &#x27;AA:BB:CC = Port 1&#x27; in its MAC table → switch looks up destination MAC → forwards only out the correct port ]</p></aside> -->
 <ul class="doc-list">
   <li>Learn: when a frame arrives, the switch reads the source MAC address and records it with the incoming port number in the MAC address table.</li>
@@ -395,21 +393,19 @@ clear mac address-table dynamic interface &lt;INT&gt;     → remove all entries
 <aside class="callout"><strong>Important:</strong><p>The Preamble and Start Frame Delimiter (SFD) are not counted in the Ethernet frame size. The 64-byte minimum applies from Destination MAC through FCS (Frame Check Sequence): 6 + 6 + 2 + 46 + 4 = 64 bytes.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="subheading" id="vlans">VLANs and Trunking</h3>
-<p class="body-line">All devices on a switch by default share the same local network and broadcast domain. VLANs (Virtual Local Area Networks) divide a single physical switch into multiple isolated logical networks. To carry traffic from multiple VLANs across one cable, switches use trunking.</p>
-<h4 class="subheading" id="local-area-network-lan-and-broadcast-domain">LAN and Broadcast Domain</h4>
-<ul class="doc-list">
-  <li>LAN (Local Area Network): a group of devices in a single location that are all part of the same network and can communicate directly at Layer 2.</li>
-  <li>Broadcast Domain: the set of all devices that receive a broadcast frame (destination MAC FF:FF:FF:FF:FF:FF) sent by any one member. By default, all ports on a switch are in the same broadcast domain.</li>
-</ul><aside class="callout"><strong>Note:</strong><p>Routers break broadcast domains — a broadcast does not cross a router. Switches alone do not break broadcast domains, but VLANs (Virtual Local Area Networks) let you create multiple separate broadcast domains within a single switch.</p></aside>
+<h4 class="subheading" id="local-area-network-lan-and-broadcast-domain">Broadcast Domain</h4>
+<p class="body-line">A set of all devices that receive a broadcast frame (destination MAC FF:FF:FF:FF:FF:FF) sent by any one member. By default, all ports on a switch are in the same broadcast domain.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/broadcast_domain.jpg" alt="Straight-Through vs. Crossover Cables"></figure>
+
+<aside class="callout"><strong>Note:</strong><p>Routers break broadcast domains — a broadcast does not cross a router. Switches alone do not break broadcast domains, but VLANs let you create multiple separate broadcast domains within a single switch.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="virtual-local-area-networks-vlans">VLANs</h4>
-<p class="body-line">A VLAN (Virtual Local Area Network) logically separates end hosts at Layer 2 — creating isolated broadcast domains within a single physical switch. VLANs are configured per interface on the switch. A switch will not forward traffic directly between hosts in different VLANs; to communicate across VLANs, traffic must be routed at Layer 3, which is covered in the inter-VLAN routing section of the Layer 3 chapter.</p>
+<p class="body-line">A VLAN (Virtual Local Area Network) logically separates end hosts at Layer 2 — creating isolated broadcast domains within a single physical switch. VLANs are configured per interface on the switch. A switch will not forward traffic directly between hosts in different VLANs; to communicate across VLANs, traffic must be routed at Layer 3.</p>
 <!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: One physical switch divided into 3 VLANs: VLAN 10 (Sales) on ports 1–4, VLAN 20 (Engineering) on ports 5–8, VLAN 30 (Management) on ports 9–12. A broadcast from VLAN 10 does not reach VLAN 20 or 30. ]</p></aside> -->
 <ul class="doc-list">
-  <li>VLAN 1: the default VLAN. All switch interfaces belong to VLAN 1 by default. Also the default native VLAN on trunk ports. Cannot be deleted.</li>
+  <li>VLAN 1: the default VLAN. All switch interfaces belong to VLAN 1 by default. Cannot be deleted.</li>
   <li>VLANs 1002, 1003, 1004, 1005: reserved for legacy FDDI (Fiber Distributed Data Interface) and Token Ring technologies. Cannot be used or deleted.</li>
-<div class="table-wrap"><table><thead><tr><th>Range</th><th>Category</th><th>Notes</th></tr></thead><tbody><tr><td>1</td><td>Default VLAN</td><td>Always exists. Cannot be deleted.</td></tr><tr><td>2–1001</td><td>Normal VLANs</td><td>Standard range. Supported on all Cisco switches and all VTP versions.</td></tr><tr><td>1002–1005</td><td>Reserved VLANs</td><td>Legacy technology. Cannot be modified or deleted.</td></tr><tr><td>1006–4094</td><td>Extended VLANs</td><td>Modern switches support these. Not supported by VTPv1 or VTPv2.</td></tr><tr><td>0 and 4095</td><td>Reserved</td><td>Reserved by the IEEE 802.1Q standard. Cannot be used.</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Range</th><th>Category</th><th>Notes</th></tr></thead><tbody><tr><td>1</td><td>Default VLAN</td><td>Always exists. Cannot be deleted.</td></tr><tr><td>2–1001</td><td>Normal VLANs</td><td>Standard range. Supported on all VTP (VLAN Trunking Protocol) versions.</td></tr><tr><td>1002–1005</td><td>Reserved VLANs</td><td>Legacy technology. Cannot be modified or deleted.</td></tr><tr><td>1006–4094</td><td>Extended VLANs</td><td>Modern switches support these. Not supported by VTPv1 or VTPv2.</td></tr><tr><td>0 and 4095</td><td>Reserved</td><td>Reserved by the IEEE 802.1Q standard. Cannot be used.</td></tr></tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="configuring-access-ports">Configuring Access Ports</h4>
 <p class="body-line">An access port belongs to exactly one VLAN and connects to end hosts such as PCs, printers, and servers. The end host is unaware of VLANs — the switch handles VLAN membership transparently.</p>
