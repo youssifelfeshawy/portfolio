@@ -60,6 +60,14 @@
 <figure class="overview-figure-block figure-with-image">
   <img src="assets/network_overview.png" alt="Network Overview">
 </figure>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="topic-heading" id="network-types">Network Types</h3>
+<ul class="doc-list">
+  <li><strong>LAN (Local Area Network):</strong> a network within a small area — a single building, office, or home. Provides high-speed connectivity over short distances. Most LANs use Ethernet (wired) or Wi-Fi (wireless).</li>
+  <li><strong>MAN (Metropolitan Area Network):</strong> spans a city or large campus. Connects multiple LANs within a geographic region, often managed by a single organization or service provider.</li>
+  <li><strong>WAN (Wide Area Network):</strong> spans large geographic areas — cities, countries, or the entire globe. The internet is the largest WAN. Connects remote LANs together over long distances.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="topic-heading" id="network-devices">Network Devices</h3>
 <p class="body-line">Every device in a network is called a node. Nodes include routers, switches, firewalls, servers, and clients. Servers and clients are specifically called end hosts or endpoints.</p>
 <ul class="doc-list">
@@ -108,8 +116,7 @@
   <li>Parity: None</li>
   <li>Flow Control: None</li>
 </ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="cisco-ios-cli-modes">Cisco IOS CLI Modes</h4>
+<h3 class="topic-heading" id="cisco-ios-cli-modes">Cisco IOS CLI Modes</h3>
 <p class="body-line">Cisco IOS (Internetwork Operating System) organizes its command-line interface into different access levels called modes. Each mode controls what commands are available and what changes can be made.</p>
 <ul class="doc-list">
   <li><strong>User EXEC Mode</strong> — prompt: <code>Router&gt;</code>: the initial mode when you log in. Very limited — you can view some basic information but cannot make any configuration changes. Also called "user mode".</li>
@@ -313,8 +320,11 @@
   <li>MMF (Multi-Mode Fiber): uses a LED (Light Emitting Diode) light source and a wider core (50 or 62.5 micrometers). Light bounces along multiple paths (modes), which causes slight signal spreading (modal dispersion) that limits distance to roughly 550 meters. Cheaper than single-mode. Best suited for short distances inside buildings or data centers.</li>
   <li>SMF (Single-Mode Fiber): uses a laser light source and an extremely narrow core (9 micrometers). Light travels in a single straight path (mode) with virtually no dispersion, enabling distances of 100 kilometers or more. More expensive. Used for long-distance runs between buildings, campuses, and WANs (Wide Area Networks).</li>
 </ul><aside class="overview-figure-block figure-with-image"><img src="assets/Single_Mode_vs_Multimode_Fiber.jpg" alt="Single Mode vs Multimode Fiber"></aside>
+<div class="table-wrap"><table><thead><tr><th>Informal Name</th><th>IEEE Standard</th><th>Speed</th><th>Cable Type</th><th>Maximum Length</th></tr></thead><tbody><tr><td>1000BASE-LX</td><td>802.3z</td><td>1 Gbps</td><td>Multimode or Single-Mode</td><td>550 m (MM) / 5 km (SM)</td></tr><tr><td>10GBASE-SR</td><td>802.3ae</td><td>10 Gbps</td><td>Multimode</td><td>400 m</td></tr><tr><td>10GBASE-LR</td><td>802.3ae</td><td>10 Gbps</td><td>Single-Mode</td><td>10 km</td></tr><tr><td>10GBASE-ER</td><td>802.3ae</td><td>10 Gbps</td><td>Single-Mode</td><td>30 km</td></tr></tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="UTP-vs-fiber">UTP vs. Fiber</h4>
 <div class="table-wrap"><table><thead><tr><th>Factor</th><th>UTP Copper</th><th>Fiber Optic</th></tr></thead><tbody><tr><td>Signal type</td><td>Electrical</td><td>Light (LED or laser)</td></tr><tr><td>Max distance</td><td>~100 m per segment</td><td>~550 m (Multi-Mode) to 100+ km (Single-Mode)</td></tr><tr><td>EMI immunity</td><td>Susceptible to EMI</td><td>Completely immune to EMI</td></tr><tr><td>Security</td><td>Signal can leak — can be tapped</td><td>No signal leakage — cannot be passively tapped</td></tr><tr><td>Cost</td><td>Lower</td><td>Higher, especially SMF (Single-Mode Fiber)</td></tr><tr><td>Connector type</td><td>RJ-45</td><td>LC, SC, or ST — requires SFP transceiver on the device</td></tr></tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="network-devices-at-layer-1">Network Devices</h3>
 <p class="body-line">Layer 1 devices operate purely on raw signals — they have no understanding of addresses or any higher-layer information. They simply receive a signal and retransmit it.</p>
@@ -323,18 +333,18 @@
   <li>Hub: a basic Layer 1 device that connects multiple devices. When any device sends a signal, the hub amplifies and repeats it out of every other port with no intelligence about the intended destination. All devices share the same physical medium. Hubs are legacy technology replaced by switches.</li>
   <li>Repeater: receives a signal, amplifies it to restore signal strength lost over distance, and retransmits it. Used to extend the maximum cable length of a network segment.</li>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="subheading" id="frame-errors-at-layer-1">Frame Errors</h3>
-<ul class="doc-list">
-  <li>Runt: a frame smaller than the minimum valid Ethernet frame size of 64 bytes. Typically caused by a collision or a malfunctioning network interface card (NIC).</li>
-  <li>Giant: a frame larger than the maximum valid Ethernet frame size of 1518 bytes (or 1522 bytes when an 802.1Q VLAN tag is present). Usually caused by a misconfigured device.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
 <h2 class="major-heading" id="layer-2">Layer 2: Data Link Layer</h2>
-<!-- <figure class="overview-figure-block figure-with-image"><img src="" alt="layer 2 header and trailer then these lists will exaplain each part of it"></figure> -->
-<p class="body-line">This layer takes network communication a step further by organizing data into structured frames and directing them to the correct device on the local network. It introduces hardware addressing, error detection, and switches, which make selective forwarding possible.</p><ul class="doc-list">
-  <li>Framing: packages raw bits into structured units called frames, each with a defined start, hardware addressing, data payload, and error-check trailer.</li>
-  <li><strong>MAC (Media Access Control):</strong> uses unique MAC addresses to identify the source and destination of each frame on the local network, while also defining how devices share access to the transmission medium and when each device is allowed to send data to help prevent collisions.</li>
-  <li>Error Detection: a checksum in the frame trailer lets the receiving device verify the frame arrived uncorrupted.</li>
-</ul><aside class="callout"><strong>Note:</strong><p>Layer 2 only handles delivery between directly connected devices on the same local network. Delivering data across different networks is the job of Layer 3.</p></aside>
+<p class="body-line">Layer 2 organizes raw bits into structured units called frames. Each Ethernet frame has a header, a payload, and a trailer. The header contains addressing information — source and destination MAC (Media Access Control) addresses — that identifies where the frame came from and where it needs to go. The payload carries the actual data from the layer above. The trailer contains an error-check value that lets the receiver verify the frame arrived intact. Layer 2 only handles delivery between devices on the same local network — delivering data across different networks is the job of Layer 3. Ethernet is the dominant Layer 2 protocol in wired local area networks, and every Ethernet frame follows the structure below.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody><tr><td>Preamble</td><td>7 bytes</td><td>Alternating 1s and 0s (10101010 repeated). Allows receiving devices to synchronize their clock to the incoming bit stream before the actual frame begins.</td></tr><tr><td>Start Frame Delimiter (SFD)</td><td>1 byte</td><td>The bit pattern 10101011. Signals the end of the preamble — the very next byte is the start of the Destination MAC Address field.</td></tr><tr><td>Destination MAC Address</td><td>6 bytes</td><td>MAC address of the intended recipient. Can be unicast (one device), multicast (a group), or broadcast (FF:FF:FF:FF:FF:FF — all devices on the local network).</td></tr><tr><td>Source MAC Address</td><td>6 bytes</td><td>MAC address of the sending device&#x27;s network interface card (NIC).</td></tr><tr><td>Type / Length</td><td>2 bytes</td><td>Value 1536 (0x0600) or higher: identifies the Layer 3 protocol — 0x0800 = IPv4, 0x86DD = IPv6. Value below 1536: indicates the byte length of the payload.</td></tr><tr><td>Payload (Data)</td><td>46–1500 bytes</td><td>The encapsulated Layer 3 data — usually an IP packet. Minimum 46 bytes — if the actual data is shorter, padding bytes (zeros) are appended to reach the minimum. This ensures the total frame meets the 64-byte minimum required for correct collision detection.</td></tr><tr><td>FCS (Frame Check Sequence)</td><td>4 bytes</td><td>A Cyclic Redundancy Check (CRC) value — a mathematical checksum computed from all the data in the frame. The sender runs a CRC algorithm over the frame contents and places the result here. The receiver performs the same calculation on the received data and compares results. If they do not match, the frame was corrupted in transit and is silently discarded (no retransmission at this layer — reliability is handled by Layer 4).</td></tr></tbody></table></div>
+<aside class="callout"><strong>Important:</strong><p>The Preamble and Start Frame Delimiter (SFD) are not counted in the Ethernet frame size. The 64-byte minimum applies from Destination MAC through FCS: 6 + 6 + 2 + 46 + 4 = 64 bytes.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h3 class="subheading" id="frame-errors">Frame Errors</h3>
+<p class="body-line">Frame errors occur when a received frame does not meet the size constraints defined by the Ethernet standard.</p>
+<ul class="doc-list">
+  <li><strong>Runt:</strong> a frame smaller than the 64-byte minimum. Typically caused by a collision or a malfunctioning NIC. To prevent runts, the sender pads the payload with zeros if the actual data is shorter than 46 bytes, ensuring the frame always meets the minimum size.</li>
+  <li><strong>Giant:</strong> a frame larger than the 1518-byte maximum. Usually caused by a misconfigured device. To prevent oversized data from being sent, Layer 3 uses fragmentation — breaking large packets into smaller pieces that each fit within the 1500-byte payload limit before they are encapsulated into frames.</li>
+</ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="switches-the-core-layer-2-device">Switches</h3>
 <aside class="figure-block"><img src="assets/cisco_switch.png" alt=""></aside>
@@ -385,14 +395,6 @@ clear mac address-table dynamic                     → remove all dynamically l
 clear mac address-table dynamic address &lt;MAC&gt;       → remove one specific entry by MAC address
 clear mac address-table dynamic interface &lt;INT&gt;     → remove all entries learned on one interface</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="subheading" id="the-ethernet-frame-structure">Ethernet Frame Structure</h3>
-<p class="body-line">Ethernet is the dominant Layer 2 protocol in wired local area networks. When a Layer 3 packet arrives at Layer 2, it is wrapped in an Ethernet frame — a structured container with a header at the front and a trailer at the back.</p>
-<!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Ethernet frame layout: [Preamble 7B | Start Frame Delimiter 1B | Destination MAC 6B | Source MAC 6B | Type/Length 2B | Payload 46–1500B | Frame Check Sequence 4B] ]</p></aside> -->
-<div class="doc-spacer" aria-hidden="true"></div>
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody><tr><td>Preamble</td><td>7 bytes</td><td>Alternating 1s and 0s (10101010 repeated). Allows receiving devices to synchronize their clock to the incoming bit stream before the actual frame begins.</td></tr><tr><td>Start Frame Delimiter (SFD)</td><td>1 byte</td><td>The bit pattern 10101011. Signals the end of the preamble — the very next byte is the start of the Destination MAC Address field.</td></tr><tr><td>Destination MAC Address</td><td>6 bytes</td><td>MAC address of the intended recipient. Can be unicast (one device), multicast (a group), or broadcast (FF:FF:FF:FF:FF:FF — all devices on the local network).</td></tr><tr><td>Source MAC Address</td><td>6 bytes</td><td>MAC address of the sending device&#x27;s network interface card (NIC).</td></tr><tr><td>Type / Length</td><td>2 bytes</td><td>Value 1536 (0x0600) or higher: identifies the Layer 3 protocol — 0x0800 = IPv4 (Internet Protocol version 4), 0x86DD = IPv6. Value below 1536: indicates the byte length of the payload.</td></tr><tr><td>Payload (Data)</td><td>46–1500 bytes</td><td>The encapsulated Layer 3 data — usually an IP packet (L3PDU). Minimum 46 bytes. If the actual data is shorter than 46 bytes, the switch appends padding bytes (zeros) to reach the minimum. This 64-byte minimum total frame size is required for correct collision detection on half-duplex links.</td></tr><tr><td>FCS (Frame Check Sequence)</td><td>4 bytes</td><td>A Cyclic Redundancy Check (CRC) value. The receiver recalculates it — if it does not match, the frame was corrupted and is discarded.</td></tr></tbody></table></div>
-<aside class="callout"><strong>Important:</strong><p>The Preamble and Start Frame Delimiter (SFD) are not counted in the Ethernet frame size. The 64-byte minimum applies from Destination MAC through FCS (Frame Check Sequence): 6 + 6 + 2 + 46 + 4 = 64 bytes.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-<div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="local-area-network-lan-and-broadcast-domain">Broadcast Domain</h3>
 <p class="body-line">A set of all devices that receive a broadcast frame (destination MAC FF:FF:FF:FF:FF:FF) sent by any one member. By default, all ports on a switch are in the same broadcast domain.</p>
 <figure class="overview-figure-block figure-with-image"><img src="assets/broadcast_domain.jpg" alt="Straight-Through vs. Crossover Cables"></figure>
@@ -400,52 +402,46 @@ clear mac address-table dynamic interface &lt;INT&gt;     → remove all entries
 <aside class="callout"><strong>Note:</strong><p>Routers break broadcast domains — a broadcast does not cross a router. Switches alone do not break broadcast domains, but VLANs let you create multiple separate broadcast domains within a single switch.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="virtual-local-area-networks-vlans">VLANs</h3>
-<p class="body-line">A VLAN (Virtual Local Area Network) logically separates end hosts at Layer 2 — creating isolated broadcast domains within a single physical switch. VLANs are configured per interface on the switch. A switch will not forward traffic directly between hosts in different VLANs; to communicate across VLANs, traffic must be routed at Layer 3.</p>
+<p class="body-line">A VLAN (Virtual Local Area Network) logically separates end hosts at Layer 2 — creating isolated broadcast domains within a single physical switch. A switch will not forward traffic directly between hosts in different VLANs; to communicate across VLANs, traffic must be routed at Layer 3. To make VLANs work, each switch port must be configured as either an <strong>access port</strong> (connecting end hosts to a single VLAN) or a <strong>trunk port</strong> (carrying traffic for multiple VLANs between switches or routers).</p>
 <!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: One physical switch divided into 3 VLANs: VLAN 10 (Sales) on ports 1–4, VLAN 20 (Engineering) on ports 5–8, VLAN 30 (Management) on ports 9–12. A broadcast from VLAN 10 does not reach VLAN 20 or 30. ]</p></aside> -->
 <div class="table-wrap"><table><thead><tr><th>Range</th><th>Category</th><th>Notes</th></tr></thead><tbody><tr><td>1</td><td>Default VLAN</td><td>All switch interfaces belong to VLAN 1 by default. Cannot be deleted.</td></tr><tr><td>2–1001</td><td>Normal VLANs</td><td>Standard range. Supported on all VTP (VLAN Trunking Protocol) versions.</td></tr><tr><td>1002–1005</td><td>Reserved VLANs</td><td>Reserved for legacy technology. Cannot be modified or deleted.</td></tr><tr><td>1006–4094</td><td>Extended VLANs</td><td>Modern switches support these. Not supported by VTPv1 or VTPv2.</td></tr><tr><td>0 and 4095</td><td>Reserved</td><td>Reserved by the IEEE 802.1Q standard. Cannot be used.</td></tr></tbody></table></div>
+<pre class="command-line"><code>vlan 10                               → enter VLAN configuration mode (creates VLAN 10 if needed)
+name Sales                            → assign a descriptive name to the VLAN</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="configuring-access-ports">Access Ports</h4>
 <p class="body-line">An access port belongs to exactly one VLAN and connects to end hosts such as PCs, printers, and servers. The end host is unaware of VLANs — the switch handles VLAN membership transparently.</p>
-<pre class="command-line"><code>int range g0/1 - 4               → select multiple interfaces at once
-switchport mode access           → configure as an access port (also disables Dynamic Trunking Protocol)
-switchport access vlan 10        → assign the port to VLAN 10 (auto-created if it does not exist)</code></pre>
-<pre class="command-line"><code>vlan 10                          → enter VLAN configuration mode (creates VLAN 10 if needed)
-name Sales                       → assign a descriptive name to the VLAN</code></pre>
-<pre class="command-line"><code>show vlan brief                  → view all VLANs and which access ports belong to each</code></pre>
+<pre class="command-line"><code>int range g0/1 - 4                    → select multiple interfaces at once
+switchport mode access                → configure as an access port
+switchport access vlan 10             → assign the port to VLAN 10 (auto-created if it does not exist)</code></pre>
+<pre class="command-line"><code>show vlan brief                       → view all VLANs and which access ports belong to each</code></pre>
 <aside class="callout"><strong>Note:</strong><p>&#x27;show vlan brief&#x27; shows access ports only — trunk ports do not appear here. Use &#x27;show interfaces trunk&#x27; to see trunk information.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="trunk-ports">Trunk Ports</h4>
-<p class="body-line">A trunk port carries traffic from multiple VLANs (Virtual Local Area Networks) over a single physical cable. Trunk ports are used on switch-to-switch and switch-to-router links where traffic from many VLANs must travel on the same connection.</p>
+<h4 class="subheading" id="trunk-ports">Trunk Ports &amp; IEEE 802.1Q</h4>
+<p class="body-line">When multiple switches are interconnected, traffic from different VLANs needs to travel across the same physical link. A trunk port carries traffic for multiple VLANs simultaneously by tagging each frame with its VLAN ID so the receiving switch knows which VLAN it belongs to. The industry-standard protocol for this tagging is IEEE 802.1Q (dot1q) — it replaced the older Cisco-proprietary ISL (Inter-Switch Link) and is used in all modern networks.</p>
 <ul class="doc-list">
-  <li>Access ports: untagged — carry traffic for a single VLAN. Connect to end hosts.</li>
-  <li>Trunk ports: tagged — carry traffic for multiple VLANs simultaneously. Connect to other switches or routers.</li>
-<!-- </ul><aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Two switches connected by a trunk link. VLAN 10, 20, and 30 traffic all travels on the same cable. Each frame is tagged with its VLAN ID so the receiving switch knows which VLAN it belongs to. ]</p></aside> -->
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="ieee-802-1q-trunking-protocol">IEEE 802.1Q Trunking Protocol</h4>
-<p class="body-line">Two trunking protocols exist: the old Cisco-proprietary ISL (Inter-Switch Link), and the modern industry-standard IEEE 802.1Q (dot1q). IEEE 802.1Q is universal and used in all modern networks.</p>
-<p class="body-line">When a switch sends a frame out a trunk port, it inserts a 4-byte IEEE 802.1Q tag into the Ethernet frame between the Source MAC Address and the Type/Length field. The receiving switch reads the tag to determine the VLAN, then strips it before delivering the frame to the destination host.</p>
-<!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Ethernet frame with 802.1Q tag inserted between Source MAC and Type/Length: [Destination MAC | Source MAC | 802.1Q Tag 4B | Type/Length | Payload | FCS] ]</p></aside> -->
-<!-- <div class="doc-spacer" aria-hidden="true"></div> -->
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody><tr><td>TPID (Tag Protocol Identifier)</td><td>2 bytes</td><td>Always 0x8100 — identifies this frame as 802.1Q tagged.</td></tr><tr><td>PCP (Priority Code Point)</td><td>3 bits</td><td>Class of Service (CoS) — used for Quality of Service (QoS) to prioritize delay-sensitive traffic such as voice.</td></tr><tr><td>DEI (Drop Eligible Indicator)</td><td>1 bit</td><td>If set to 1, this frame may be dropped first during network congestion.</td></tr><tr><td>VID (VLAN Identifier)</td><td>12 bits</td><td>Identifies the VLAN the frame belongs to. 12 bits = 4,096 possible values (0–4,095).</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="native-vlan">Native VLAN</h4>
-<p class="body-line">The native VLAN is an IEEE 802.1Q feature. Frames belonging to the native VLAN are sent across a trunk port without an 802.1Q tag — they travel as plain untagged frames. When a switch receives an untagged frame on a trunk port, it assumes the frame belongs to the native VLAN.</p>
+  <li><strong>Access ports:</strong> untagged — carry traffic for a single VLAN. Connect to end hosts.</li>
+  <li><strong>Trunk ports:</strong> tagged — carry traffic for multiple VLANs simultaneously. Connect to other switches or routers.</li>
+</ul>
+<figure class="overview-figure-block figure-with-image"><img src="assets/IEEE 802.1Q.png" alt="Straight-Through vs. Crossover Cables"></figure>
+<p class="body-line">When a switch sends a frame out a trunk port, it inserts a 4-byte 802.1Q tag into the Ethernet frame between the Source MAC Address and the Type/Length field. The receiving switch reads the tag to determine the VLAN, then strips it before delivering the frame to the destination host.</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th style="width: 80px; white-space: nowrap;">Size</th><th>Purpose</th></tr></thead><tbody><tr><td>TPID (Tag Protocol Identifier)</td><td>16 bits</td><td>Always 0x8100 — identifies this frame as 802.1Q tagged.</td></tr><tr><td>PCP (Priority Code Point)</td><td>3 bits</td><td>Class of Service (CoS) — used for Quality of Service (QoS) to prioritize delay-sensitive traffic such as voice.</td></tr><tr><td>DEI (Drop Eligible Indicator)</td><td>1 bit</td><td>If set to 1, this frame may be dropped first during network congestion.</td></tr><tr><td>VID (VLAN Identifier)</td><td>12 bits</td><td>Identifies the VLAN the frame belongs to. 12 bits = 4,096 possible values (0–4,095).</td></tr></tbody></table></div>
+<p class="body-line">The native VLAN is a special 802.1Q feature — frames belonging to the native VLAN are sent across a trunk without a tag. When a switch receives an untagged frame on a trunk port, it assumes the frame belongs to the native VLAN.</p>
 <ul class="doc-list">
-  <li>Default native VLAN: VLAN 1 on all trunk ports.</li>
-  <li>Security best practice: change the native VLAN to an unused VLAN (such as VLAN 1001) to prevent VLAN hopping attacks.</li>
-  <li>Must match: the native VLAN must be configured identically on both ends of a trunk link. A mismatch sends frames to the wrong VLAN.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="configuring-trunk-ports">Configuring Trunk Ports</h4>
+  <li><strong>Default native VLAN:</strong> VLAN 1 on all trunk ports.</li>
+  <li><strong>Security best practice:</strong> change the native VLAN to an unused VLAN (such as VLAN 1001) to prevent VLAN hopping attacks.</li>
+  <li><strong>Must match:</strong> the native VLAN must be configured identically on both ends of a trunk link. A mismatch sends frames to the wrong VLAN.</li>
+</ul>
 <pre class="command-line"><code>int g0/1
-switchport trunk encapsulation dot1q       → set encapsulation to IEEE 802.1Q (required on switches that support both ISL and dot1q)
-switchport mode trunk                      → configure the port as a trunk
-switchport trunk allowed vlan 10,20,30    → restrict which VLANs are permitted on this trunk
-switchport trunk native vlan 1001          → change native VLAN to an unused VLAN</code></pre>
-<pre class="command-line"><code>show interfaces trunk                      → view trunk ports, allowed VLANs, and native VLAN</code></pre>
+switchport trunk encapsulation dot1q  → set encapsulation to IEEE 802.1Q
+switchport mode trunk                 → configure the port as a trunk
+switchport trunk allowed vlan 10,20,30 → restrict which VLANs are permitted on this trunk
+switchport trunk native vlan 1001     → change native VLAN to an unused VLAN</code></pre>
+<pre class="command-line"><code>show interfaces trunk                 → view trunk ports, allowed VLANs, and native VLAN</code></pre>
+<aside class="callout"><strong>Note:</strong><p>Because the 802.1Q tag adds 4 bytes to the frame, a tagged frame can be up to 1522 bytes — exceeding the normal 1518-byte maximum. This is expected and is not considered a giant frame.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="dynamic-trunking-protocol-dtp">Dynamic Trunking Protocol</h4>
 <p class="body-line">DTP (Dynamic Trunking Protocol) is a Cisco-proprietary protocol that allows Cisco switches to automatically negotiate whether an interface should be access or trunk without manual configuration. It is enabled by default.</p>
-<div class="table-wrap"><table><thead><tr><th>Mode</th><th>Behavior</th><th>Forms Trunk With</th></tr></thead><tbody><tr><td>trunk</td><td>Always a trunk. Sends DTP frames actively.</td><td>All modes.</td></tr><tr><td>dynamic desirable</td><td>Actively tries to negotiate a trunk.</td><td>trunk, dynamic desirable, or dynamic auto.</td></tr><tr><td>dynamic auto</td><td>Passively waits. Forms a trunk only if the peer actively initiates.</td><td>trunk or dynamic desirable only.</td></tr><tr><td>access</td><td>Always an access port. DTP negotiation disabled.</td><td>Never forms a trunk.</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Mode</th><th>Behavior</th><th>Forms Trunk With</th></tr></thead><tbody><tr><td>trunk</td><td>Always a trunk. Sends DTP frames actively.</td><td>All modes, except for access mode.</td></tr><tr><td>dynamic desirable</td><td>Actively tries to negotiate a trunk.</td><td>trunk, dynamic desirable, or dynamic auto.</td></tr><tr><td>dynamic auto</td><td>Passively waits. Forms a trunk only if the peer actively initiates.</td><td>trunk or dynamic desirable only.</td></tr><tr><td>access</td><td>Always an access port. DTP negotiation disabled.</td><td>Never forms a trunk.</td></tr></tbody></table></div>
 <ul class="doc-list">
   <li>Older Cisco switches: default mode is dynamic desirable — actively try to form trunks.</li>
   <li>Newer Cisco switches: default mode is dynamic auto — passively wait.</li>
@@ -492,6 +488,7 @@ switchport trunk native vlan 1001          → change native VLAN to an unused V
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="bridge-protocol-data-units-bpdus">Bridge Protocol Data Units</h4>
 <p class="body-line">STP switches communicate using BPDUs (Bridge Protocol Data Units). Hello BPDUs are sent out every interface every 2 seconds by default. If a switch receives a Hello BPDU on an interface, it knows that interface is connected to another switch — end hosts like PCs and routers do not send BPDUs.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/BPDU.png" alt="Straight-Through vs. Crossover Cables"></figure>
 <div class="doc-spacer" aria-hidden="true"></div>
 
 <h4 class="subheading" id="the-bridge-id">The Bridge ID</h4>
