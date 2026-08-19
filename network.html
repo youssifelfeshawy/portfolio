@@ -116,7 +116,7 @@
   <li>Parity: None</li>
   <li>Flow Control: None</li>
 </ul>
-<h3 class="topic-heading" id="cisco-ios-cli-modes">Cisco IOS CLI Modes</h3>
+<h3 class="topic-heading" id="cisco-ios-cli-modes">Cisco IOS CLI</h3>
 <p class="body-line">Cisco IOS (Internetwork Operating System) organizes its command-line interface into different access levels called modes. Each mode controls what commands are available and what changes can be made.</p>
 <ul class="doc-list">
   <li><strong>User EXEC Mode</strong> — prompt: <code>Router&gt;</code>: the initial mode when you log in. Very limited — you can view some basic information but cannot make any configuration changes. Also called "user mode".</li>
@@ -346,53 +346,49 @@
   <li><strong>Giant:</strong> a frame larger than the 1518-byte maximum. Usually caused by a misconfigured device. To prevent oversized data from being sent, Layer 3 uses fragmentation — breaking large packets into smaller pieces that each fit within the 1500-byte payload limit before they are encapsulated into frames.</li>
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="subheading" id="switches-the-core-layer-2-device">Switches</h3>
-<aside class="figure-block"><img src="assets/cisco_switch.png" alt=""></aside>
-<p class="body-line">A hub repeats every signal out of every port to every connected device — with no intelligence. If two devices transmit simultaneously, their signals collide on the shared medium and both transmissions are corrupted.</p>
-<p class="body-line">A switch is the intelligent Layer 2 replacement for the hub. A switch reads the destination MAC (Media Access Control) address of each incoming frame and forwards it only out the correct port — toward the intended recipient, not every device.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="subheading" id="duplex-modes">Duplex Modes</h3>
+<h3 class="subheading" id="switches">Switches</h3>
+<aside class="figure-block"><img src="assets/cisco_switch.png" alt="Cisco Network Switch"></aside>
+<p class="body-line">A switch is an intelligent Layer 2 device. Because it operates at the Data Link layer, it can read the source and destination MAC addresses inside Ethernet frames and forward each frame only through the port that leads toward the intended destination.</p>
+<p class="body-line">Unlike a hub, which repeats signals to all connected devices over a shared half-duplex medium, a switch normally uses full-duplex links. This allows devices on switch ports to send and receive at the same time without competing for the same shared medium.</p>
 <ul class="doc-list">
-  <li>Half-Duplex: a device can either send or receive at any moment — never both simultaneously. Used with hubs and legacy equipment.</li>
-  <li>Full-Duplex: a device can send and receive simultaneously on separate wire pairs. No collisions are possible. All modern switch-connected devices operate in full-duplex.</li>
+  <li><strong>Half-Duplex:</strong> sending and receiving cannot happen simultaneously.</li>
+  <li><strong>Full-Duplex:</strong> sending and receiving can happen simultaneously.</li>
 </ul>
-<pre class="command-line">duplex {auto | full | half}</pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="subheading" id="collision-domains">Collision Domains</h3>
-<p class="body-line">A collision domain is a network segment where two devices transmitting simultaneously cause a collision. The type of device determines the collision domain boundaries:</p>
+<p class="body-line">To manually configure the duplex mode on an interface:</p>
+<pre class="command-line">int <i>interface-id</i>
+  duplex {auto | full | half}</pre>
+<p class="body-line">This difference in duplex operation also affects how collisions are handled. Because all devices connected to a hub share one half-duplex collision domain, simultaneous transmissions can collide. CSMA/CD (Carrier Sense Multiple Access with Collision Detection) is used to manage access to this shared medium:</p>
 <ul class="doc-list">
-  <li>Hub: all ports share one collision domain. Any two devices can collide with each other.</li>
-  <li>Switch: each port is its own isolated collision domain. Devices on different switch ports can transmit simultaneously without any collision.</li>
-<!-- </ul><aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Hub: one large shared collision domain enclosing all devices. Switch: each port is its own separate collision domain — no inter-port collisions. ]</p></aside> -->
+  <li><strong>Carrier Sense:</strong> before sending, the device listens to the shared medium. If it is busy, the device waits; if it is free, the device starts transmitting.</li>
+  <li><strong>Multiple Access:</strong> all devices connected to the shared medium have equal access to it and may attempt to transmit when it is available.</li>
+  <li><strong>Collision Detection:</strong> while transmitting, the device continues monitoring the medium. If a collision is detected, the devices stop transmitting, send a jam signal, wait for a random back-off time, and then try again.</li>
+</ul>
+<aside class="callout"><strong>Note:</strong><p>CSMA/CD is only needed in shared half-duplex Ethernet environments. Full-duplex switch connections can separate collision domains, so CSMA/CD is not used.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="carrier-sense-multiple-access-with-collision-detection-csma-cd">CSMA/CD</h4>
-<p class="body-line">When devices share a collision domain (as on a hub), they use CSMA/CD (Carrier Sense Multiple Access with Collision Detection) to manage access to the shared medium:</p>
-<ul class="doc-list">
-  <li>Carrier Sense: before transmitting, a device listens to the medium to check that it is currently idle.</li>
-  <li>Multiple Access: multiple devices share the same physical medium.</li>
-  <li>Collision Detection: if two devices transmit simultaneously and a collision occurs, both immediately stop and broadcast a jamming signal to alert all devices. Each then waits a random back-off period before retrying.</li>
-</ul><aside class="callout"><strong>Note:</strong><p>CSMA/CD only applies in half-duplex environments with shared collision domains. Modern switch-connected devices run full-duplex — CSMA/CD is disabled entirely.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
+
 <h3 class="subheading" id="media-access-control-mac-addresses">MAC Addresses</h3>
-<p class="body-line">Every network interface card (NIC) — in a laptop, phone, server, switch, or any networked device — has a MAC (Media Access Control) address permanently embedded by the manufacturer. The MAC address is how Layer 2 identifies devices on a local network.</p>
+<p class="body-line">At Layer 2, devices are identified using MAC (Media Access Control) addresses. A MAC address is assigned to a network interface card (NIC) and is used by switches to identify the source and destination of Ethernet frames on the local network.</p>
 <ul class="doc-list">
-  <li>48 bits long (6 bytes) — written as 12 hexadecimal characters, for example AA:BB:CC:11:22:33.</li>
-  <li>Burned-In Address (BIA): permanently written into the hardware at the factory. Cannot be changed by software, though it can be spoofed at the operating system level.</li>
-  <li>Globally unique: no two network interface cards in the world should share the same MAC address.</li>
-<!-- </ul><aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: MAC address AA:BB:CC:11:22:33 — first 3 bytes (AA:BB:CC) highlighted as Organizationally Unique Identifier (OUI), last 3 bytes (11:22:33) as unique device identifier ]</p></aside> -->
-<div class="table-wrap"><table><thead><tr><th>Portion</th><th>Bytes</th><th>Name</th><th>Purpose</th></tr></thead><tbody><tr><td>First half (6 hex chars)</td><td>Bytes 1–3</td><td>Organizationally Unique Identifier (OUI)</td><td>Identifies the manufacturer. Every NIC made by Cisco shares the same OUI; Intel NICs share a different OUI.</td></tr><tr><td>Second half (6 hex chars)</td><td>Bytes 4–6</td><td>Device Identifier</td><td>Uniquely identifies this specific device within that manufacturer&#x27;s product range.</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="mac-address-table-switch-learning-and-forwarding">MAC Address Table</h4>
-<p class="body-line">A switch maintains a MAC address table also called a CAM (Content Addressable Memory) table that maps each known MAC address to the switch port it was learned from. This table is built dynamically as frames arrive.</p>
-<!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Switch learning: PC-A sends a frame with source MAC AA:BB:CC → switch records &#x27;AA:BB:CC = Port 1&#x27; in its MAC table → switch looks up destination MAC → forwards only out the correct port ]</p></aside> -->
+  <li><strong>Length:</strong> 48 bits (6 bytes), usually written as 12 hexadecimal characters, for example AA:BB:CC:11:22:33.</li>
+  <li><strong>Uniqueness:</strong> MAC addresses are designed to uniquely identify individual network interfaces.</li>
+  <li><strong>Burned-In Address (BIA):</strong> the hardware MAC address assigned by the manufacturer. It can be overridden or spoofed by software, but the original hardware address remains unchanged.</li>
+</ul>
+<p class="body-line">A MAC address is divided into two main portions:</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/mac_address_OUI_ID.jpg" alt="MAC Address OUI and Device Identifier Structure"></figure>
+<div class="table-wrap"><table><thead><tr><th>Portion</th><th>Bytes</th><th>Name</th><th>Purpose</th></tr></thead><tbody><tr><td>First half (6 hex characters)</td><td>Bytes 1–3</td><td>Organizationally Unique Identifier (OUI)</td><td>Identifies the organization or manufacturer that was assigned that OUI.</td></tr><tr><td>Second half (6 hex characters)</td><td>Bytes 4–6</td><td>Device Identifier</td><td>Identifies the individual network interface within that OUI range.</td></tr></tbody></table></div>
+<p class="body-line">Because a switch forwards Ethernet frames using MAC addresses, it keeps a MAC address table, also called a CAM (Content Addressable Memory) table. This table maps learned MAC addresses to the switch ports where they were last seen and is built automatically as frames enter the switch.</p>
 <ul class="doc-list">
-  <li>Learn: when a frame arrives, the switch reads the source MAC address and records it with the incoming port number in the MAC address table.</li>
-  <li>Forward: the switch looks up the destination MAC address. If found, the frame is sent only out that port (unicast forwarding). If not found, the frame is flooded out all ports except the one it arrived on — called unknown unicast flooding.</li>
-  <li>Aging: if a MAC address entry is not refreshed for 5 minutes, it is removed from the table. The switch will flood again until the address is relearned.</li></ul>
-<p class="body-line">To view the MAC address table or clear dynamically learned MAC addresses, either all at once, by a specific MAC address, or by a specific interface; static MAC addresses are not removed:</p>
+  <li><strong>Learn:</strong> when a frame arrives, the switch reads the source MAC address and records it together with the incoming port.</li>
+  <li><strong>Forward:</strong> the switch checks the destination MAC address in its table. If the address is known, the frame is forwarded only through the associated port. If it is unknown, the frame is flooded out all other ports in the same VLAN except the port it arrived on.</li>
+  <li><strong>Aging:</strong> dynamically learned MAC entries are removed after they remain inactive for the aging period, which is typically 300 seconds (5 minutes) by default. If traffic for that destination appears again after the entry is removed, the switch must relearn it.</li>
+</ul>
+<!-- <figure class="overview-figure-block figure-with-image"><img src="" alt="Switch MAC Address Learning and Forwarding Process"></figure> -->
+<p class="body-line">To view the MAC address table or clear dynamically learned entries, either all at once, for a specific MAC address, or on a specific interface:</p>
 <pre class="command-line"><code>show mac address-table
 clear mac address-table dynamic [address <i>mac-addr</i> | interface <i>interface-id</i>]</code></pre>
+<aside class="callout"><strong>Note:</strong><p>The clear command removes only dynamically learned MAC address entries. Static MAC address entries are not removed.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
+
 <h3 class="subheading" id="local-area-network-lan-and-broadcast-domain">Broadcast Domain</h3>
 <p class="body-line">A set of all devices that receive a broadcast frame (destination MAC FF:FF:FF:FF:FF:FF) sent by any one member. By default, all ports on a switch are in the same broadcast domain.</p>
 <figure class="overview-figure-block figure-with-image"><img src="assets/broadcast_domain.jpg" alt="Straight-Through vs. Crossover Cables"></figure>
@@ -765,54 +761,47 @@ ip address &lt;ip-address&gt; &lt;subnet-mask&gt;           → assign IP addres
 <aside class="callout"><strong>Important:</strong><p>The Header Checksum protects only the IP header — not the payload data. Payload error detection is the responsibility of Layer 4: TCP (Transmission Control Protocol) and UDP (User Datagram Protocol) each have their own checksum fields.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="ip-fragmentation">IP Fragmentation</h4>
-<p class="body-line">Every network link has a MTU (Maximum Transmission Unit) — the largest packet it can carry. For standard Ethernet, the MTU (Maximum Transmission Unit) is 1,500 bytes. If an IP packet exceeds the MTU of a link, the router fragments it. The receiving host — not intermediate routers — reassembles the fragments using the Identification, Flags, and Fragment Offset fields.</p>
+<p class="body-line">Every network link has a MTU (Maximum Transmission Unit) — the largest packet it can carry. For standard Ethernet, the MTU is 1,500 bytes. If an IP packet exceeds the MTU of a link, the router fragments it. The receiving host — not intermediate routers — reassembles the fragments using the Identification, Flags, and Fragment Offset fields.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="address-resolution-protocol-arp">Address Resolution Protocol</h3>
-<p class="body-line">ARP (Address Resolution Protocol) operates at the boundary between Layer 2 and Layer 3. When a device knows the destination IP (Internet Protocol) address but needs the destination MAC (Media Access Control) address to build an Ethernet frame (L2PDU), ARP discovers that MAC address automatically.</p>
+<p class="body-line">ARP (Address Resolution Protocol) operates at the boundary between Layer 2 and Layer 3. When a device knows the destination IP address but needs the destination MAC address to build an Ethernet frame (L2PDU), ARP discovers that MAC address automatically.</p>
 <!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: ARP flow: PC-A knows destination IP 192.168.1.20 but not its MAC → broadcasts ARP Request (Who has 192.168.1.20?) to FF:FF:FF:FF:FF:FF → PC-B replies with unicast ARP Reply containing its MAC address ]</p></aside> -->
 <div class="doc-spacer" aria-hidden="true"></div>
 <div class="table-wrap"><table><thead><tr><th>ARP Message</th><th>Sent By</th><th>Destination</th><th>Meaning</th></tr></thead><tbody><tr><td>ARP Request</td><td>Device that needs the MAC address</td><td>Broadcast — FF:FF:FF:FF:FF:FF (all devices on the local network receive it)</td><td>&quot;Who has IP address X.X.X.X? Please reply with your MAC address.&quot;</td></tr><tr><td>ARP Reply</td><td>Device that owns that IP address</td><td>Unicast — sent directly to the MAC address of the requesting device</td><td>&quot;I have IP address X.X.X.X. My MAC address is AA:BB:CC:DD:EE:FF.&quot;</td></tr></tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">After the ARP Reply is received, the IP-to-MAC mapping is stored in the ARP table (also called the ARP cache). Entries expire after a period of inactivity so the table stays current as addresses change.</p>
+<p class="body-line">After the ARP Reply is received, the IP-to-MAC mapping is stored in the ARP table (also called the ARP cache).</p>
 <ul class="doc-list">
   <li>Static ARP entry: manually configured, permanent — does not expire. Used for security-sensitive or critical devices.</li>
-  <li>Dynamic ARP entry: learned automatically via ARP (Address Resolution Protocol). Expires after inactivity.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">When reading ARP table output, the column labels use the following terminology:</p>
-<ul class="doc-list">
-  <li>Internet Address / Logical Address: refers to the IP address of the device.</li>
-  <li>Physical Address: refers to the MAC address of the device.</li>
-  <li>Type — Static: a default system entry or a manually configured entry.</li>
-  <li>Type — Dynamic: an entry learned automatically via ARP (Address Resolution Protocol).</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
-<pre class="command-line"><code>arp -a          → Windows, Linux, macOS: view the ARP table</code></pre>
-<pre class="command-line"><code>show arp        → Cisco IOS: view the ARP table (shows IP address, MAC address, interface, and entry type)</code></pre>
+  <li>Dynamic ARP entry: learned automatically via ARP. Expires after inactivity.</li>
+<pre class="command-line"><code>arp -a                → Windows, Linux, macOS: view the ARP table</code></pre>
+<pre class="command-line"><code>show arp              → Cisco IOS: view the ARP table</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="the-ping-utility">Ping Utility</h3>
 <p class="body-line">Ping is a network diagnostic tool that tests whether a destination is reachable and measures the round-trip time (RTT). It uses ICMP (Internet Control Message Protocol) — sending an ICMP Echo Request to the destination and waiting for an ICMP Echo Reply. A successful reply confirms the path is working end-to-end.</p>
 <ul class="doc-list">
   <li>ICMP Echo Request: sent by the initiating device to the target IP address.</li>
   <li>ICMP Echo Reply: sent back by the target device if it is reachable.</li>
-</ul><aside class="callout"><strong>Note:</strong><p>When pinging a device on the same subnet for the first time, ARP (Address Resolution Protocol) must run first to resolve the destination MAC address. Only then can the ICMP packet be encapsulated in an Ethernet frame and sent. This is why the very first ping can occasionally be slow or fail.</p></aside>
+</ul><aside class="callout"><strong>Note:</strong><p>When pinging a device on the same subnet for the first time, ARP must run first to resolve the destination MAC address. Only then can the ICMP packet be encapsulated in an Ethernet frame and sent. This is why the very first ping can occasionally be slow or fail.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="the-routing-table">Routing Table</h3>
-<p class="body-line">A router consults its routing table for every forwarding decision — a database mapping destination networks to the interface or next-hop address used to reach them. To view it on a Cisco router:</p>
+<p class="body-line">A router consults its routing table for every forwarding decision — a database mapping destination networks to the interface or next-hop address used to reach them.</p>
+<h4 class="subheading" id="types-of-routing">Types of Routing</h4>
+<ul class="doc-list">
+  <li><strong>Static Routing:</strong> a network engineer manually configures routes using the <code>ip route</code> command. The router only knows what it is explicitly told and does not adapt automatically to topology changes. Appropriate for small networks or specific fixed routes.</li>
+  <li><strong>Dynamic Routing:</strong> routers automatically exchange routing information with neighboring routers and build their tables without manual intervention. When the network changes, routers update their tables automatically. Examples: OSPF (Open Shortest Path First), EIGRP (Enhanced Interior Gateway Routing Protocol), BGP (Border Gateway Protocol). Scales well for large networks.</li>
+</ul>
+<p class="body-line">To view the routing tables on a router:</p>
 <pre class="command-line"><code>show ip route</code></pre>
 <p class="body-line">The output shows a codes legend at the top listing all the protocols the router can use to learn routes, followed by the actual routing table entries.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="route-codes-how-routes-are-learned">Route Codes</h4>
 <ul class="doc-list">
   <li>L — Local: a route to the exact IP address configured on this router&#x27;s own interface. Uses a /32 prefix (e.g., 192.168.1.1/32) — the /32 mask has no host bits, matching exactly this one specific address.</li>
   <li>C — Connected: a route to the network the interface is directly part of. Uses the actual configured subnet prefix (e.g., 192.168.1.0/24 — the entire subnet).</li>
-  <li>S — Static: a route manually configured by a network administrator using the &#x27;ip route&#x27; command.</li>
+  <li>S — Static: a route manually configured by a network administrator using the <code>ip route</code> command.</li>
   <li>O — OSPF: a route learned from a neighboring router via the OSPF (Open Shortest Path First) dynamic routing protocol.</li>
 </ul><aside class="callout"><strong>Note:</strong><p>When you configure an IP address on an interface and enable it with &#x27;no shutdown&#x27;, two routes are automatically added: one Local (L) route for the interface&#x27;s exact IP, and one Connected (C) route for the subnet. These appear automatically — they are neither static nor dynamic.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="types-of-routing">Types of Routing</h4>
-<ul class="doc-list">
-  <li>Dynamic Routing: routers automatically exchange routing information with neighboring routers and build their tables without manual intervention. When the network changes, routers update their tables automatically. Examples: OSPF (Open Shortest Path First), EIGRP (Enhanced Interior Gateway Routing Protocol), Border Gateway Protocol (BGP). Scales well for large networks.</li>
-  <li><strong>Static Routing:</strong> a network engineer manually configures routes using the &#x27;ip route&#x27; command. The router only knows what it is explicitly told and does not adapt automatically to topology changes. Appropriate for small networks or specific fixed routes.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
+<div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="configuring-static-routes">Configuring Static Routes</h4>
 <p class="body-line">Static routes are added to the routing table using the &#x27;ip route&#x27; command. Three methods exist:</p>
 <div class="doc-spacer" aria-hidden="true"></div>
@@ -854,9 +843,9 @@ encapsulation dot1q 10                                → handle frames tagged w
 ip address 192.168.10.1 255.255.255.0                 → default gateway IP for VLAN 10 hosts</code></pre>
 <p class="body-line">Repeat for each VLAN. For the native VLAN, two options exist:</p>
 <ul class="doc-list">
-  <li><strong>Option 1:</strong> use a subinterface and add the &#x27;native&#x27; keyword: encapsulation dot1q 1001 native</li>
+  <li><strong>Option 1:</strong> use a subinterface and add the &#x27;native&#x27; keyword: <code>encapsulation dot1q 1001 native</code></li>
   <li><strong>Option 2:</strong> configure the IP directly on the physical interface — native VLAN frames arrive untagged, so no encapsulation command is needed.</li>
-</ul><aside class="callout"><strong>Note:</strong><p>Router on a Stick (ROAS) creates a bottleneck — all inter-VLAN traffic must travel through one physical cable to the router and back. For larger or higher-traffic networks, a Layer 3 (multilayer) switch is the preferred solution.</p></aside>
+</ul><aside class="callout"><strong>Note:</strong><p>Router-on-a-Stick (ROAS) can create a bottleneck because all inter-VLAN traffic must pass through the trunk link to the router and back. EtherChannel can increase the available bandwidth and provide redundancy, but for larger or high-traffic networks, a Layer 3 (multilayer) switch is generally the preferred solution because it performs inter-VLAN routing directly on the switch.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h5 class="subheading" id="layer-3-multilayer-switches">2- Multilayer Switches</h5>
 <p class="body-line">A multilayer switch (also called a Layer 3 switch) can both switch at Layer 2 and route at Layer 3. Inter-VLAN routing happens inside the switch itself at wire speed — eliminating the ROAS bottleneck entirely.</p>
