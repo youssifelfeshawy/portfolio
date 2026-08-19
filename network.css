@@ -302,6 +302,22 @@ pre code {
   list-style: none;
 }
 
+ol.doc-list {
+  counter-reset: doc-ol;
+}
+
+ol.doc-list > li::before {
+  content: counter(doc-ol) ".";
+  counter-increment: doc-ol;
+  color: var(--cyan);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: inherit;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
 .doc-list li {
   position: relative;
   margin: 9.6px 0;

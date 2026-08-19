@@ -335,9 +335,9 @@
 <div class="doc-spacer" aria-hidden="true"></div>
 <h2 class="major-heading" id="layer-2">Layer 2: Data Link Layer</h2>
 <p class="body-line">Layer 2 organizes raw bits into structured units called frames. Each Ethernet frame has a header, a payload, and a trailer. The header contains addressing information — source and destination MAC (Media Access Control) addresses — that identifies where the frame came from and where it needs to go. The payload carries the actual data from the layer above. The trailer contains an error-check value that lets the receiver verify the frame arrived intact. Layer 2 only handles delivery between devices on the same local network — delivering data across different networks is the job of Layer 3. Ethernet is the dominant Layer 2 protocol in wired local area networks, and every Ethernet frame follows the structure below.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
+<figure class="overview-figure-block figure-with-image"><img src="assets/layer_2_header.png" alt="Straight-Through vs. Crossover Cables"></figure>
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody><tr><td>Preamble</td><td>7 bytes</td><td>Alternating 1s and 0s (10101010 repeated). Allows receiving devices to synchronize their clock to the incoming bit stream before the actual frame begins.</td></tr><tr><td>Start Frame Delimiter (SFD)</td><td>1 byte</td><td>The bit pattern 10101011. Signals the end of the preamble — the very next byte is the start of the Destination MAC Address field.</td></tr><tr><td>Destination MAC Address</td><td>6 bytes</td><td>MAC address of the intended recipient. Can be unicast (one device), multicast (a group), or broadcast (FF:FF:FF:FF:FF:FF — all devices on the local network).</td></tr><tr><td>Source MAC Address</td><td>6 bytes</td><td>MAC address of the sending device&#x27;s network interface card (NIC).</td></tr><tr><td>Type / Length</td><td>2 bytes</td><td>Value 1536 (0x0600) or higher: identifies the Layer 3 protocol — 0x0800 = IPv4, 0x86DD = IPv6. Value below 1536: indicates the byte length of the payload.</td></tr><tr><td>Payload (Data)</td><td>46–1500 bytes</td><td>The encapsulated Layer 3 data — usually an IP packet. Minimum 46 bytes — if the actual data is shorter, padding bytes (zeros) are appended to reach the minimum. This ensures the total frame meets the 64-byte minimum required for correct collision detection.</td></tr><tr><td>FCS (Frame Check Sequence)</td><td>4 bytes</td><td>A Cyclic Redundancy Check (CRC) value — a mathematical checksum computed from all the data in the frame. The sender runs a CRC algorithm over the frame contents and places the result here. The receiver performs the same calculation on the received data and compares results. If they do not match, the frame was corrupted in transit and is silently discarded (no retransmission at this layer — reliability is handled by Layer 4).</td></tr></tbody></table></div>
-<aside class="callout"><strong>Important:</strong><p>The Preamble and Start Frame Delimiter (SFD) are not counted in the Ethernet frame size. The 64-byte minimum applies from Destination MAC through FCS: 6 + 6 + 2 + 46 + 4 = 64 bytes.</p></aside>
+<aside class="callout"><strong>Important:</strong><p>Preamble and Start Frame Delimiter (SFD) are not counted in the Ethernet frame size. The 64-byte minimum applies from Destination MAC through FCS: 6 + 6 + 2 + 46 + 4 = 64 bytes.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="frame-errors">Frame Errors</h3>
 <p class="body-line">Frame errors occur when a received frame does not meet the size constraints defined by the Ethernet standard.</p>
@@ -356,7 +356,7 @@
   <li>Half-Duplex: a device can either send or receive at any moment — never both simultaneously. Used with hubs and legacy equipment.</li>
   <li>Full-Duplex: a device can send and receive simultaneously on separate wire pairs. No collisions are possible. All modern switch-connected devices operate in full-duplex.</li>
 </ul>
-<!-- <pre class="command-line">changing to half or full duplex command</pre> -->
+<pre class="command-line">duplex {auto | full | half}</pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="collision-domains">Collision Domains</h3>
 <p class="body-line">A collision domain is a network segment where two devices transmitting simultaneously cause a collision. The type of device determines the collision domain boundaries:</p>
@@ -388,40 +388,33 @@
 <ul class="doc-list">
   <li>Learn: when a frame arrives, the switch reads the source MAC address and records it with the incoming port number in the MAC address table.</li>
   <li>Forward: the switch looks up the destination MAC address. If found, the frame is sent only out that port (unicast forwarding). If not found, the frame is flooded out all ports except the one it arrived on — called unknown unicast flooding.</li>
-  <li>Aging: if a MAC address entry is not refreshed for 5 minutes, it is removed from the table. The switch will flood again until the address is relearned.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
-<pre class="command-line"><code>show mac address-table                              → view the full MAC address table
-clear mac address-table dynamic                     → remove all dynamically learned entries
-clear mac address-table dynamic address &lt;MAC&gt;       → remove one specific entry by MAC address
-clear mac address-table dynamic interface &lt;INT&gt;     → remove all entries learned on one interface</code></pre>
+  <li>Aging: if a MAC address entry is not refreshed for 5 minutes, it is removed from the table. The switch will flood again until the address is relearned.</li></ul>
+<p class="body-line">To view the MAC address table or clear dynamically learned MAC addresses, either all at once, by a specific MAC address, or by a specific interface; static MAC addresses are not removed:</p>
+<pre class="command-line"><code>show mac address-table
+clear mac address-table dynamic [address <i>mac-addr</i> | interface <i>interface-id</i>]</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="local-area-network-lan-and-broadcast-domain">Broadcast Domain</h3>
 <p class="body-line">A set of all devices that receive a broadcast frame (destination MAC FF:FF:FF:FF:FF:FF) sent by any one member. By default, all ports on a switch are in the same broadcast domain.</p>
 <figure class="overview-figure-block figure-with-image"><img src="assets/broadcast_domain.jpg" alt="Straight-Through vs. Crossover Cables"></figure>
-
 <aside class="callout"><strong>Note:</strong><p>Routers break broadcast domains — a broadcast does not cross a router. Switches alone do not break broadcast domains, but VLANs let you create multiple separate broadcast domains within a single switch.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="virtual-local-area-networks-vlans">VLANs</h3>
 <p class="body-line">A VLAN (Virtual Local Area Network) logically separates end hosts at Layer 2 — creating isolated broadcast domains within a single physical switch. A switch will not forward traffic directly between hosts in different VLANs; to communicate across VLANs, traffic must be routed at Layer 3. To make VLANs work, each switch port must be configured as either an <strong>access port</strong> (connecting end hosts to a single VLAN) or a <strong>trunk port</strong> (carrying traffic for multiple VLANs between switches or routers).</p>
 <!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: One physical switch divided into 3 VLANs: VLAN 10 (Sales) on ports 1–4, VLAN 20 (Engineering) on ports 5–8, VLAN 30 (Management) on ports 9–12. A broadcast from VLAN 10 does not reach VLAN 20 or 30. ]</p></aside> -->
 <div class="table-wrap"><table><thead><tr><th>Range</th><th>Category</th><th>Notes</th></tr></thead><tbody><tr><td>1</td><td>Default VLAN</td><td>All switch interfaces belong to VLAN 1 by default. Cannot be deleted.</td></tr><tr><td>2–1001</td><td>Normal VLANs</td><td>Standard range. Supported on all VTP (VLAN Trunking Protocol) versions.</td></tr><tr><td>1002–1005</td><td>Reserved VLANs</td><td>Reserved for legacy technology. Cannot be modified or deleted.</td></tr><tr><td>1006–4094</td><td>Extended VLANs</td><td>Modern switches support these. Not supported by VTPv1 or VTPv2.</td></tr><tr><td>0 and 4095</td><td>Reserved</td><td>Reserved by the IEEE 802.1Q standard. Cannot be used.</td></tr></tbody></table></div>
-<pre class="command-line"><code>vlan 10                               → enter VLAN configuration mode (creates VLAN 10 if needed)
-name Sales                            → assign a descriptive name to the VLAN</code></pre>
+<pre class="command-line"><code>vlan <i>vlan-id</i>                      → create and enter VLAN configuration mode
+  name <i>vlan-name</i>                  → assign a descriptive name to the VLAN</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="configuring-access-ports">Access Ports</h4>
-<p class="body-line">An access port belongs to exactly one VLAN and connects to end hosts such as PCs, printers, and servers. The end host is unaware of VLANs — the switch handles VLAN membership transparently.</p>
-<pre class="command-line"><code>int range g0/1 - 4                    → select multiple interfaces at once
-switchport mode access                → configure as an access port
-switchport access vlan 10             → assign the port to VLAN 10 (auto-created if it does not exist)</code></pre>
-<pre class="command-line"><code>show vlan brief                       → view all VLANs and which access ports belong to each</code></pre>
-<aside class="callout"><strong>Note:</strong><p>&#x27;show vlan brief&#x27; shows access ports only — trunk ports do not appear here. Use &#x27;show interfaces trunk&#x27; to see trunk information.</p></aside>
+<p class="body-line">An access port belongs to exactly one VLAN and connects to end hosts such as PCs, printers, and servers. Frames on access ports are untagged — the end host is unaware of VLANs and the switch handles VLAN membership transparently.</p>
+<pre class="command-line"><code>int range <i>interfaces-ids</i>                   → select multiple interfaces at once
+  switchport mode access                   → configure as an access port
+  switchport access vlan <i>vlan-id</i>           → create and assign to the VLAN
+show vlan brief                            → view VLANs and assigned ports</code></pre>
+<aside class="callout"><strong>Note:</strong><p><code>show vlan brief</code> shows access ports only — trunk ports do not appear here. </p><p></p>Use <code>show interfaces trunk</code> to see trunk information.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="trunk-ports">Trunk Ports &amp; IEEE 802.1Q</h4>
-<p class="body-line">When multiple switches are interconnected, traffic from different VLANs needs to travel across the same physical link. A trunk port carries traffic for multiple VLANs simultaneously by tagging each frame with its VLAN ID so the receiving switch knows which VLAN it belongs to. The industry-standard protocol for this tagging is IEEE 802.1Q (dot1q) — it replaced the older Cisco-proprietary ISL (Inter-Switch Link) and is used in all modern networks.</p>
-<ul class="doc-list">
-  <li><strong>Access ports:</strong> untagged — carry traffic for a single VLAN. Connect to end hosts.</li>
-  <li><strong>Trunk ports:</strong> tagged — carry traffic for multiple VLANs simultaneously. Connect to other switches or routers.</li>
-</ul>
+<p class="body-line">When multiple switches are interconnected, traffic from different VLANs needs to travel across the same physical link. A trunk port carries traffic for multiple VLANs simultaneously — frames on trunk ports are tagged with their VLAN ID so the receiving switch knows which VLAN each frame belongs to. The industry-standard protocol for this tagging is IEEE 802.1Q (dot1q) — it replaced the older Cisco-proprietary ISL (Inter-Switch Link) and is used in all modern networks.</p>
 <figure class="overview-figure-block figure-with-image"><img src="assets/IEEE 802.1Q.png" alt="Straight-Through vs. Crossover Cables"></figure>
 <p class="body-line">When a switch sends a frame out a trunk port, it inserts a 4-byte 802.1Q tag into the Ethernet frame between the Source MAC Address and the Type/Length field. The receiving switch reads the tag to determine the VLAN, then strips it before delivering the frame to the destination host.</p>
 <div class="table-wrap"><table><thead><tr><th>Field</th><th style="width: 80px; white-space: nowrap;">Size</th><th>Purpose</th></tr></thead><tbody><tr><td>TPID (Tag Protocol Identifier)</td><td>16 bits</td><td>Always 0x8100 — identifies this frame as 802.1Q tagged.</td></tr><tr><td>PCP (Priority Code Point)</td><td>3 bits</td><td>Class of Service (CoS) — used for Quality of Service (QoS) to prioritize delay-sensitive traffic such as voice.</td></tr><tr><td>DEI (Drop Eligible Indicator)</td><td>1 bit</td><td>If set to 1, this frame may be dropped first during network congestion.</td></tr><tr><td>VID (VLAN Identifier)</td><td>12 bits</td><td>Identifies the VLAN the frame belongs to. 12 bits = 4,096 possible values (0–4,095).</td></tr></tbody></table></div>
@@ -431,12 +424,12 @@ switchport access vlan 10             → assign the port to VLAN 10 (auto-creat
   <li><strong>Security best practice:</strong> change the native VLAN to an unused VLAN (such as VLAN 1001) to prevent VLAN hopping attacks.</li>
   <li><strong>Must match:</strong> the native VLAN must be configured identically on both ends of a trunk link. A mismatch sends frames to the wrong VLAN.</li>
 </ul>
-<pre class="command-line"><code>int g0/1
-switchport trunk encapsulation dot1q  → set encapsulation to IEEE 802.1Q
-switchport mode trunk                 → configure the port as a trunk
-switchport trunk allowed vlan 10,20,30 → restrict which VLANs are permitted on this trunk
-switchport trunk native vlan 1001     → change native VLAN to an unused VLAN</code></pre>
-<pre class="command-line"><code>show interfaces trunk                 → view trunk ports, allowed VLANs, and native VLAN</code></pre>
+<pre class="command-line"><code>int <i>interface-id</i>                                 → select the interface
+  switchport trunk encapsulation dot1q           → set encapsulation to 802.1Q
+  switchport mode trunk                          → configure as a trunk
+  switchport trunk allowed vlan <i>vlan-list</i>        → allow only specified VLANs
+  switchport trunk native vlan <i>vlan-id</i>           → change the native VLAN
+show interfaces trunk                            → view trunk configurations</code></pre>
 <aside class="callout"><strong>Note:</strong><p>Because the 802.1Q tag adds 4 bytes to the frame, a tagged frame can be up to 1522 bytes — exceeding the normal 1518-byte maximum. This is expected and is not considered a giant frame.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="dynamic-trunking-protocol-dtp">Dynamic Trunking Protocol</h4>
@@ -467,88 +460,91 @@ switchport trunk native vlan 1001     → change native VLAN to an unused VLAN</
 </ul>
 <aside class="callout"><strong>Important:</strong><p>VTP is rarely used in modern networks and is generally not recommended. A switch with a higher revision number can overwrite the VLAN database on all connected switches, potentially destroying the network configuration. Manual VLAN configuration per switch is the safer approach.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
+
 <h3 class="subheading" id="stp">Spanning Tree Protocol</h3>
-<p class="body-line">Network redundancy is critical — if one switch or link fails, traffic must continue through an alternate path. However, redundant Layer 2 links create loops, and loops are catastrophic in Ethernet networks. STP (Spanning Tree Protocol) automatically blocks redundant paths to prevent loops while keeping those paths on standby as instant backups.</p>
-<h4 class="subheading" id="the-problem-with-redundant-links">The Problem with Redundant Links</h4>
-<p class="body-line">Unlike IP packets at Layer 3, Ethernet frames have no TTL (Time to Live) field — nothing naturally stops them from circulating forever in a loop.</p>
+<p class="body-line">Network redundancy is important because it keeps traffic flowing if a switch or link fails. However, adding redundant Layer 2 links can create switching loops, where Ethernet frames circulate repeatedly between switches.</p>
+<p class="body-line">Unlike Layer 3 IP packets, Ethernet frames do not have a TTL (Time to Live) field, so there is nothing to automatically stop a frame from travelling around a loop.</p>
+<p class="body-line">These loops can cause serious network problems:</p>
 <ul class="doc-list">
-  <li>Broadcast Storm: a broadcast frame (destination FF:FF:FF:FF:FF:FF) entering a loop is forwarded by every switch out every port indefinitely. Copies multiply rapidly. Within seconds, broadcast traffic consumes all available bandwidth and makes the network completely unusable.</li>
-  <li>MAC Address Flapping: in a loop, the same frame arrives on different switch ports repeatedly. The switch constantly updates its MAC address table, recording the same source MAC alternating between ports. This instability causes frames to be forwarded incorrectly and wastes switch resources.</li>
+  <li><strong>Broadcast Storm:</strong> a broadcast frame (destination FF:FF:FF:FF:FF:FF) is repeatedly forwarded around the loop, creating more and more copies until they consume most of the available bandwidth and can make the network unusable.</li>
+  <li><strong>MAC Address Flapping:</strong> the same source MAC address is learned on different switch ports repeatedly, causing the MAC address table to constantly change and making frame forwarding unstable.</li>
+</ul>
+<p class="body-line">STP (Spanning Tree Protocol) prevents these problems by detecting redundant Layer 2 paths and placing selected paths into a blocking state. This creates a loop-free topology while keeping the redundant links available as backup paths if the active path fails.</p>
 <figure class="overview-figure-block figure-with-image"><img src="assets/stp-topology.svg" alt="STP Topology"></figure>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="stp-versions">STP Versions</h4>
+<p class="body-line">STP has evolved into several versions that differ in convergence speed, VLAN support, and load-balancing capabilities:</p>
 <div class="table-wrap"><table><thead><tr><th>Version</th><th>Standard</th><th>Load Balance?</th><th>Description</th></tr></thead><tbody><tr><td>Classic STP</td><td>IEEE 802.1D</td><td>No</td><td>The original STP. All VLANs share one STP instance.</td></tr><tr><td>PVST</td><td>Cisco proprietary</td><td>Yes</td><td>Per-VLAN Spanning Tree. One STP instance per VLAN.  Supports ISL trunking only.</td></tr><tr><td>PVST+</td><td>Cisco proprietary</td><td>Yes</td><td>Per-VLAN Spanning Tree Plus. One STP instance per VLAN. Supports IEEE 802.1Q trunking.</td></tr><tr><td>Rapid STP (RSTP)</td><td>IEEE 802.1w</td><td>No</td><td>Much faster convergence than 802.1D. All VLANs share one STP instance.</td></tr><tr><td>Rapid PVST+</td><td>Cisco proprietary</td><td>Yes</td><td>Cisco&#x27;s upgrade to 802.1w. One STP instance per VLAN. Supports IEEE 802.1Q.</td></tr><tr><td>MSTP</td><td>IEEE 802.1s</td><td>Yes</td><td>Multiple Spanning Tree Protocol. Uses RSTP mechanics. Groups multiple VLANs into instances (e.g. VLANs 1–5 in instance 1, VLANs 6–10 in instance 2) to load balance.</td></tr></tbody></table></div>
-<p class="body-line">Modern Cisco switches run Rapid PVST+ by default. In the command, the keyword pvst refers to PVST+, not the original PVST. To change the STP mode:</p>
+<p class="body-line">Cisco switches support different STP modes. When configuring the mode, the keyword <code>pvst</code> refers to PVST+, while <code>rapid-pvst</code> enables Rapid PVST+. To change the STP mode:</p>
 <pre class="command-line"><code>spanning-tree mode {stp | rstp | mst | pvst | rapid-pvst}</code></pre>
 <aside class="callout"><strong>Note:</strong><p>STP Load Balancing in PVST+ allows different VLANs to use different active paths through the network. This is possible because PVST+ runs a separate STP instance for every VLAN.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="spanning-tree-protocol-stp-ieee-802-1d">IEEE 802.1D</h4>
-<p class="body-line">Classic STP (Spanning Tree Protocol), defined in IEEE 802.1D, is enabled by default on switches from all vendors. STP prevents Layer 2 loops by placing selected ports into a blocking state — disabling them from forwarding regular traffic. Blocked ports act as standby links that can activate if the primary path fails.</p>
-<div class="table-wrap"><table><thead><tr><th>Port State</th><th>Forwards Traffic?</th><th>Processes BPDUs?</th><th>Description</th></tr></thead><tbody><tr><td>Forwarding</td><td>Yes</td><td>Yes</td><td>Normal operation — forwards all traffic and participates fully in Spanning Tree Protocol.</td></tr><tr><td>Blocking</td><td>No</td><td>Yes (receives only)</td><td>Discards all regular traffic. Listens for BPDUs (Bridge Protocol Data Units) to detect topology changes. Activates if the active path fails.</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="bridge-protocol-data-units-bpdus">Bridge Protocol Data Units</h4>
-<p class="body-line">STP switches communicate using BPDUs (Bridge Protocol Data Units). Hello BPDUs are sent out every interface every 2 seconds by default. If a switch receives a Hello BPDU on an interface, it knows that interface is connected to another switch — end hosts like PCs and routers do not send BPDUs.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/BPDU.png" alt="Straight-Through vs. Crossover Cables"></figure>
-<div class="doc-spacer" aria-hidden="true"></div>
 
-<h4 class="subheading" id="the-bridge-id">The Bridge ID</h4>
-<p class="body-line">Every switch in an STP topology has a Bridge ID (Bridge Identifier) — a unique value used to elect the root bridge and make all forwarding decisions. The Bridge ID has two components:</p>
+<h4 class="subheading" id="classic-stp">Classic STP</h4>
+<p class="body-line">Classic STP, defined in IEEE 802.1D, prevents Layer 2 loops by allowing switches to identify redundant paths and block selected ports while keeping them available as backup paths.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/bpdu_exchange.jpg" alt="STP BPDU Exchange Between Switches"></figure>
+<p class="body-line">To make these decisions, switches need to exchange information about the STP topology. They do this using BPDUs (Bridge Protocol Data Units). BPDUs are special STP messages that switches use to share information about themselves and the paths they know about. By comparing the information carried in these BPDUs, the switches can agree on one loop-free topology.</p>
+<aside class="callout"><strong>Note:</strong><p>Classic STP (IEEE 802.1D) uses destination MAC address 0180.C200.0000 for BPDUs while Cisco&#x27;s PVST+ uses 0100.0CCC.CCCD.</p></aside>
+<p class="body-line">However, all switches need the same reference point when comparing their available paths. STP therefore selects one switch to become the Root Bridge. The Root Bridge acts as the central reference for the entire STP topology, and all other switches calculate their best path toward it.</p>
+<p class="body-line">When STP first starts, every switch initially assumes that it is the Root Bridge and sends BPDUs advertising itself. To elect the Root Bridge, the switches compare their Bridge IDs (Bridge Identifiers). The switch with the lowest Bridge ID wins the election and becomes the Root Bridge.</p>
+<p class="body-line">The Bridge ID is determined mainly by two values:</p>
 <ul class="doc-list">
-  <li>Bridge Priority: compared first when electing the root bridge. Default is 32,768 on all switches. In Cisco&#x27;s PVST+ (Per-VLAN Spanning Tree Plus) implementation, this 16-bit field is split into a 4-bit Bridge Priority and a 12-bit Extended System ID (equal to the VLAN ID). So the default Bridge Priority in VLAN 1 is 32,768 + 1 = 32,769. Notice that all the switches will be in the same vlan instance so all of them will have the same Extended System ID.</li>
-  <li>MAC Address: used as a tiebreaker when two switches have the same Bridge Priority. The switch with the numerically lower MAC address wins.</li>
-<!-- </ul><aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Bridge ID structure: [4-bit Bridge Priority | 12-bit Extended System ID (VLAN ID) | 48-bit MAC Address] — total 64 bits ]</p></aside> -->
-<p class="body-line">Because the Extended System ID (VLAN ID) cannot be changed, the Bridge Priority can only be adjusted in increments of 4,096. Valid values: 0, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 40960, 45056, 49152, 53248, 57344, 61440. To manually set the priority and make a specific switch the root bridge — for example because it is more reliable or better positioned in the network:</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<pre class="command-line"><code>spanning-tree vlan &lt;vlan-id&gt; priority &lt;value&gt;        → set a specific Bridge Priority (must be a multiple of 4096)</code></pre>
-<pre class="command-line"><code>spanning-tree vlan &lt;vlan-id&gt; root primary            → shortcut: sets priority to 24,576 (or 4,096 less than the current lowest, whichever wins)</code></pre>
-<pre class="command-line"><code>spanning-tree vlan &lt;vlan-id&gt; root secondary          → shortcut: sets priority to 28,672 — becomes root if the primary fails</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="root-bridge-election">Root Bridge Election</h4>
-<p class="body-line">The first step of STP (Spanning Tree Protocol) is electing one switch as the root bridge — the reference point for the entire topology. All forwarding paths are calculated relative to the root bridge.</p>
-<p class="body-line">When a switch powers on, it assumes it is the root bridge and sends Hello BPDUs advertising itself. If it receives a BPDU from a switch with a lower Bridge ID, it gives up its claim. Once all switches agree, only the root bridge generates original BPDUs — all other switches only forward them.</p>
+  <li><strong>Bridge Priority:</strong> compared first. The default value is 32,768. The switch with the lower Bridge Priority is preferred.</li>
+  <li><strong>MAC Address:</strong> used as the tiebreaker when two switches have the same Bridge Priority. The switch with the numerically lower MAC address wins.</li>
+</ul>
+<p class="body-line">In Cisco's PVST+ implementation, the Bridge ID also contains an Extended System ID, which represents the VLAN ID. The original 16-bit priority field is divided into a 4-bit configurable Bridge Priority and a 12-bit Extended System ID. For example, with the default priority of 32,768 in VLAN 1, the value represented in the Bridge ID becomes 32,768 + 1 = 32,769. Because part of this field is reserved for the Extended System ID, the configurable Bridge Priority changes in increments of 4,096: 0, 4096, 8192, 12288,....</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/stp_bridge_id.png" alt="STP Bridge ID Structure"></figure>
+<p class="body-line">The Bridge Priority can also be changed manually to influence which switch becomes the Root Bridge:</p>
+<pre class="command-line"><code>spanning-tree vlan <i>vlan-id</i> [priority <i>priority</i> | root {primary | secondary}]</code></pre>
+<p class="body-line">A lower Bridge Priority makes the switch more likely to become the Root Bridge. Cisco also provides shortcuts for selecting a primary and secondary Root Bridge:</p>
 <ul class="doc-list">
-  <li>Election rule: the switch with the lowest Bridge ID becomes the root bridge. Bridge Priority is compared first; if equal, the lower MAC address wins.</li>
-  <li>Root bridge ports: all ports on the root bridge are automatically Designated Ports in the forwarding state. The root bridge never has a blocking port.</li>
-<!-- </ul><aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: STP election example: Switch A priority 32769, Switch B priority 32769, Switch C priority 4097. Switch C wins (lowest priority) → all Switch C ports become Designated and forwarding. ]</p></aside> -->
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="stp-port-roles">STP Port Roles</h4>
-<p class="body-line">After the root bridge is elected, every port in the network is assigned one of three roles:</p>
-<!-- <div class="doc-spacer" aria-hidden="true"></div> -->
-<h5 class="subheading" id="root-port">Root Port</h5>
-<p class="body-line">Every non-root switch selects exactly one Root Port — the port with the best path to the root bridge. Root ports are placed in the forwarding state. The port on the opposite end of every root port is always a Designated Port.</p>
-<p class="body-line">Tiebreaker order for root port selection:</p>
+  <li><strong>root primary:</strong> adjusts the Bridge Priority to make the switch the preferred Root Bridge.</li>
+  <li><strong>root secondary:</strong> configures the switch as a preferred backup Root Bridge if the primary Root Bridge fails.</li>
+</ul>
+<p class="body-line">Once the Root Bridge is established, it becomes the only switch that originates Hello BPDUs every 2 seconds by default, while the other switches receive and forward them through the topology. STP then assigns a role to every port. Classic STP uses three main port roles:</p>
 <ul class="doc-list">
-  <li>Lowest Root Path Cost — the total cumulative cost of all links from this switch to the root bridge, based on link speed.</li>
-  <li>Lowest Neighbor Bridge ID — if costs are equal, prefer the port connected to the switch with the lower Bridge ID.</li>
-  <li>Lowest Neighbor Port ID — if the neighbor Bridge ID is also equal (e.g., two parallel links between the same switches), prefer the port connected to the neighbor&#x27;s lower Port ID. Port ID = Port Priority (default 128) + Port Number. To influence which port a downstream switch selects as its root port, you can adjust the port priority on the upstream switch&#x27;s interface: <code>spanning-tree vlan &lt;vlan-id&gt; port-priority &lt;value&gt; </code></li>
-</ul><aside class="callout"><strong>Note:</strong><p>It is the neighbor switch&#x27;s Port ID that is used to break ties — not the local switch&#x27;s own Port ID.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="spanning-tree-protocol-stp-link-cost-values">STP (Spanning Tree Protocol) Link Cost Values:-</h4>
+  <li><strong>Root Port (RP):</strong> the port on a non-root switch that provides the best path toward the Root Bridge. Every non-root switch has exactly one Root Port. During normal STP operation, it receives BPDUs from the Designated Port on the other end of the link.</li>
+  <li><strong>Designated Port (DP):</strong> the port selected to forward traffic on a network link. Every link has exactly one Designated Port. Designated Ports send or forward BPDUs onto their links.</li>
+  <li><strong>Non-Designated Port:</strong> a redundant port that is placed in the blocking state to prevent a Layer 2 loop. It receives BPDUs but does not forward regular traffic or forward BPDUs.</li>
+</ul>
+<figure class="overview-figure-block figure-with-image"><img src="" alt="STP Root Designated and Non-Designated Port Roles"></figure>
+<p class="body-line">STP assigns these roles in a specific order. First, all ports on the Root Bridge become Designated Ports. The Root Bridge does not have a Root Port because it is already the reference point that all other switches are trying to reach.</p>
+<p class="body-line">Next, every non-root switch must select exactly <strong>one Root Port</strong> — the port that provides its best path toward the Root Bridge. If a switch has multiple possible paths, STP selects the Root Port using these tiebreakers in order:</p>
+<ol class="doc-list">
+  <li><strong>Lowest Root Path Cost</strong></li>
+  <li><strong>Lowest Neighbor Bridge ID</strong></li>
+  <li><strong>Lowest Neighbor Port ID</strong></li>
+</ol>
+<p class="body-line">The first value compared is the Root Path Cost. The Root Bridge starts by advertising a Root Path Cost of 0. Each switch that receives a superior BPDU adds the STP cost of the receiving link to the advertised cost, building the total cost back toward the Root Bridge. The path with the lowest total Root Path Cost is preferred.</p>
 <div class="table-wrap"><table><thead><tr><th>Link Speed</th><th>STP Cost</th></tr></thead><tbody><tr><td>10 Mbps</td><td>100</td></tr><tr><td>100 Mbps</td><td>19</td></tr><tr><td>1 Gbps</td><td>4</td></tr><tr><td>10 Gbps</td><td>2</td></tr></tbody></table></div>
+<p class="body-line">The cost of a specific interface can also be changed manually to influence which path STP prefers:</p>
+<pre class="command-line"><code>spanning-tree vlan <i>vlan-id</i> cost <i>cost</i></code></pre>
+<p class="body-line">If multiple possible Root Ports have the same Root Path Cost, STP compares the Bridge IDs of the neighboring switches. The port connected to the neighbor with the lowest Bridge ID is preferred.</p>
+<p class="body-line">If the remaining candidate ports are connected to the same neighboring switch, their Neighbor Bridge ID is also equal, so STP compares the Neighbor Port IDs. The port connected to the neighbor's lowest Port ID is preferred.</p>
+<p class="body-line">The Port ID is formed from the Port Priority and the Port Number. The default Port Priority is 128, while the Port Number identifies the specific interface on the neighboring switch, such as G0/1 or G0/2. If the Port Priority is also equal, the port connected to the neighbor's lower Port Number — and therefore lower Port ID — is preferred.</p>
+<!-- <p class="body-line">The Port ID is formed from the Port Priority and the Port Number. The default Port Priority is 128. The port connected to the neighbor's lower Port ID is prefered.</p> -->
+<!-- <figure class="overview-figure-block figure-with-image"><img src="assets/Straight_vs_crossover.jpg" alt="Straight-Through vs. Crossover Cables"></figure> -->
+<p class="body-line">The Port Priority can be changed on the upstream interface to influence this final tiebreaker:</p>
+<pre class="command-line"><code>spanning-tree vlan <i>vlan-id</i> port-priority <i>priority</i></code></pre>
+</ul><aside class="callout"><strong>Note:</strong><p>It is the neighbor switch&#x27;s Port ID that is used to break ties — not the local switch&#x27;s own Port ID.</p></aside>
+<p class="body-line">Once every non-root switch has selected its Root Port, STP must determine which port should forward traffic on every network segment. This port is called the Designated Port. Every network segment has exactly one Designated Port. On the Root Bridge, all ports are automatically Designated Ports.</p>
+<p class="body-line">On a link between two non-root switches, STP selects the Designated Port using the following order:</p>
+<ol class="doc-list">
+  <li><strong>Lowest Root Path Cost</strong></li>
+  <li><strong>Lowest Bridge ID</strong></li>
+</ol>
+<p class="body-line">The switch with the better path toward the Root Bridge makes its port the Designated Port.</p>
+<p class="body-line">After the Root Ports and Designated Ports have been selected, any remaining port becomes a Non-Designated Port. This is the redundant port that STP prevents from forwarding regular traffic so that a Layer 2 loop cannot form.</p>
+<p class="body-line">A port's <strong>role</strong> describes its purpose in the STP topology, while its state determines what the port is currently allowed to do. Classic STP uses five port states:</p>
+<div class="table-wrap"><table><thead><tr><th>State</th><th>Type</th><th>Sends/ Receives Traffic?</th><th>Sends/ Receives BPDUs?</th><th>Learning MAC Address</th><th>Description</th></tr></thead><tbody><tr><td>Blocking</td><td>Stable</td><td>No</td><td>Receives only</td><td>No</td><td>Blocks regular traffic indefinitely to prevent loops and remains in this state until the topology changes.</td></tr><tr><td>Listening</td><td>Transitional</td><td>No</td><td>Yes</td><td>No</td><td>Processes BPDUs for 15 seconds to determine whether the port can safely move toward Forwarding.</td></tr><tr><td>Learning</td><td>Transitional</td><td>No</td><td>Yes</td><td>Yes</td><td>Learns MAC addresses for 15 seconds while still preventing regular traffic from being forwarded.</td></tr><tr><td>Forwarding</td><td>Stable</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Operates normally by forwarding traffic and learning MAC addresses until the topology changes.</td></tr><tr><td>Disabled</td><td>Administrative</td><td>No</td><td>No</td><td>No</td><td>Remains inactive while the port is administratively shut down and does not participate in STP.</td></tr></tbody></table></div>
+<p class="body-line">When a blocked port needs to become active, it normally transitions through <strong>Blocking → Listening → Learning → Forwarding</strong>. Listening and Learning each last 15 seconds, giving a 30-second Forward Delay.</p>
+<figure class="overview-figure-block figure-with-image"><img src="" alt="Classic STP Blocking Listening Learning and Forwarding State Transition"></figure>
+<aside class="callout">
+  <strong>Note:</strong>
+  <p>Moving from Blocking to Forwarding, the port wait up to 20 seconds for the Max Age timer to expire which is how long the port don't recieve BPDUs before STP considers to change. After that, the port spends 15 seconds in Listening and 15 seconds in Learning, so convergence can take up to 50 seconds. These delays help STP avoid making a wrong topology decision that could create a loop. However, a port moving from Forwarding to Blocking can do so immediately.</p>
+</aside>
+<p class="body-line">To view the STP configurations:</p>
+<pre class="command-line"><code>show spanning-tree [summary | {int &lt;interface-id&gt;} | {vlan &lt;vlan-id&gt;} | detail]</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">Cost calculation example: Switch SW2 has two paths to the root bridge. Via G0/1: root bridge advertised cost 0, SW2&#x27;s G0/1 link cost = 4 (1 Gbps), total = 4. Via G0/0: intermediate switch advertised cost 4, SW2&#x27;s G0/0 adds 4, total = 8. SW2 selects G0/1 as its Root Port — lower total cost. To influence root port selection by adjusting the cost of a specific link:</p>
-<pre class="command-line"><code>spanning-tree vlan &lt;vlan-id&gt; cost &lt;value&gt;            → change the STP cost on this interface for the specified VLAN</code></pre>
-<h5 class="subheading" id="designated-port">Designated Port</h5>
-<p class="body-line">Every network segment (every link between two switches) has exactly one Designated Port — the port that forwards traffic onto that segment. Designated ports are in the forwarding state. For links between two non-root switches, the designated port is chosen as follows:</p>
-<ul class="doc-list">
-  <li>The switch with the lower total root path cost makes its port the Designated Port.</li>
-  <li>If root path costs are equal: the switch with the lower Bridge ID makes its port the Designated Port.</li>
-  <li>The other switch&#x27;s port becomes the Non-Designated (blocking) Port.</li>
-<h5 class="subheading" id="non-designated-port-blocking">Non-Designated Port</h5>
-<p class="body-line">Any port that is neither a Root Port nor a Designated Port becomes a Non-Designated Port in the blocking state. This is the port STP disables to break the loop. It remains ready to transition to forwarding if the active path fails.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<div class="table-wrap"><table><thead><tr><th>Step</th><th>Action</th><th>Tiebreaker Order</th></tr></thead><tbody><tr><td>1 — Elect Root Bridge</td><td>One switch becomes the root bridge. All its ports are Designated Ports (forwarding).</td><td>1. Lowest Bridge Priority  2. Lowest MAC Address</td></tr><tr><td>2 — Select Root Ports</td><td>Each non-root switch selects one Root Port (forwarding) — its best path to the root bridge.</td><td>1. Lowest Root Path Cost  2. Lowest Neighbor Bridge ID  3. Lowest Neighbor Port ID</td></tr><tr><td>3 — Select Designated Ports</td><td>Each network segment gets one Designated Port (forwarding) on the switch closest to the root bridge.</td><td>1. Lowest Root Path Cost  2. Lowest Bridge ID</td></tr><tr><td>4 — Block Remaining Ports</td><td>All remaining ports become Non-Designated Ports (blocking) to eliminate loops.</td><td>No election — any port that is not a Root or Designated Port is blocked.</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="stp-port-states">STP Port States</h4>
-<p class="body-line">Each switch port in a STP (Spanning Tree Protocol) topology is always in one of four states. Two are stable and two are transitional — passed through when changing from blocking to forwarding.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<div class="table-wrap"><table><thead><tr><th>State</th><th>Type</th><th>Sends/ Receives Traffic?</th><th>Sends/Receives BPDUs?</th><th>Learns MAC Addresses?</th><th>Duration</th></tr></thead><tbody><tr><td>Blocking</td><td>Stable</td><td>No</td><td>Receives only — does NOT forward BPDUs</td><td>No</td><td>Indefinite — stays here until topology changes</td></tr><tr><td>Listening</td><td>Transitional</td><td>No</td><td>Yes — sends and receives BPDUs</td><td>No</td><td>15 seconds (Forward Delay timer)</td></tr><tr><td>Learning</td><td>Transitional</td><td>No</td><td>Yes — sends and receives BPDUs</td><td>Yes</td><td>15 seconds (Forward Delay timer)</td></tr><tr><td>Forwarding</td><td>Stable</td><td>Yes</td><td>Yes — sends and receives BPDUs</td><td>Yes</td><td>Indefinite — normal operation</td></tr></tbody></table></div>
-<aside class="callout"><strong>Note:</strong><p>A Forwarding port can move directly to Blocking with no delay — blocking cannot create a loop. However, a Blocking port must always pass through Listening (15 s) and Learning (15 s) first — 30 seconds total — before reaching Forwarding. This prevents loops from accidentally forming. A blocking interface transitioning after Max Age expires takes 50 seconds total (20 s Max Age + 15 s Listening + 15 s Learning).</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="stp-timers">STP Timers</h4>
-<div class="table-wrap"><table><thead><tr><th>Timer</th><th>Default Value</th><th>Purpose</th></tr></thead><tbody><tr><td>Hello Timer</td><td>2 seconds</td><td>How often the root bridge sends Hello BPDUs. All other switches only forward these BPDUs.</td></tr><tr><td>Forward Delay</td><td>15 seconds</td><td>How long a port spends in the Listening state, then the Learning state (15 s each = 30 s total before Forwarding).</td></tr><tr><td>Max Age</td><td>20 seconds</td><td>How long an interface waits after ceasing to receive Hello BPDUs before re-evaluating the STP topology. Resets every time a BPDU is received. If it reaches 0, the switch re-elects the root bridge, root ports, and designated ports. 20 seconds = 10 × Hello interval.</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
+<!-- ---------- -->
 <h4 class="subheading" id="stp-toolkit">STP Toolkit</h4>
 <p class="body-line">The STP Toolkit refers to a set of features that enhance, protect, and optimize STP (Spanning Tree Protocol) behavior: PortFast, BPDU Guard, BPDU Filter, Root Guard, and Loop Guard.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
@@ -561,16 +557,16 @@ switchport trunk native vlan 1001     → change native VLAN to an unused VLAN</
 <pre class="command-line"><code>spanning-tree portfast trunk                   → enable PortFast on a trunk interface (use with caution)</code></pre>
 <pre class="command-line"><code>spanning-tree portfast disable                 → disable PortFast on this specific port</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">To enable PortFast globally on all access ports (not trunk ports):</p>
-<pre class="command-line"><code>spanning-tree portfast default                 → enables PortFast on all access ports automatically</code></pre>
+<p class="body-line">To enable PortFast globally on all access ports (recommended):</p>
+<pre class="command-line"><code>spanning-tree portfast default                 → enables PortFast on all access ports automatically (recommended)</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h5 class="subheading" id="bpdu-guard">BPDU Guard</h5>
 <p class="body-line">BPDU Guard protects PortFast-enabled ports from accidentally receiving BPDUs (Bridge Protocol Data Units). If a BPDU Guard-enabled port receives a BPDU — indicating another switch has been connected — the port is immediately shut down (placed in an ErrDisable state) to prevent a potential loop.</p>
 <pre class="command-line"><code>int g#/#</code></pre>
 <pre class="command-line"><code>spanning-tree bpduguard enable                 → enable BPDU Guard on this interface</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">To enable BPDU Guard globally on all PortFast-enabled interfaces:</p>
-<pre class="command-line"><code>spanning-tree portfast bpduguard default        → enables BPDU Guard on all PortFast ports</code></pre>
+<p class="body-line">To enable BPDU Guard globally on all PortFast-enabled interfaces (recommended):</p>
+<pre class="command-line"><code>spanning-tree portfast bpduguard default        → enables BPDU Guard on all PortFast ports (recommended)</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h5 class="subheading" id="errdisable-and-errdisable-recovery">ErrDisable and ErrDisable Recovery</h5>
 <p class="body-line">ErrDisable is a Cisco switch feature that automatically shuts down a port when a policy violation is detected — such as a BPDU Guard violation. The port enters an err-disabled state and stops forwarding traffic.</p>
@@ -591,7 +587,7 @@ switchport trunk native vlan 1001     → change native VLAN to an unused VLAN</
 <div class="doc-spacer" aria-hidden="true"></div>
 <ul class="doc-list">
   <li>Default (recommended): enables BPDU Filter on all PortFast-enabled ports. If the port receives a BPDU, PortFast and BPDU Filter are automatically disabled and the port operates as a normal STP port.</li>
-</ul><pre class="command-line"><code>spanning-tree portfast [edge] bpdufilter default        → enable BPDU Filter on all PortFast-enabled ports</code></pre>
+</ul><pre class="command-line"><code>spanning-tree portfast bpdufilter default       → enable BPDU Filter on all PortFast-enabled ports (recommended)</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h5 class="subheading" id="root-guard">Root Guard</h5>
 <p class="body-line">Root Guard protects the STP topology by preventing an unauthorized switch from becoming the root bridge. When enabled on an interface, if that interface receives a superior BPDU — one with a lower Bridge ID than the current root bridge — the port is placed into a Broken (Root Inconsistent) state, effectively disabling it.</p>
@@ -599,7 +595,7 @@ switchport trunk native vlan 1001     → change native VLAN to an unused VLAN</
 <pre class="command-line"><code>int g#/#
 spanning-tree guard root                               → enable Root Guard on this interface</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">A Root Guard-disabled port will not forward data frames and will discard any frames it receives. Once the superior BPDUs stop being received and their Max Age (20 seconds by default) expires, the port is automatically re-enabled.</p>
+<p class="body-line">A port placed in the Root Inconsistent state by Root Guard will not revceive or forward any data frames. Once the superior BPDUs stop being received and their Max Age (20 seconds by default) expires, the port is automatically re-enabled.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h5 class="subheading" id="loop-guard">Loop Guard</h5>
 <p class="body-line">Loop Guard protects against unidirectional link failures — where data flows in only one direction between two switches. This is more common with fiber optic cables than copper UTP, due to the separate TX and RX strands. Causes include damaged cables, faulty connectors, or faulty SFP transceivers.</p>
@@ -615,8 +611,7 @@ spanning-tree guard root                               → enable Root Guard on 
 <ul class="doc-list">
   <li>Root Guard: applied to Designated Ports — prevents them from becoming Root Ports by blocking superior BPDUs.</li>
   <li>Loop Guard: applied to Root and Non-Designated Ports — prevents them from becoming Designated Ports when BPDUs stop arriving.</li>
-</ul><p class="body-line">If both are configured on the same port, the more specific configuration wins. If Loop Guard is enabled globally and Root Guard is then configured on a specific port, Root Guard takes effect on that port and Loop Guard is disabled there.</p>
-<aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: STP Toolkit summary: PortFast on edge/access ports → BPDU Guard protects those ports → Root Guard on designated ports facing untrusted switches → Loop Guard on root/non-designated ports facing unidirectional link risk ]</p></aside>
+</ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="rapid-spanning-tree-protocol-rstp-ieee-802-1w">Rapid Spanning Tree Protocol</h4>
 <p class="body-line">RSTP (Rapid Spanning Tree Protocol), standardized as IEEE 802.1w and implemented in Cisco switches as Rapid PVST+, is the modern replacement for Classic STP. Its key advantage is dramatically faster convergence — adapting to topology changes in seconds rather than up to 50 seconds with Classic STP.</p>
@@ -625,7 +620,7 @@ spanning-tree guard root                               → enable Root Guard on 
 <p class="body-line">Rapid STP simplifies the port states compared to Classic STP. The Listening state is removed entirely, and the Disabled and Blocking states are merged into a single Discarding state:</p>
 <div class="table-wrap"><table><thead><tr><th>Classic STP State</th><th>RSTP State</th><th>Notes</th></tr></thead><tbody><tr><td>Disabled</td><td>Discarding</td><td>Port is administratively shut down.</td></tr><tr><td>Blocking</td><td>Discarding</td><td>Port is enabled but blocking traffic to prevent loops.</td></tr><tr><td>Listening</td><td>Removed</td><td>The Listening state does not exist in RSTP.</td></tr><tr><td>Learning</td><td>Learning</td><td>Same as Classic STP — learns MAC addresses but does not forward traffic.</td></tr><tr><td>Forwarding</td><td>Forwarding</td><td>Same as Classic STP — fully operational.</td></tr></tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Note:</strong><p>Classic STP (IEEE 802.1D) uses destination MAC address 0180.C200.0000 for BPDUs. Cisco&#x27;s PVST+ uses 0100.0CCC.CCCD. Rapid STP is backward compatible with Classic STP — interfaces connected to a Classic STP switch will automatically operate in Classic STP mode, reverting to the full Blocking → Listening → Learning → Forwarding process with the original timers.</p></aside>
+<aside class="callout"><strong>Note:</strong><p>Rapid STP is backward compatible with Classic STP — interfaces connected to a Classic STP switch will automatically operate in Classic STP mode, reverting to the full Blocking → Listening → Learning → Forwarding process with the original timers.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h5 class="subheading" id="rstp-port-roles">RSTP Port Roles</h5>
 <p class="body-line">Rapid STP retains the Root Port and Designated Port roles from Classic STP, but splits the Non-Designated port role into two distinct roles:</p>
@@ -640,35 +635,28 @@ spanning-tree guard root                               → enable Root Guard on 
 <h5 class="subheading" id="rstp-link-types">RSTP Link Types</h5>
 <p class="body-line">Rapid STP classifies each port into one of three link types, which determines how quickly it can transition to Forwarding. The link type is detected automatically, but can also be manually configured when needed:</p>
 <ul class="doc-list">
-  <li>Edge: a port connected directly to an end host (PC, server, printer). Moves immediately to Forwarding without negotiation — equivalent to Classic STP&#x27;s PortFast. Configured with: spanning-tree portfast. Edge ports are built into RSTP automatically.</li>
+  <li>Edge: a port connected directly to an end host. Moves immediately to Forwarding without negotiation — equivalent to Classic STP&#x27;s PortFast. Edge ports are built into RSTP automatically.</li>
   <li>Point-to-Point: a direct full-duplex connection between two switches. RSTP can rapidly negotiate Forwarding using a handshake process. Detected automatically in full-duplex.</li>
   <li>Shared: a connection to a hub operating in half-duplex. Must use Classic STP timers and transition process. Detected automatically in half-duplex.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
 <p class="body-line">To manually override the detected link type when needed:</p>
-<pre class="command-line"><code>spanning-tree link-type &lt;point-to-point|shared&gt;       → manually set the link type on this interface</code></pre>
+<pre class="command-line"><code>int <i>interface</i>
+spanning-tree link-type {point-to-point | shared}</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Note:</strong><p>Two Classic STP optional features — UplinkFast (fast failover for Root Ports) and BackboneFast (fast recovery from indirect failures) — are both built into RSTP automatically. You do not need to configure them separately when using Rapid PVST+.</p></aside>
+<aside class="callout"><strong>Note:</strong><p>Two Classic STP optional features — UplinkFast (speeds up recovery when a switch’s Root Port fails) and BackboneFast (speeds up recovery from indirect failures elsewhere in the STP topology) — are built into RSTP by default. Therefore, when using Rapid PVST+, no need to configure either feature separately.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="viewing-stp-information">Viewing STP Information</h4>
-<pre class="command-line"><code>show spanning-tree                         → view STP state for all VLANs, including port roles and states</code></pre>
-<pre class="command-line"><code>show spanning-tree vlan &lt;vlan-id&gt;          → filter by a specific VLAN</code></pre>
-<pre class="command-line"><code>show spanning-tree detail                  → detailed view including total path cost to the root bridge</code></pre>
-<pre class="command-line"><code>show spanning-tree summary                 → lists each VLAN and the number of interfaces in each STP state</code></pre>
-<pre class="command-line"><code>show spanning-tree interface g#/# detail   → detailed STP information for a specific interface</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
+<!-- ---------- -->
 <h3 class="topic-heading" id="etherchannel">EtherChannel</h3>
-<p class="body-line">When multiple links connect two switches, Spanning Tree Protocol disables all but one to prevent loops — leaving redundant bandwidth unused. EtherChannel bundles multiple physical interfaces together into a single logical interface, allowing all links to carry traffic simultaneously while STP sees only one connection.</p>
+<p class="body-line">When multiple physical links connect two switches, Spanning Tree Protocol blocks all but one to prevent loops — leaving redundant bandwidth unused. EtherChannel solves this by bundling multiple physical interfaces into a single logical interface, so STP sees only one connection and all links carry traffic simultaneously.</p>
 <h4 class="subheading" id="network-design-context">Network Design Context</h4>
 <p class="body-line">In a typical campus network, there are two important switch roles:</p>
 <ul class="doc-list">
-  <li>Access Layer Switch: the switch that end hosts (PCs, phones, printers) connect directly to. This is the edge of the network.</li>
-  <li>Distribution Layer Switch: the switch that access layer switches connect to. It aggregates traffic from multiple access switches and connects them to the rest of the network or the internet.</li>
-</ul><p class="body-line">When the total bandwidth of all end-host-facing interfaces on an access switch exceeds the uplink bandwidth to the distribution switch, this is called oversubscription. Some oversubscription is acceptable, but too much causes congestion.</p>
-<p class="body-line">Connecting two switches with multiple links without EtherChannel causes Spanning Tree Protocol to block all links except one — the redundant links carry no traffic unless the active link fails. EtherChannel solves this by making STP treat the entire bundle as a single interface, allowing all physical links to forward simultaneously.</p>
+  <li><strong>Access Layer Switch:</strong> the switch that end hosts (PCs, phones, printers) connect directly to. This is the edge of the network.</li>
+  <li><strong>Distribution Layer Switch:</strong> the switch that access layer switches connect to. It aggregates traffic from multiple access switches and connects them to the rest of the network or the internet.</li>
+</ul><p class="body-line">When the total bandwidth of all end-host-facing interfaces on an access switch exceeds the uplink bandwidth to the distribution switch, this is called oversubscription. Some oversubscription is acceptable, but too much causes congestion. EtherChannel reduces oversubscription by combining the bandwidth of multiple uplinks into a single high-capacity connection.</p>
 <!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Two switches connected by 4 physical links: without EtherChannel, STP blocks 3 of them. With EtherChannel, all 4 links are active and treated as one logical interface by STP. ]</p></aside> -->
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="how-etherchannel-works">How EtherChannel Works</h4>
-<p class="body-line">EtherChannel (also called Port Channel or LAG (Link Aggregation Group)) groups multiple physical interfaces into one logical interface. Traffic is distributed across the physical links using a load-balancing algorithm based on flows — a flow being a communication between two specific nodes.</p>
+<p class="body-line">EtherChannel also called Port Channel or LAG (Link Aggregation Group) which groups multiple physical interfaces into one logical interface. Traffic is distributed across the physical links using a load-balancing algorithm based on flows — a flow being a communication between two specific nodes.</p>
 <p class="body-line">All frames belonging to the same flow are always sent over the same physical interface. This guarantees in-order delivery within each flow. Sending frames from the same flow over different physical interfaces could cause out-of-order arrival, which causes problems for higher-layer protocols.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="load-balancing-methods">Load-Balancing Methods</h4>
@@ -681,12 +669,11 @@ spanning-tree guard root                               → enable Root Guard on 
   <li>dst-ip: destination IP address.</li>
   <li>src-dst-ip: source and destination IP addresses.</li>
 </ul><div class="doc-spacer" aria-hidden="true"></div>
-<pre class="command-line"><code>port-channel load-balance &lt;method&gt;          → change the load-balancing method (global config mode)
-show etherchannel load-balance              → view the current load-balancing method</code></pre>
+<pre class="command-line"><code>port-channel load-balance {src-mac|dst-mac|src-dst-mac|src-ip|dst-ip|src-dst-ip}
+show etherchannel load-balance</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="etherchannel-configuration-methods">EtherChannel Configuration Methods</h4>
 <p class="body-line">There are three methods for forming an EtherChannel on Cisco switches:</p>
-<div class="doc-spacer" aria-hidden="true"></div>
 <h5 class="subheading" id="1-port-aggregation-protocol-pagp">1- PAgP (Port Aggregation Protocol)</h5>
 <p class="body-line">PAgP (Port Aggregation Protocol) is a Cisco-proprietary protocol that dynamically negotiates the creation and maintenance of an EtherChannel — similar to how DTP (Dynamic Trunking Protocol) works for trunks.</p>
 <div class="table-wrap"><table><thead><tr><th>Switch A Mode</th><th>Switch B Mode</th><th>EtherChannel Formed?</th></tr></thead><tbody><tr><td>auto</td><td>auto</td><td>No — both are passive, neither initiates</td></tr><tr><td>desirable</td><td>auto</td><td>Yes — desirable actively initiates</td></tr><tr><td>desirable</td><td>desirable</td><td>Yes — both actively negotiate</td></tr></tbody></table></div>
@@ -694,24 +681,20 @@ show etherchannel load-balance              → view the current load-balancing 
 <p class="body-line">LACP (Link Aggregation Control Protocol) is the industry-standard protocol (IEEE 802.3ad) for dynamic EtherChannel negotiation. It is equivalent to PAgP but works between switches from different vendors.</p>
 <div class="table-wrap"><table><thead><tr><th>Switch A Mode</th><th>Switch B Mode</th><th>EtherChannel Formed?</th></tr></thead><tbody><tr><td>passive</td><td>passive</td><td>No — both are passive, neither initiates</td></tr><tr><td>active</td><td>passive</td><td>Yes — active initiates</td></tr><tr><td>active</td><td>active</td><td>Yes — both actively negotiate</td></tr></tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Note:</strong><p>LACP supports up to 16 interfaces in a single EtherChannel, but only 8 can be active at once. The remaining 8 are in standby mode, ready to become active if one of the active interfaces fails.</p></aside>
+<aside class="callout"><strong>Note:</strong><p>LACP supports up to 16 interfaces in a single EtherChannel, but only 8 can be active at once. The remaining 8 are in standby mode, ready to become active if one of the active interfaces fails. This standby feature is in LACP only the rest just has 8 active.</p></aside>
 <h5 class="subheading" id="3-static-etherchannel">3- Static EtherChannel</h5>
-<p class="body-line">Static EtherChannel does not use any negotiation protocol. Interfaces are manually configured to form an EtherChannel. Both sides must be set to &#x27;on&#x27; mode. On mode only works with on mode — mixing &#x27;on&#x27; with &#x27;desirable&#x27; (PAgP) or &#x27;active&#x27; (LACP) will not form an EtherChannel.</p>
+<p class="body-line">Static EtherChannel does not use any negotiation protocol. Interfaces are manually configured to form an EtherChannel. Both sides must be set to &#x27;on&#x27; mode. Mixing &#x27;on&#x27; with &#x27;desirable&#x27; (PAgP) or &#x27;active&#x27; (LACP) will not form an EtherChannel.</p>
 <div class="table-wrap"><table><thead><tr><th>Switch A Mode</th><th>Switch B Mode</th><th>EtherChannel Formed?</th></tr></thead><tbody><tr><td>on</td><td>on</td><td>Yes</td></tr><tr><td>on</td><td>desirable</td><td>No</td></tr><tr><td>on</td><td>active</td><td>No</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="configuring-etherchannel">Configuring EtherChannel</h4>
+
 <p class="body-line">The configuration steps are the same regardless of the protocol used — only the mode name differs:</p>
-<pre class="command-line"><code>int range g0/0 - 3                            → select all interfaces to include in the EtherChannel
-channel-group &lt;number&gt; mode &lt;mode&gt;            → assign interfaces to a channel group with the chosen mode</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">Mode options: desirable or auto (PAgP) | active or passive (LACP) | on (Static).</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<pre class="command-line"><code>channel-protocol &lt;pagp|lacp&gt;              → optionally specify the protocol (the mode implies the protocol)</code></pre>
+<pre class="command-line"><code>int range <i>interfaces-ids</i>
+channel-protocol {lacp | pagp}               → optionally specify the protocol
+channel-group <i>channel-group-number</i> mode {active|passive|auto|desirable|on}</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <aside class="callout"><strong>Note:</strong><p>The channel-group number must match across all member interfaces on the same switch. However, it does not need to match the channel-group number on the other switch — channel-group 1 on Switch A can form an EtherChannel with channel-group 2 on Switch B.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="member-interface-requirements">Member Interface Requirements</h4>
-<p class="body-line">All interfaces in an EtherChannel must have identical configurations. If any interface has a mismatching configuration, it is excluded from the EtherChannel. Matching requirements:</p>
+<p class="body-line">All interfaces in an EtherChannel must have identical configurations — because the bundle is treated as a single logical link, every physical member must behave exactly as if it were one wire. If any interface has a mismatching configuration, it is excluded from the EtherChannel. Matching requirements:</p>
 <ul class="doc-list">
   <li>Same duplex mode (full or half).</li>
   <li>Same speed.</li>
@@ -721,25 +704,24 @@ channel-group &lt;number&gt; mode &lt;mode&gt;            → assign interfaces 
 <h4 class="subheading" id="verifying-etherchannel">Verifying EtherChannel</h4>
 <pre class="command-line"><code>show ip interface brief                  → the Port-Channel interface appears as a single logical interface
 show etherchannel summary                → view all EtherChannels, member interfaces, and their status
-show etherchannel port-channel           → detailed view of each port-channel interface
-show etherchannel load-balance           → confirm the current load-balancing method</code></pre>
+show etherchannel port-channel           → detailed view of each port-channel interface</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="layer-3-etherchannel">Layer 3 EtherChannel</h4>
 <p class="body-line">EtherChannel can also be used on Layer 3 (multilayer) switches. Instead of carrying switched traffic, the port-channel interface is configured as a routed Layer 3 interface with an IP address. Because Layer 3 routing does not rely on broadcasts in the same way as Layer 2 switching, Spanning Tree Protocol is not required for Layer 3 EtherChannels.</p>
-<pre class="command-line"><code>int range g0/0 - 3
-no switchport                                   → convert interfaces to Layer 3 routed ports
-channel-group &lt;number&gt; mode &lt;mode&gt;              → form the EtherChannel</code></pre>
-<pre class="command-line"><code>int port-channel &lt;number&gt;
+<pre class="command-line"><code>int range <i>interfaces-ids</i>
+no switchport                 → convert the interfaces to Layer 3 routed ports
+channel-group <i>channel-group-number</i> mode {active|passive|auto|desirable|on}</code></pre>
+<pre class="command-line"><code>int port-channel <i>channel-group-number</i>
 no switchport                                   → ensure the port-channel itself is a routed interface
 ip address &lt;ip-address&gt; &lt;subnet-mask&gt;           → assign IP address to the logical EtherChannel interface</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h2 class="major-heading" id="layer-3">Layer 3: The Network Layer</h2>
 <p class="body-line">Layer 2 delivers frames between devices on the same local network. Layer 3 makes communication possible between devices on completely different networks — anywhere in the world. It introduces IP addresses, routers, and the logic needed to find the best path from any source to any destination.</p>
 <h3 class="subheading" id="network-devices-at-layer-3-routers">Routers</h3>
-<p class="body-line">A router is the primary Layer 3 device. Its job is to receive packets, examine the destination IP (Internet Protocol) address, and forward each packet out the correct interface toward its destination — hop by hop across the network. Routers connect different networks to each other, enabling global communication that Layer 2 switches cannot provide.</p>
+<p class="body-line">A router is the primary Layer 3 device. Its job is to receive packets, examine the destination IP address, and forward each packet out the correct interface toward its destination — hop by hop across the network. Routers connect different networks to each other, enabling global communication that Layer 2 switches cannot provide.</p>
 <p class="body-line">Layer 3 has three core responsibilities, all performed by routers:</p>
 <ul class="doc-list">
-  <li>Logical Addressing: IP (Internet Protocol) addresses uniquely identify every device across any network in the world — unlike MAC addresses, which are only meaningful within a single local network. IP addresses stay the same end-to-end from source to destination, while MAC addresses change at every single hop.</li>
+  <li>Logical Addressing: IP addresses uniquely identify every device across any network in the world — unlike MAC addresses, which are only meaningful within a single local network. IP addresses stay the same end-to-end from source to destination, while MAC addresses change at every single hop.</li>
   <li>Routing: routers examine the destination IP address of each packet and forward it along the best available path across the network.</li>
   <li>Encapsulation: at each hop, the router strips the incoming Layer 2 frame (L2PDU), reads the Layer 3 IP address, makes a routing decision, then re-encapsulates the packet (L3PDU) in a brand new Layer 2 frame for the next link. The IP header — added at Layer 3 and containing source and destination IP addresses — is what the router uses to make these decisions.</li>
 <!-- </ul><aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Packet traveling through 2 routers: Source → Router 1 (strips L2 frame, reads IP, creates new L2 frame) → Router 2 (same process) → Destination. IP addresses unchanged throughout; MAC addresses change at every hop. ]</p></aside> -->
@@ -779,14 +761,11 @@ ip address &lt;ip-address&gt; &lt;subnet-mask&gt;           → assign IP addres
 <p class="body-line">When a Layer 4 segment or datagram arrives at Layer 3, an IP header is added to create an IP packet. Every field in the header serves a specific purpose.</p>
 <!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: IPv4 header field layout with bit widths: Version (4) | IHL (4) | DSCP (6) | ECN (2) | Total Length (16) | Identification (16) | Flags (3) | Fragment Offset (13) | TTL (8) | Protocol (8) | Header Checksum (16) | Source IP (32) | Destination IP (32) | Options (variable) ]</p></aside> -->
 <div class="doc-spacer" aria-hidden="true"></div>
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose and Values</th></tr></thead><tbody><tr><td>Version</td><td>4 bits</td><td>Internet Protocol version: 4 = IPv4, 6 = IPv6.</td></tr><tr><td>Internet Header Length (IHL)</td><td>4 bits</td><td>Length of the IP header in 32-bit words. Minimum = 5 (5 × 4 = 20 bytes, no options). Maximum = 15 (60 bytes, with options present).</td></tr><tr><td>Differentiated Services Code Point (DSCP)</td><td>6 bits</td><td>Used for Quality of Service (QoS) — allows routers to prioritize delay-sensitive traffic such as voice calls and video.</td></tr><tr><td>Explicit Congestion Notification (ECN)</td><td>2 bits</td><td>Allows routers to signal network congestion to endpoints without dropping packets. Requires all devices along the path to support it.</td></tr><tr><td>Total Length</td><td>16 bits</td><td>Total size of the IP packet in bytes (header + payload). Minimum = 20 bytes. Maximum = 65,535 bytes.</td></tr><tr><td>Identification</td><td>16 bits</td><td>A unique value per original packet. When fragmented, all fragments of the same packet share this value for reassembly.</td></tr><tr><td>Flags</td><td>3 bits</td><td>Bit 0: Reserved (always 0). Bit 1: Don&#x27;t Fragment (DF) — if set, routers must not fragment this packet; if too large, it is dropped and an ICMP error is returned. Bit 2: More Fragments (MF) — set to 1 on all fragments except the last.</td></tr><tr><td>Fragment Offset</td><td>13 bits</td><td>Position (in 8-byte units) of this fragment within the original packet. Allows correct reassembly even if fragments arrive out of order.</td></tr><tr><td>TTL (Time to Live)</td><td>8 bits</td><td>A hop counter decremented by 1 at each router. When it reaches 0, the router drops the packet and sends an ICMP &#x27;Time Exceeded&#x27; message to the source. Prevents packets from looping indefinitely. Recommended default: 64.</td></tr><tr><td>Protocol</td><td>8 bits</td><td>Identifies the Layer 4 protocol in the payload: 1 = ICMP (Internet Control Message Protocol), 6 = TCP (Transmission Control Protocol), 17 = UDP (User Datagram Protocol), 89 = OSPF (Open Shortest Path First).</td></tr><tr><td>Header Checksum</td><td>16 bits</td><td>Cyclic Redundancy Check (CRC) covering the IP header only — not the payload. Recalculated at every router because the TTL (Time to Live) changes each hop. A mismatch causes the packet to be dropped.</td></tr><tr><td>Source IP Address</td><td>32 bits</td><td>IP address of the original sender. Does not change as the packet travels through the network.</td></tr><tr><td>Destination IP Address</td><td>32 bits</td><td>IP address of the final destination. Routers use this field to make every forwarding decision.</td></tr><tr><td>Options</td><td>0–320 bits</td><td>Optional, variable-length field. Rarely used in practice. Present only when Internet Header Length (IHL) is greater than 5.</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose and Values</th></tr></thead><tbody><tr><td>Version</td><td>4 bits</td><td>Internet Protocol version: 4 = IPv4, 6 = IPv6.</td></tr><tr><td>Internet Header Length (IHL)</td><td>4 bits</td><td>Length of the IP header in 32-bit words. Minimum = 5 (5 × 4 = 20 bytes, no options). Maximum = 15 (60 bytes, with options present).</td></tr><tr><td>Differentiated Services Code Point (DSCP)</td><td>6 bits</td><td>Used for Quality of Service (QoS) — allows routers to prioritize delay-sensitive traffic such as voice calls and video.</td></tr><tr><td>Explicit Congestion Notification (ECN)</td><td>2 bits</td><td>Allows routers to signal network congestion to endpoints without dropping packets. Requires all devices along the path to support it.</td></tr><tr><td>Total Length</td><td>16 bits</td><td>Total size of the IP packet in bytes (header + payload). Minimum = 20 bytes. Maximum = 65,535 bytes.</td></tr><tr><td>Identification</td><td>16 bits</td><td>A unique value per original packet. When fragmented, all fragments of the same packet share this value for reassembly.</td></tr><tr><td>Flags</td><td>3 bits</td><td>Bit 0: Reserved (always 0). Bit 1: Don&#x27;t Fragment (DF) — if set, routers must not fragment this packet; if too large, it is dropped and an error is returned. Bit 2: More Fragments (MF) — set to 1 on all fragments except the last.</td></tr><tr><td>Fragment Offset</td><td>13 bits</td><td>Position (in 8-byte units) of this fragment within the original packet. Allows correct reassembly even if fragments arrive out of order.</td></tr><tr><td>TTL (Time to Live)</td><td>8 bits</td><td>A hop counter decremented by 1 at each router. When it reaches 0, the router drops the packet and sends an ICMP &#x27;Time Exceeded&#x27; message to the source. Prevents packets from looping indefinitely. Recommended default: 64.</td></tr><tr><td>Protocol</td><td>8 bits</td><td>Identifies the Layer 4 protocol in the payload: 1 = ICMP (Internet Control Message Protocol), 6 = TCP (Transmission Control Protocol), 17 = UDP (User Datagram Protocol), 89 = OSPF (Open Shortest Path First).</td></tr><tr><td>Header Checksum</td><td>16 bits</td><td>Cyclic Redundancy Check (CRC) covering the IP header only — not the payload. Recalculated at every router because the TTL (Time to Live) changes each hop. A mismatch causes the packet to be dropped.</td></tr><tr><td>Source IP Address</td><td>32 bits</td><td>IP address of the original sender. Does not change as the packet travels through the network.</td></tr><tr><td>Destination IP Address</td><td>32 bits</td><td>IP address of the final destination. Routers use this field to make every forwarding decision.</td></tr><tr><td>Options</td><td>0–320 bits</td><td>Optional, variable-length field. Rarely used in practice. Present only when Internet Header Length (IHL) is greater than 5.</td></tr></tbody></table></div>
 <aside class="callout"><strong>Important:</strong><p>The Header Checksum protects only the IP header — not the payload data. Payload error detection is the responsibility of Layer 4: TCP (Transmission Control Protocol) and UDP (User Datagram Protocol) each have their own checksum fields.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="ip-fragmentation">IP Fragmentation</h4>
 <p class="body-line">Every network link has a MTU (Maximum Transmission Unit) — the largest packet it can carry. For standard Ethernet, the MTU (Maximum Transmission Unit) is 1,500 bytes. If an IP packet exceeds the MTU of a link, the router fragments it. The receiving host — not intermediate routers — reassembles the fragments using the Identification, Flags, and Fragment Offset fields.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="time-to-live-ttl-and-routing-loops">TTL (Time to Live) and Routing Loops</h4>
-<p class="body-line">Without the TTL (Time to Live) field, a packet caught in a routing loop would circulate forever. Starting at 64 (recommended default), TTL is decremented by 1 at each router. When it reaches 0, the packet is dropped and an ICMP (Internet Control Message Protocol) &#x27;Time Exceeded&#x27; error is returned to the source. This mechanism also underpins traceroute — which intentionally sends packets with TTL = 1, 2, 3, and so on to map the hops along a path.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="address-resolution-protocol-arp">Address Resolution Protocol</h3>
 <p class="body-line">ARP (Address Resolution Protocol) operates at the boundary between Layer 2 and Layer 3. When a device knows the destination IP (Internet Protocol) address but needs the destination MAC (Media Access Control) address to build an Ethernet frame (L2PDU), ARP discovers that MAC address automatically.</p>
@@ -1178,14 +1157,14 @@ standby &lt;group-number&gt; preempt                 → enable preemption — t
 <h4 class="subheading" id="tcp-handshakes">Connection Establishment and Termination</h4>
 <ul class="doc-list">
   <li><strong>Three-Way Handshake (establishing a connection):</strong>
-    <ol style="margin-top:6px; padding-left:20px; color:#cbd5e1;">
+    <ol class="doc-list" style="margin-top:6px; padding-left:20px;">
       <li>Client sends SYN → server</li>
       <li>Server sends SYN + ACK → client</li>
       <li>Client sends ACK → server — connection established</li>
     </ol>
   </li>
   <li><strong>Four-Way Handshake (terminating a connection):</strong>
-    <ol style="margin-top:6px; padding-left:20px; color:#cbd5e1;">
+    <ol class="doc-list" style="margin-top:6px; padding-left:20px;">
       <li>Initiator sends FIN</li>
       <li>Receiver sends ACK</li>
       <li>Receiver sends FIN</li>
