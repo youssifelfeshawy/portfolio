@@ -367,7 +367,7 @@
 <div class="doc-spacer" aria-hidden="true"></div>
 
 <h3 class="subheading" id="media-access-control-mac-addresses">MAC Addresses</h3>
-<p class="body-line">At Layer 2, devices are identified using MAC (Media Access Control) addresses. A MAC address is assigned to a network interface card (NIC) and is used by switches to identify the source and destination of Ethernet frames on the local network.</p>
+<p class="body-line">At Layer 2, devices are identified using MAC (Media Access Control) addresses. A MAC address, also called physical address, is assigned to a network interface card (NIC) and is used by switches to identify the source and destination of Ethernet frames on the local network.</p>
 <ul class="doc-list">
   <li><strong>Length:</strong> 48 bits (6 bytes), usually written as 12 hexadecimal characters, for example AA:BB:CC:11:22:33.</li>
   <li><strong>Uniqueness:</strong> MAC addresses are designed to uniquely identify individual network interfaces.</li>
@@ -545,68 +545,64 @@ show interfaces trunk                            → view trunk configurations</
 <p class="body-line">To view the STP configurations:</p>
 <pre class="command-line"><code>show spanning-tree [summary | {int &lt;interface-id&gt;} | {vlan &lt;vlan-id&gt;} | detail]</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<!-- ---------- -->
-<h4 class="subheading" id="stp-toolkit">STP Toolkit</h4>
-<p class="body-line">The STP Toolkit refers to a set of features that enhance, protect, and optimize STP (Spanning Tree Protocol) behavior: PortFast, BPDU Guard, BPDU Filter, Root Guard, and Loop Guard.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="portfast">PortFast</h5>
-<p class="body-line">PortFast allows a switch port to skip the Listening and Learning states and move immediately to the Forwarding state when it becomes active. This removes the 30-second delay that would otherwise occur when a device first connects.</p>
-<ul class="doc-list">
-  <li>Use only on ports connected to end hosts (PCs, servers, printers) — never on ports connected to other switches. Enabling PortFast on a switch-to-switch port could create a Layer 2 loop.</li>
-</ul><pre class="command-line"><code>int g#/#</code></pre>
-<pre class="command-line"><code>spanning-tree portfast                         → enable PortFast on this interface</code></pre>
-<pre class="command-line"><code>spanning-tree portfast trunk                   → enable PortFast on a trunk interface (use with caution)</code></pre>
-<pre class="command-line"><code>spanning-tree portfast disable                 → disable PortFast on this specific port</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">To enable PortFast globally on all access ports (recommended):</p>
-<pre class="command-line"><code>spanning-tree portfast default                 → enables PortFast on all access ports automatically (recommended)</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="bpdu-guard">BPDU Guard</h5>
-<p class="body-line">BPDU Guard protects PortFast-enabled ports from accidentally receiving BPDUs (Bridge Protocol Data Units). If a BPDU Guard-enabled port receives a BPDU — indicating another switch has been connected — the port is immediately shut down (placed in an ErrDisable state) to prevent a potential loop.</p>
-<pre class="command-line"><code>int g#/#</code></pre>
-<pre class="command-line"><code>spanning-tree bpduguard enable                 → enable BPDU Guard on this interface</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">To enable BPDU Guard globally on all PortFast-enabled interfaces (recommended):</p>
-<pre class="command-line"><code>spanning-tree portfast bpduguard default        → enables BPDU Guard on all PortFast ports (recommended)</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="errdisable-and-errdisable-recovery">ErrDisable and ErrDisable Recovery</h5>
-<p class="body-line">ErrDisable is a Cisco switch feature that automatically shuts down a port when a policy violation is detected — such as a BPDU Guard violation. The port enters an err-disabled state and stops forwarding traffic.</p>
-<p class="body-line">To re-enable an err-disabled port, the underlying issue must be fixed first. Re-enabling without fixing the cause will immediately err-disable the port again. There are two ways to re-enable:</p>
-<ul class="doc-list">
-  <li>Manual: enter interface configuration mode and use &#x27;shutdown&#x27; followed by &#x27;no shutdown&#x27; to reset the port.</li>
-  <li>Automatic — ErrDisable Recovery: automatically re-enables err-disabled ports after a configurable timer expires. Disabled by default.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
-<pre class="command-line"><code>errdisable recovery cause bpduguard                     → enable automatic recovery for BPDU Guard violations</code></pre>
-<pre class="command-line"><code>errdisable recovery interval &lt;seconds&gt;                  → set the recovery timer (default is 300 seconds / 5 minutes)</code></pre>
-<pre class="command-line"><code>show errdisable recovery                                → view ErrDisable Recovery status and timers</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="bpdu-filter">BPDU Filter</h5>
-<p class="body-line">BPDU Filter prevents a port from sending BPDUs (Bridge Protocol Data Units). Unlike BPDU Guard, it does not disable the port if it receives a BPDU. Useful on ports connected to end hosts where sending BPDUs wastes bandwidth and exposes STP topology information unnecessarily. BPDU Filter can be configured in two ways:</p>
-<ul class="doc-list">
-  <li>Per-port (use with caution): the port will not send BPDUs and will ignore any BPDUs it receives. This effectively disables STP on the port entirely.</li>
-</ul><pre class="command-line"><code>spanning-tree bpdufilter enable</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<ul class="doc-list">
-  <li>Default (recommended): enables BPDU Filter on all PortFast-enabled ports. If the port receives a BPDU, PortFast and BPDU Filter are automatically disabled and the port operates as a normal STP port.</li>
-</ul><pre class="command-line"><code>spanning-tree portfast bpdufilter default       → enable BPDU Filter on all PortFast-enabled ports (recommended)</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="root-guard">Root Guard</h5>
-<p class="body-line">Root Guard protects the STP topology by preventing an unauthorized switch from becoming the root bridge. When enabled on an interface, if that interface receives a superior BPDU — one with a lower Bridge ID than the current root bridge — the port is placed into a Broken (Root Inconsistent) state, effectively disabling it.</p>
-<p class="body-line">A good practice is to enable Root Guard on all ports connecting to switches outside of your administrative control.</p>
-<pre class="command-line"><code>int g#/#
-spanning-tree guard root                               → enable Root Guard on this interface</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">A port placed in the Root Inconsistent state by Root Guard will not revceive or forward any data frames. Once the superior BPDUs stop being received and their Max Age (20 seconds by default) expires, the port is automatically re-enabled.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="loop-guard">Loop Guard</h5>
-<p class="body-line">Loop Guard protects against unidirectional link failures — where data flows in only one direction between two switches. This is more common with fiber optic cables than copper UTP, due to the separate TX and RX strands. Causes include damaged cables, faulty connectors, or faulty SFP transceivers.</p>
-<p class="body-line">Without Loop Guard, if a Root or Non-Designated port stops receiving BPDUs due to a unidirectional failure, the Max Age timer eventually expires and the port transitions to Forwarding — potentially creating a loop. Loop Guard prevents this by placing the port into a Broken (Loop Inconsistent) state instead. The port remains up/up physically but STP blocks it. If BPDUs are received again, the port is automatically re-enabled.</p>
-<ul class="doc-list">
-  <li>Loop Guard should be enabled on: Root Ports and Non-Designated Ports — ports that are supposed to be receiving BPDUs.</li>
-</ul><pre class="command-line"><code>spanning-tree guard loop                               → enable Loop Guard on a specific interface</code></pre>
-<pre class="command-line"><code>spanning-tree loopguard default                        → enable Loop Guard on all ports globally</code></pre>
-<pre class="command-line"><code>spanning-tree guard none                               → disable Loop Guard on a specific port</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
+<!-- ---------- the perfect one -->
+ <h4 class="subheading" id="stp-toolkit">STP Toolkit</h4>
+<p class="body-line">The STP Toolkit includes several features that improve the speed, security, and stability of Spanning Tree Protocol. These features are used on different types of ports depending on what the network needs to protect.</p>
+<h5 class="subheading" id="portfast">1. PortFast</h5>
+<p class="body-line">PortFast allows an STP edge port to skip the normal Listening and Learning states and move immediately to the Forwarding state when the port becomes active. It is normally used on ports connected to end devices, where waiting for the normal STP convergence process is unnecessary.</p>
+<p class="body-line">To configure PortFast on a specific interface:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  spanning-tree portfast [disable | trunk]</code></pre>
+  <p class="body-line">To enable PortFast globally on all access ports:</p>
+  <pre class="command-line"><code>spanning-tree portfast default</code></pre>
+  <aside class="callout"><strong>Note:</strong><p>PortFast should normally be used only on ports connected to end devices. The <code>trunk</code> option may be used when the trunk connects to an end device that requires multiple VLANs, such as a server, hypervisor, router, or firewall, but it should not be used on trunk links between switches because a Layer 2 loop could form before STP has time to react.</p></aside>
+<h5 class="subheading" id="bpdu-guard">2. BPDU Guard</h5>
+<p class="body-line">BPDU Guard protects edge ports from accidentally being connected to another Layer 2 device. Since an edge port is normally connected to an end host, it is not expected to receive STP BPDUs.</p>
+<p class="body-line">To enable or disable BPDU Guard on a specific interface:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  spanning-tree bpduguard {enable | disable}</code></pre>
+<p class="body-line">To enable BPDU Guard globally on all PortFast-enabled ports:</p>
+<pre class="command-line"><code>spanning-tree portfast bpduguard default</code></pre>
+<h5 class="subheading" id="errdisable">3. ErrDisable and ErrDisable Recovery</h5>
+<p class="body-line">If a BPDU Guard-enabled port receives a BPDU, the switch places the port into the <strong>ErrDisable</strong> state to protect the Layer 2 topology. A port placed in <strong>ErrDisable</strong> stops forwarding traffic until the problem is corrected.</p>
+<p class="body-line">There are two ways to return the port to normal operation:</p>
+<ul>
+  <li><strong>Manual recovery:</strong> fix the problem, then use <code>shutdown</code> followed by <code>no shutdown</code> on the affected interface.</li>
+  <li><strong>Automatic recovery:</strong> configure the switch to automatically re-enable the port after the recovery timer expires.</li>
+</ul>
+<p class="body-line">To configure and verify automatic recovery from BPDU Guard violations:</p>
+<pre class="command-line"><code>errdisable recovery cause bpduguard        → enable automatic recovery for BPDU Guard
+errdisable recovery interval <i>seconds</i>       → set the recovery timer
+show errdisable recovery                   → view recovery settings and timers</code></pre>
+<aside class="callout"><strong>Note:</strong><p>The default ErrDisable recovery interval is 300 seconds. The underlying problem should always be fixed first; otherwise, the port may enter ErrDisable again after it recovers.</p></aside>
+<h5 class="subheading" id="bpdu-filter">4. BPDU Filter</h5>
+<p class="body-line">BPDU Filter controls whether STP BPDUs are sent and processed on an edge port. It is used when the port should not normally participate in STP communication.</p>
+<p class="body-line">To enable or disable BPDU Filter directly on a specific interface:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  spanning-tree bpdufilter {enable | disable}</code></pre>
+<p class="body-line">When BPDU Filter is enabled directly on an interface, the port stops sending and processing BPDUs. This can be dangerous because STP may no longer detect a Layer 2 loop on that port.</p>
+<p class="body-line">To enable BPDU Filter globally on PortFast-enabled ports:</p>
+<pre class="command-line"><code>spanning-tree portfast bpdufilter default</code></pre>
+<p class="body-line">With the global method, a PortFast port initially filters BPDUs. If a BPDU is received, the port stops behaving as a PortFast/BPDU-filtered edge port and participates normally in STP, allowing STP to protect the network.</p>
+<aside class="callout"><strong>Note:</strong><p>For PortFast, BPDU Guard, and BPDU Filter, the global <code>default</code> commands are generally the recommended method because they automatically apply the features to appropriate PortFast edge ports. These tools are mainly associated with ports connected to end hosts rather than normal switch-to-switch links.</p></aside>
+<h5 class="subheading" id="root-guard">5. Root Guard</h5>
+<p class="body-line">Root Guard protects the intended Root Bridge by preventing another switch connected through a protected port from becoming the Root Bridge. A Root Guard-enabled port can receive normal BPDUs, but it must not receive a superior BPDU. A superior BPDU advertises better STP information and could cause the neighboring switch to become the Root Bridge.</p>
+<p class="body-line">To enable Root Guard on a specific interface:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  spanning-tree guard root</code></pre>
+<p class="body-line">If a Root Guard-enabled port receives a superior BPDU, the switch places the port into the <strong>Root-Inconsistent</strong> state. The port stops forwarding traffic but continues listening for BPDUs.</p>
+<p class="body-line">When the superior BPDUs stop arriving and the Max Age (20 seconds by default) expires, the port automatically leaves the Root-Inconsistent state and returns to normal STP operation.</p>
+<aside class="callout"><strong>Note:</strong><p>Root Guard is normally configured on selected switch-to-switch ports where another switch should never be allowed to become the Root Bridge. A good practice is to enable Root Guard on ports connected to switches outside of your administrative control.</p></aside>
+<h5 class="subheading" id="loop-guard">6. Loop Guard</h5>
+<p class="body-line">Loop Guard protects against situations where a switch stops receiving BPDUs on a port that should normally receive them. One possible cause is a <strong>unidirectional link failure</strong>, where traffic can travel in only one direction between two switches. This is more common with fiber links because transmit (TX) and receive (RX) use separate strands. Without Loop Guard, if one fiber strand fails to recieve the BPDUS, a blocked port could incorrectly assume the path is safe and move to the Forwarding state, creating a Layer 2 loop. With Loop Guard enabled, the port is placed into the Loop-Inconsistent state instead and remains blocked until BPDUs are received again.</p>
+<p class="body-line">To enable Loop Guard on a specific interface:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  spanning-tree guard loop</code></pre>
+<p class="body-line">To enable Loop Guard globally:</p>
+<pre class="command-line"><code>spanning-tree loopguard default</code></pre>
+<p class="body-line">If a Loop Guard-enabled port stops receiving the BPDUs it expects, the switch places the port into the <strong>Loop-Inconsistent</strong> state instead of allowing it to begin forwarding traffic.</p>
+<p class="body-line">When valid BPDUs are received again, the port automatically leaves the Loop-Inconsistent state and returns to normal STP operation.</p>
+<aside class="callout"><strong>Important:</strong><p>Root Guard and Loop Guard are mainly used on switch-to-switch links. Root Guard prevents an unwanted switch from becoming the Root Bridge, while Loop Guard prevents a blocked STP path from incorrectly becoming a forwarding path when BPDUs disappear.</p></aside>
 <h5 class="subheading" id="root-guard-vs-loop-guard">Root Guard vs. Loop Guard</h5>
 <p class="body-line">Root Guard and Loop Guard are mutually exclusive — they cannot both be enabled on the same port. Their purposes are opposite:</p>
 <ul class="doc-list">
@@ -614,38 +610,36 @@ spanning-tree guard root                               → enable Root Guard on 
   <li>Loop Guard: applied to Root and Non-Designated Ports — prevents them from becoming Designated Ports when BPDUs stop arriving.</li>
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
+
 <h4 class="subheading" id="rapid-spanning-tree-protocol-rstp-ieee-802-1w">Rapid Spanning Tree Protocol</h4>
-<p class="body-line">RSTP (Rapid Spanning Tree Protocol), standardized as IEEE 802.1w and implemented in Cisco switches as Rapid PVST+, is the modern replacement for Classic STP. Its key advantage is dramatically faster convergence — adapting to topology changes in seconds rather than up to 50 seconds with Classic STP.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="rstp-port-states">RSTP Port States</h5>
-<p class="body-line">Rapid STP simplifies the port states compared to Classic STP. The Listening state is removed entirely, and the Disabled and Blocking states are merged into a single Discarding state:</p>
-<div class="table-wrap"><table><thead><tr><th>Classic STP State</th><th>RSTP State</th><th>Notes</th></tr></thead><tbody><tr><td>Disabled</td><td>Discarding</td><td>Port is administratively shut down.</td></tr><tr><td>Blocking</td><td>Discarding</td><td>Port is enabled but blocking traffic to prevent loops.</td></tr><tr><td>Listening</td><td>Removed</td><td>The Listening state does not exist in RSTP.</td></tr><tr><td>Learning</td><td>Learning</td><td>Same as Classic STP — learns MAC addresses but does not forward traffic.</td></tr><tr><td>Forwarding</td><td>Forwarding</td><td>Same as Classic STP — fully operational.</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Note:</strong><p>Rapid STP is backward compatible with Classic STP — interfaces connected to a Classic STP switch will automatically operate in Classic STP mode, reverting to the full Blocking → Listening → Learning → Forwarding process with the original timers.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="rstp-port-roles">RSTP Port Roles</h5>
-<p class="body-line">Rapid STP retains the Root Port and Designated Port roles from Classic STP, but splits the Non-Designated port role into two distinct roles:</p>
+<p class="body-line">RSTP (Rapid Spanning Tree Protocol), standardized as IEEE 802.1w and implemented by Cisco as Rapid PVST+, improves Classic STP by allowing the network to react to topology changes much faster. Classic STP may take up to 50 seconds to converge, while RSTP can normally react within a few seconds.</p>
+<p class="body-line">One of the main reasons for this faster convergence is how BPDUs are handled. In Classic STP, the Root Bridge originates the BPDU information and the other switches propagate it through the topology. In RSTP, every switch generates and sends its own BPDUs from its Designated Ports every 2 seconds by default, allowing neighboring switches to detect changes directly.</p>
+<p class="body-line">RSTP also detects lost neighbors faster. Instead of waiting for the 20-second Max Age timer used by Classic STP, a switch considers a neighbor lost after missing three consecutive BPDUs, which normally takes about 6 seconds.</p>
+<p class="body-line">RSTP uses the same Root Bridge election and path-selection rules as Classic STP. However, larger path-cost values can be used to better distinguish between modern high-speed links:</p>
+<div class="table-wrap"><table><thead><tr><th>Link Speed</th><th>Classic STP Cost</th><th>RSTP Cost</th></tr></thead><tbody><tr><td>10 Mbps</td><td>100</td><td>2,000,000</td></tr><tr><td>100 Mbps</td><td>19</td><td>200,000</td></tr><tr><td>1 Gbps</td><td>4</td><td>20,000</td></tr><tr><td>10 Gbps</td><td>2</td><td>2,000</td></tr><tr><td>100 Gbps</td><td>—</td><td>200</td></tr><tr><td>1 Tbps</td><td>—</td><td>20</td></tr></tbody></table></div>
+<p class="body-line">The Root Port and Designated Port roles remain the same as in Classic STP, while the Non-Designated role is replaced by two more specific roles:</p>
 <ul class="doc-list">
-  <li>Alternate Port: a Discarding port that receives a superior BPDU from another switch. It is the best alternative path to the root bridge. If the Root Port fails, the Alternate Port can move immediately to Forwarding without waiting — this is equivalent to the classic optional UplinkFast feature, but is built into RSTP automatically.</li>
-  <li>Backup Port: a Discarding port that receives a superior BPDU from another interface on the same switch. This only occurs when two interfaces on the same switch are connected to the same collision domain (via a hub). Hubs are not used in modern networks, so this role is rarely seen. The interface with the lowest Port ID becomes the Designated Port; the other becomes the Backup Port.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="rstp-bpdu-behavior">RSTP BPDU Behavior</h5>
-<p class="body-line">In Classic STP, only the root bridge originates BPDUs — all other switches simply forward the BPDUs they receive. In Rapid STP, every switch originates and sends its own BPDUs from its Designated ports every Hello interval (2 seconds by default).</p>
-<p class="body-line">RSTP also ages out neighbor information much faster. Classic STP waits 10 Hello intervals (20 seconds — the Max Age timer) before considering a neighbor lost. Rapid STP considers a neighbor lost if it misses 3 consecutive BPDUs (6 seconds). When a neighbor is considered lost, the switch immediately flushes all MAC addresses learned on that interface.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="rstp-link-types">RSTP Link Types</h5>
-<p class="body-line">Rapid STP classifies each port into one of three link types, which determines how quickly it can transition to Forwarding. The link type is detected automatically, but can also be manually configured when needed:</p>
+  <li><strong>Alternate Port:</strong> a Discarding port that provides an alternative path toward the Root Bridge. If the current Root Port fails, the Alternate Port can rapidly replace it.</li>
+  <li><strong>Backup Port:</strong> a Discarding port that provides a backup to another port on the same switch connected to the same shared segment. This is mainly associated with hub-based networks and is rarely seen in modern switched networks. The interface with the lowest Port ID becomes the Designated Port; the other becomes the Backup Port.</li>
+</ul>
+<figure class="overview-figure-block figure-with-image"><img src="" alt="RSTP Root Designated Alternate and Backup Port Roles"></figure>
+<p class="body-line">RSTP also simplifies the five Classic STP port states into only three. Disabled, Blocking, and Listening are represented by the Discarding state, while Learning and Forwarding remain:</p>
+<div class="table-wrap"><table><thead><tr><th>RSTP State</th><th>Classic STP Equivalent</th><th>Forwards Traffic?</th><th>Learns MAC Addresses?</th><th>Behavior</th></tr></thead><tbody><tr><td>Discarding</td><td>Disabled / Blocking / Listening</td><td>No</td><td>No</td><td>Does not forward regular traffic and prevents the port from creating a loop.</td></tr><tr><td>Learning</td><td>Learning</td><td>No</td><td>Yes</td><td>Learns MAC addresses while preparing to begin forwarding traffic.</td></tr><tr><td>Forwarding</td><td>Forwarding</td><td>Yes</td><td>Yes</td><td>Forwards regular traffic and operates normally in the active topology.</td></tr></tbody></table></div>
+<aside class="callout"><strong>Note:</strong><p>RSTP is backward compatible with Classic STP. If an RSTP switch connects to a switch running Classic STP, that link uses the slower Classic STP states and their behaviors.</p></aside>
+<p class="body-line">Unlike Classic STP, RSTP does not always depend on fixed Listening and Learning delays before allowing a port to Forward. It can use direct communication between neighboring switches to determine whether a link can safely become active. How quickly this happens depends partly on the type of link connected to the port.</p>
+<p class="body-line">RSTP recognizes three main link types:</p>
 <ul class="doc-list">
-  <li>Edge: a port connected directly to an end host. Moves immediately to Forwarding without negotiation — equivalent to Classic STP&#x27;s PortFast. Edge ports are built into RSTP automatically.</li>
-  <li>Point-to-Point: a direct full-duplex connection between two switches. RSTP can rapidly negotiate Forwarding using a handshake process. Detected automatically in full-duplex.</li>
-  <li>Shared: a connection to a hub operating in half-duplex. Must use Classic STP timers and transition process. Detected automatically in half-duplex.</li>
-<p class="body-line">To manually override the detected link type when needed:</p>
-<pre class="command-line"><code>int <i>interface</i>
-spanning-tree link-type {point-to-point | shared}</code></pre>
+  <li><strong>Edge:</strong> a port connected directly to an end host. It can move immediately to Forwarding because another switch is not expected on the link. This provides the same function as PortFast.</li>
+  <li><strong>Point-to-Point:</strong> a direct full-duplex connection between two switches. RSTP can use a rapid proposal-and-agreement process between the switches to safely move ports toward Forwarding.</li>
+  <li><strong>Shared:</strong> a half-duplex connection to a shared medium such as a hub. Rapid negotiation cannot be used, so the port relies on the slower timer-based STP process.</li>
+</ul>
+<figure class="overview-figure-block figure-with-image"><img src="" alt="RSTP Edge Point-to-Point and Shared Link Types"></figure>
+<p class="body-line">The link type is normally determined from the interface operation, but point-to-point or shared behavior can also be configured manually:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  spanning-tree link-type {point-to-point | shared}</code></pre>
+<aside class="callout"><strong>Note:</strong><p>Classic STP had two optional features to speed up recovery: UplinkFast allowed a backup path to quickly replace a failed Root Port, while BackboneFast helped switches react faster to indirect link failures elsewhere in the topology. RSTP includes these faster recovery behaviors by default, so UplinkFast and BackboneFast do not need to be configured separately.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Note:</strong><p>Two Classic STP optional features — UplinkFast (speeds up recovery when a switch’s Root Port fails) and BackboneFast (speeds up recovery from indirect failures elsewhere in the STP topology) — are built into RSTP by default. Therefore, when using Rapid PVST+, no need to configure either feature separately.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-<!-- ---------- -->
+
 <h3 class="topic-heading" id="etherchannel">EtherChannel</h3>
 <p class="body-line">When multiple physical links connect two switches, STP treats each link separately and may block redundant links to prevent Layer 2 loops. EtherChannel, also called Port-Channel or LAG (Link Aggregation Group), solves this by combining multiple physical interfaces into one logical interface. STP sees the entire bundle as a single link, allowing the physical member links to remain available for traffic while still preventing loops.</p>
 <figure class="overview-figure-block figure-with-image"><img src="" alt="Multiple Switch Links With and Without EtherChannel"></figure>
@@ -685,17 +679,7 @@ show etherchannel load-balance</code></pre>
 </ul>
 <p class="body-line">After the EtherChannel forms, the switch creates a logical Port-Channel interface representing all of its physical members. To verify the bundle, its members, and their status:</p>
 <pre class="command-line"><code>show etherchannel {summary | port-channel | detail}</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
 
-<h4 class="subheading" id="layer-3-etherchannel">Layer 3 EtherChannel</h4>
-<p class="body-line">EtherChannel can also be used on Layer 3 (multilayer) switches. Instead of carrying switched traffic, the port-channel interface is configured as a routed Layer 3 interface with an IP address. Because Layer 3 routing does not rely on broadcasts in the same way as Layer 2 switching, Spanning Tree Protocol is not required for Layer 3 EtherChannels.</p>
-<pre class="command-line"><code>int range <i>interfaces-ids</i>
-no switchport                 → convert the interfaces to Layer 3 routed ports
-channel-group <i>channel-group-number</i> mode {active|passive|auto|desirable|on}</code></pre>
-<pre class="command-line"><code>int port-channel <i>channel-group-number</i>
-no switchport                                   → ensure the port-channel itself is a routed interface
-ip address &lt;ip-address&gt; &lt;subnet-mask&gt;           → assign IP address to the logical EtherChannel interface</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
 <h2 class="major-heading" id="layer-3">Layer 3: The Network Layer</h2>
 <p class="body-line">Layer 2 delivers frames between devices on the same local network. Layer 3 makes communication possible between devices on completely different networks — anywhere in the world. It introduces IP addresses, routers, and the logic needed to find the best path from any source to any destination.</p>
 <h3 class="subheading" id="network-devices-at-layer-3-routers">Routers</h3>
@@ -848,6 +832,15 @@ ip address 192.168.1.2 255.255.255.0               → assign IP to the routed p
 ip address 192.168.10.1 255.255.255.0             → this IP is the default gateway for all VLAN 10 hosts</code></pre>
 <pre class="command-line"><code>int vlan 20
 ip address 192.168.20.1 255.255.255.0             → default gateway for VLAN 20 hosts</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+<h4 class="subheading" id="layer-3-etherchannel">Layer 3 EtherChannel</h4>
+<p class="body-line">EtherChannel can also be used on Layer 3 (multilayer) switches. Instead of carrying switched traffic, the port-channel interface is configured as a routed Layer 3 interface with an IP address. Because Layer 3 routing does not rely on broadcasts in the same way as Layer 2 switching, Spanning Tree Protocol is not required for Layer 3 EtherChannels.</p>
+<pre class="command-line"><code>int range <i>interfaces-ids</i>
+no switchport                 → convert the interfaces to Layer 3 routed ports
+channel-group <i>channel-group-number</i> mode {active|passive|auto|desirable|on}</code></pre>
+<pre class="command-line"><code>int port-channel <i>channel-group-number</i>
+no switchport                                   → ensure the port-channel itself is a routed interface
+ip address &lt;ip-address&gt; &lt;subnet-mask&gt;           → assign IP address to the logical EtherChannel interface</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h5 class="subheading" id="cisco-ios-interface-status">Interface Status</h5>
 <!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Example output of &#x27;show ip interface brief&#x27;: columns are Interface, IP-Address, OK?, Method, Status, and Protocol ]</p></aside> -->
