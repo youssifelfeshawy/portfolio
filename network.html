@@ -430,7 +430,7 @@ show interfaces trunk                            → view trunk configurations</
 <aside class="callout"><strong>Note:</strong><p>Because the 802.1Q tag adds 4 bytes to the Ethernet frame, a tagged frame can be up to 1522 bytes instead of the normal 1518 bytes. This is expected and is not considered a giant frame.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h4 class="subheading" id="dynamic-trunking-protocol-dtp">Dynamic Trunking Protocol</h4>
+<h4 class="subheading" id="dynamic-trunking-protocol-dtp">DTP</h4>
 <p class="body-line">DTP (Dynamic Trunking Protocol) is a Cisco-proprietary protocol that allows Cisco switches to automatically negotiate whether a link should operate as an access link or a trunk link instead of requiring both sides to be configured manually.</p>
 <p class="body-line">The result of this negotiation depends on the switchport mode configured on each side of the link:</p>
 <div class="table-wrap"><table><thead><tr><th>Mode</th><th>Behavior</th><th>Forms Trunk With</th></tr></thead><tbody><tr><td>trunk</td><td>Always operates as a trunk and actively sends DTP frames.</td><td>All modes except access.</td></tr><tr><td>dynamic desirable</td><td>Actively attempts to negotiate a trunk.</td><td>trunk, dynamic desirable, or dynamic auto.</td></tr><tr><td>dynamic auto</td><td>Passively waits for the other side to initiate trunking.</td><td>trunk or dynamic desirable.</td></tr><tr><td>access</td><td>Always operates as an access port and does not form a trunk.</td><td>Never forms a trunk.</td></tr></tbody></table></div>
@@ -450,7 +450,7 @@ show interfaces trunk                            → view trunk configurations</
 <aside class="callout"><strong>Best Practice:</strong><p>Do not rely on automatic DTP negotiation. Manually configure each port as access or trunk and explicitly use IEEE 802.1Q when trunk encapsulation must be configured. Access ports disable trunk negotiation with <code>switchport mode access</code>, while trunk ports can disable DTP with <code>switchport nonegotiate</code> after <code>switchport mode trunk</code>. This provides more predictable behavior and helps prevent unauthorized trunk formation.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h4 class="subheading" id="vlan-trunking-protocol-vtp">VLAN Trunking Protocol</h4>
+<h4 class="subheading" id="vlan-trunking-protocol-vtp">VTP</h4>
 <p class="body-line">VTP (VLAN Trunking Protocol) is a Cisco-proprietary protocol that distributes VLAN configuration from a central VTP server switch to all VTP client switches in the same domain — eliminating the need to configure VLANs individually on every switch.</p>
 <div class="table-wrap"><table><thead><tr><th>VTP Mode</th><th>Add/Modify/Delete VLANs?</th><th>Stores VLAN DB in NVRAM?</th><th>Syncs to Server?</th><th>Forwards VTP Advertisements?</th></tr></thead><tbody><tr><td>Server</td><td>Yes</td><td>Yes</td><td>Yes (if another server has a higher revision number)</td><td>Yes</td></tr><tr><td>Client</td><td>No</td><td>No (VTPv3: Yes)</td><td>Yes — syncs to highest revision number seen</td><td>Yes</td></tr><tr><td>Transparent</td><td>Yes — local only, not advertised</td><td>Yes</td><td>No — ignores VTP advertisements</td><td>Yes — forwards others&#x27; advertisements</td></tr></tbody></table></div>
 <ul class="doc-list">
@@ -681,77 +681,96 @@ show etherchannel load-balance</code></pre>
 <pre class="command-line"><code>show etherchannel {summary | port-channel | detail}</code></pre>
 
 <h2 class="major-heading" id="layer-3">Layer 3: The Network Layer</h2>
-<p class="body-line">Layer 2 delivers frames between devices on the same local network. Layer 3 makes communication possible between devices on completely different networks — anywhere in the world. It introduces IP addresses, routers, and the logic needed to find the best path from any source to any destination.</p>
-<h3 class="subheading" id="network-devices-at-layer-3-routers">Routers</h3>
-<p class="body-line">A router is the primary Layer 3 device. Its job is to receive packets, examine the destination IP address, and forward each packet out the correct interface toward its destination — hop by hop across the network. Routers connect different networks to each other, enabling global communication that Layer 2 switches cannot provide.</p>
-<p class="body-line">Layer 3 has three core responsibilities, all performed by routers:</p>
-<ul class="doc-list">
-  <li>Logical Addressing: IP addresses uniquely identify every device across any network in the world — unlike MAC addresses, which are only meaningful within a single local network. IP addresses stay the same end-to-end from source to destination, while MAC addresses change at every single hop.</li>
-  <li>Routing: routers examine the destination IP address of each packet and forward it along the best available path across the network.</li>
-  <li>Encapsulation: at each hop, the router strips the incoming Layer 2 frame (L2PDU), reads the Layer 3 IP address, makes a routing decision, then re-encapsulates the packet (L3PDU) in a brand new Layer 2 frame for the next link. The IP header — added at Layer 3 and containing source and destination IP addresses — is what the router uses to make these decisions.</li>
-<!-- </ul><aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Packet traveling through 2 routers: Source → Router 1 (strips L2 frame, reads IP, creates new L2 frame) → Router 2 (same process) → Destination. IP addresses unchanged throughout; MAC addresses change at every hop. ]</p></aside> -->
+<p class="body-line">While Layer 2 handles communication within a local network, Layer 3 allows data to travel between different networks. It provides the addressing and path-selection mechanisms needed to move packets from one network to another.</p>
+<h3 class="subheading" id="routers">Routers</h3>
+<aside class="figure-block"><img src="assets/router.png" alt="Cisco Network Router"></aside>
+<p class="body-line">A router is the primary Layer 3 device and is used to connect different networks. When a packet arrives, the router examines its destination Layer 3 address and forwards the packet through the appropriate interface toward the next network.</p>
+<p class="body-line">As a packet travels from source to destination, it may pass through several routers, with each router representing one hop along the path. At every hop, the router processes the Layer 3 packet and sends it across the next link toward its destination.</p>
+<figure class="overview-figure-block figure-with-image"><img src="" alt="Packet Traveling Through Multiple Routers Between Different Networks"></figure>
+<p class="body-line">For routers to know where packets come from and where they need to go, Layer 3 uses logical addresses called IP addresses.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
+
 <h3 class="subheading" id="internet-protocol-version-4-ipv4-addressing">IPv4 Addressing</h3>
-<p class="body-line">IPv4 (Internet Protocol version 4) is the most widely used Layer 3 protocol. An IPv4 address is a 32-bit number written in dotted-decimal notation — four groups of 8 bits (called octets) separated by dots.</p>
-<p class="body-line">Example: the address 192.168.1.100 in binary is  11000000 . 10101000 . 00000001 . 01100100</p>
-<!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: IPv4 address 192.168.1.100 shown across four 8-bit octets in binary. Subnet mask 255.255.255.0 (/24) below it, with the network/host boundary between the 3rd and 4th octets. ]</p></aside> -->
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="network-portion-and-host-portion">Network Portion and Host Portion</h4>
-<p class="body-line">A subnet mask divides an IPv4 address into two parts:</p>
+<p class="body-line">IPv4 (Internet Protocol version 4) is a protocol used to identify devices and route packets between networks. An IPv4 address is 32 bits long and is written in dotted-decimal notation as four 8-bit groups called octets.</p>
+<figure class="overview-figure-block figure-with-image"><img src="" alt="IPv4 Address Shown as Four 8-Bit Octets"></figure>
+<p class="body-line">Historically, IPv4 addresses were divided into five classes according to the leading values of the first octet. Classes A, B, and C were used for normal host addressing, while Classes D and E were reserved for other purposes:</p>
+<div class="table-wrap"><table><thead><tr><th>Class</th><th>Leading Bits</th><th>First Octet Range</th><th>Usable Networks</th><th>Usable Hosts per Network</th></tr></thead><tbody><tr><td>Class A</td><td>0</td><td>1–126</td><td>126</td><td>16,777,214</td></tr><tr><td>Class B</td><td>10</td><td>128–191</td><td>16,384</td><td>65,534</td></tr><tr><td>Class C</td><td>110</td><td>192–223</td><td>2,097,152</td><td>254</td></tr><tr><td>Class D</td><td>1110</td><td>224–239</td><td>Multicast</td><td>Not used for normal host addressing</td></tr><tr><td>Class E</td><td>1111</td><td>240–255</td><td>Reserved / experimental</td><td>Not used for normal host addressing</td></tr></tbody></table></div>
+<aside class="callout"><strong>Note:</strong><p>The value 127 is not included in Class A host networks because the entire <code>127.0.0.0 - 127.255.255.255</code> range is reserved for loopback. A loopback address allows a device to communicate with and test its own TCP/IP stack without sending traffic onto the network.</p></aside>
+<p class="body-line">In the original classful system, each address class had a fixed subnet mask that separates an IPv4 address into two portions:</p>
 <ul class="doc-list">
-  <li>Network portion: identifies which network the device belongs to. All devices on the same network share an identical network portion.</li>
-  <li>Host portion: identifies the specific device within that network. Must be unique within the network.</li>
-</ul><p class="body-line">Example: 192.168.1.100 with mask /24 (255.255.255.0) — network portion: 192.168.1, host portion: .100.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="special-ipv4-addresses">Special IPv4 Addresses</h4>
+  <li><strong>Network portion:</strong> identifies the network the device belongs to. Devices in the same subnet share the same network portion.</li>
+  <li><strong>Host portion:</strong> identifies the individual device within that network and must be unique inside the subnet.</li>
+</ul>
+<p class="body-line">The subnet mask contains 1s for the network portion followed by 0s for the host portion. The same information is expressed using a prefix length, which represents the number of network bits and is written in slash notation.</p>
+<div class="table-wrap"><table><thead><tr><th>Class</th><th>Default Subnet Mask</th><th>Default Prefix</th><th>Binary Subnet Mask</th><th>Network Bits</th><th>Host Bits</th></tr></thead><tbody><tr><td>Class A</td><td>255.0.0.0</td><td>/8</td><td>11111111.00000000.00000000.00000000</td><td>8</td><td>24</td></tr><tr><td>Class B</td><td>255.255.0.0</td><td>/16</td><td>11111111.11111111.00000000.00000000</td><td>16</td><td>16</td></tr><tr><td>Class C</td><td>255.255.255.0</td><td>/24</td><td>11111111.11111111.11111111.00000000</td><td>24</td><td>8</td></tr></tbody></table></div>
+<p class="body-line">The fixed classful masks were inefficient because organizations were forced to use one of only a few network sizes. A network that needed more than 254 hosts could no longer use a Class C network and might have to receive a much larger Class B network, wasting thousands of addresses.</p>
+<p class="body-line">CIDR (Classless Inter-Domain Routing) replaced this fixed classful system by allowing the network portion to use any suitable prefix length. A larger prefix creates a smaller subnet, while a smaller prefix creates a larger subnet.</p>
+<p class="body-line">CIDR allows networks to be divided using two subnetting methods:</p>
 <ul class="doc-list">
-  <li>Network Address (host portion all zeros — e.g., 192.168.1.0/24): represents the network itself. Used in routing tables to refer to the entire subnet. Cannot be assigned to a host.</li>
-  <li>Broadcast Address (host portion all ones — e.g., 192.168.1.255/24): a packet sent here is delivered to every host in the subnet. Cannot be assigned to a host.</li>
-  <li>Loopback Range (127.0.0.0–127.255.255.255): reserved for testing the local device&#x27;s own TCP/IP stack. Traffic never leaves the device. The most commonly used loopback address is 127.0.0.1.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="classless-inter-domain-routing-cidr">Classless Inter-Domain Routing</h4>
-<p class="body-line">CIDR (Classless Inter-Domain Routing) replaced the older classful networking system to prevent the rapid exhaustion of IPv4 addresses. The classful system assigned addresses in rigid fixed sizes:</p>
-<div class="table-wrap"><table><thead><tr><th>Class</th><th>First Octet Range</th><th>Default Mask</th><th>Network Size</th></tr></thead><tbody><tr><td>A</td><td>1–126</td><td>/8  (255.0.0.0)</td><td>16,777,214 hosts — far too large for most organizations</td></tr><tr><td>B</td><td>128–191</td><td>/16 (255.255.0.0)</td><td>65,534 hosts — still too large for most</td></tr><tr><td>C</td><td>192–223</td><td>/24 (255.255.255.0)</td><td>254 hosts — often too small</td></tr></tbody></table></div>
+  <li><strong>FLSM (Fixed-Length Subnet Masking):</strong> every subnet uses the same prefix length, so all subnets have the same number of addresses.</li>
+  <li><strong>VLSM (Variable-Length Subnet Masking):</strong> different subnets can use different prefix lengths, allowing each subnet to be sized according to its actual host requirement.</li>
+</ul>
+<p class="body-line">Both methods use the same basic subnetting calculations. The main difference is that FLSM calculates one subnet size and uses it everywhere, while VLSM repeats the calculation separately for each required subnet.</p>
+<aside class="callout">
+  <strong>Subnetting Formulas:</strong>
+  <p><code>Number of subnets = 2<sup>x</sup></code>, where <code>x</code> is the number of host bits borrowed for subnetting.</p>
+  <p><code>Usable hosts per subnet = 2<sup>n</sup> - 2</code>, where <code>n</code> is the number of host bits remaining.</p>
+</aside><p class="body-line">The subnetting process can therefore be performed in the following order:</p>
+<ol class="doc-list">
+  <li>Determine how many hosts the subnet must support.</li>
+  <li>Find the smallest value of <code>n</code> where <code>2<sup>n</sup> - 2</code> is large enough for the required hosts.</li>
+  <li>Calculate the prefix using <code>32 - n</code>.</li>
+  <li>The total number of addresses in the subnet is <code>2<sup>n</sup></code>.</li>
+  <li>The first address is the Network Address (host portion all zeros) and represents the subnet itself.</li>
+  <li>The last address is the Broadcast Address (host portion all ones) and sends traffic to all hosts in the subnet.</li>
+  <li>The addresses between them form the usable host range.</li>
+  <li>The next subnet begins immediately after the previous Broadcast Address.</li>
+</ol>
+<p class="body-line">For VLSM, the required subnets are arranged from the largest host requirement to the smallest before applying these steps. Each subnet receives the smallest prefix that can support its hosts. For FLSM, the same calculation is performed once and the resulting prefix is used for every subnet.</p>
+<p class="body-line">After choosing the IPv4 address and subnet mask for a network, they can be assigned to a router interface. The interface must then be enabled before it can send and receive traffic:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  ip address <i>ip-address subnet-mask</i>
+  no shutdown</code></pre>
+<p class="body-line">The IPv4 addresses and current state of router interfaces can be checked using:</p>
+<pre class="command-line"><code>show ip interface brief</code></pre>
+<p class="body-line">The command displays two important interface states:</p>
+<div class="table-wrap"><table><thead><tr><th>Column</th><th>Layer</th><th>Meaning</th></tr></thead><tbody><tr><td>Status</td><td>Layer 1</td><td><code>up</code> means the physical connection is active, <code>down</code> indicates a physical connection problem, and <code>administratively down</code> means the interface has been manually disabled with <code>shutdown</code>.</td></tr><tr><td>Protocol</td><td>Layer 2</td><td><code>up</code> means the line protocol is operating correctly, while <code>down</code> means the data-link connection is not operational.</td></tr></tbody></table></div>
+<aside class="callout"><strong>Important:</strong><p>Router interfaces are administratively down by default and must be enabled with <code>no shutdown</code> while switch access ports are enabled by default and become active when a working device is connected.</p></aside>
+<p class="body-line">Once configured on an interface, an IP address becomes part of the IP packet header together with other information used to deliver the packet across the network. In normal routing, the source and destination IP addresses remain unchanged from source to destination, while a new Layer 2 frame is created for each link along the path.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/ipv4_header.png" alt="IPv4 Header Field Layout"></figure>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody><tr><td>Version</td><td>4 bits</td><td>Identifies the IP version.</td></tr><tr><td>Internet Header Length (IHL)</td><td>4 bits</td><td>Specifies the header length. Multiply its value by 4 to get the length in bytes. The minimum IPv4 header is 20 bytes and the maximum is 60.</td></tr><tr><td>Differentiated Services Code Point (DSCP)</td><td>6 bits</td><td>Used for Quality of Service to classify and prioritize traffic.</td></tr><tr><td>Explicit Congestion Notification (ECN)</td><td>2 bits</td><td>Allows network congestion to be signaled without immediately dropping packets when supported.</td></tr><tr><td>Total Length</td><td>16 bits</td><td>Total size of the packet including the header and payload in bytes. Maximum size is 65,535 bytes.</td></tr><tr><td>Identification</td><td>16 bits</td><td>Identifies fragments that belong to the same original packet.</td></tr><tr><td>Flags</td><td>3 bits</td><td>Controls fragmentation using 3 bits: the first bit is always 0, the second bit (DF) allows fragmentation when set to 0 and prevents it when set to 1, and the third bit (MF) is 1 when more fragments follow and 0 for the last fragment.</td></tr><tr><td>Fragment Offset</td><td>13 bits</td><td>Shows where a fragment belongs within the original packet. Allows correct reassembly even if fragments arrive out of order.</td></tr><tr><td>TTL (Time to Live)</td><td>8 bits</td><td>Decreases by 1 at every hob. If it reaches 0, the packet is discarded to prevent routing loops.</td></tr><tr><td>Protocol</td><td>8 bits</td><td>Identifies the upper-layer protocol carried inside the packet, such as TCP or UDP.</td></tr><tr><td>Header Checksum</td><td>16 bits</td><td>Checks the IP header for errors using CRC, recalculates it at each hop because TTL changes, and drops the packet if the CRC does not match.</td></tr><tr><td>Source IP Address</td><td>32 bits</td><td>Identifies the original sender of the packet.</td></tr><tr><td>Destination IP Address</td><td>32 bits</td><td>Identifies the final destination which is used by routers to make forwarding decisions.</td></tr><tr><td>Options</td><td>0–320 bits</td><td>Optional additional IPv4 information that is rarely used in normal traffic.</td></tr></tbody></table></div>
+<aside class="callout"><strong>Note:</strong><p>The IPv4 Header Checksum protects only the IP header, not the payload. Error detection for the transported data is handled by higher-layer protocols.</p></aside>
+<p class="body-line">IPv4 also supports fragmentation when a packet is too large for the next network link. Every link has an MTU (Maximum Transmission Unit), which defines the largest packet it can carry. Standard Ethernet commonly uses an MTU of 1,500 bytes.</p>
+<p class="body-line">If a packet exceeds the next link's MTU and fragmentation is allowed, the router divides it into smaller fragments. The Identification, Flags, and Fragment Offset fields allow the destination host to rebuild the original packet. If the Don't Fragment flag is set, the router drops an oversized packet instead of fragmenting it.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">The problem: a company needing 2,000 host addresses would receive an entire Class B network (65,534 hosts) — wasting over 63,000 addresses. CIDR (Classless Inter-Domain Routing) allows any prefix length. That same company could receive a /21 network (2,046 usable hosts) — a far more efficient allocation. CIDR is now universal in all modern networking.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="subnet-masks-fixed-length-and-variable-length">Fixed-Length and Variable-Length</h4>
+
+<h3 class="subheading" id="address-resolution-protocol-arp">ARP</h3>
+<p class="body-line">ARP (Address Resolution Protocol) is used with IPv4 to find the MAC address needed to deliver a frame on the local network. When a device knows the destination IP address but does not know the corresponding MAC address, it uses ARP to discover it.</p>
+<p class="body-line">The device first sends an ARP Request as a broadcast so every device on the local network receives it. The device that owns the requested IP address responds with an ARP Reply containing its MAC address.</p>
+<figure class="overview-figure-block figure-with-image"><img src="" alt="ARP Request Broadcast and ARP Reply Unicast"></figure>
+<div class="table-wrap"><table><thead><tr><th>ARP Message</th><th>Destination</th><th>Purpose</th></tr></thead><tbody><tr><td>ARP Request</td><td>Broadcast — FF:FF:FF:FF:FF:FF</td><td>Asks which device owns a specific IPv4 address and requests its MAC address.</td></tr><tr><td>ARP Reply</td><td>Normally Unicast</td><td>Returns the MAC address associated with the requested IPv4 address.</td></tr></tbody></table></div>
+<aside class="callout"><strong>Note:</strong><p>If the destination is on another network, the device does not use ARP to find the remote host's MAC address. Instead, it uses ARP to find the MAC address of its default gateway and sends the frame to the router.</p></aside>
+<p class="body-line">After receiving the ARP Reply, the device stores the IPv4-to-MAC mapping in its ARP table, also called the ARP cache, so it does not need to perform ARP again for every packet.</p>
 <ul class="doc-list">
-  <li>FLSM (Fixed-Length Subnet Masks): all subnets use the same prefix length and therefore the same number of host addresses. Simple to design but inefficient when subnets have very different size requirements.</li>
-  <li>VLSM (Variable-Length Subnet Masks): different subnets use different prefix lengths, allowing each subnet to be exactly sized for its actual needs. A subnet for 100 hosts uses /25 (126 usable hosts); a point-to-point link uses /30 (2 usable hosts). VLSM (Variable-Length Subnet Masks) is the standard approach in modern network design.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
-<div class="table-wrap"><table><thead><tr><th>Approach</th><th>Subnets Created</th><th>Hosts per Subnet</th><th>Address Waste</th></tr></thead><tbody><tr><td>Fixed-Length (/26)</td><td>4 equal subnets</td><td>62 usable hosts each</td><td>High — if some subnets only need 10 hosts, 52 addresses per subnet are wasted</td></tr><tr><td>Variable-Length (mixed)</td><td>Subnets of varying sizes</td><td>Each sized to actual need (e.g., /28 = 14 hosts, /30 = 2 hosts)</td><td>Minimal</td></tr></tbody></table></div>
+  <li><strong>Dynamic ARP Entry:</strong> learned automatically through ARP and removed after it ages out.</li>
+  <li><strong>Static ARP Entry:</strong> configured manually and remains until it is removed or the configuration changes.</li>
+</ul>
+<p class="body-line">The ARP table can be viewed using:</p>
+<pre class="command-line"><code>show [ip] arp                   → Cisco IOS</code></pre>
+<pre class="command-line"><code>arp -a                          → Windows, Linux, macOS</code></pre>
+<aside class="callout"><strong>Remember:</strong><p>A switch's MAC address table maps a MAC address to a switch port, while an ARP table maps an IPv4 address to a MAC address.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="ipv4-packet-header">IPv4 Packet Header</h4>
-<p class="body-line">When a Layer 4 segment or datagram arrives at Layer 3, an IP header is added to create an IP packet. Every field in the header serves a specific purpose.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/ipv4_header.png" alt="IPv4 header field layout"></figure>
+
+<h3 class="subheading" id="internet-control-message-protocol-icmp">ICMP</h3>
+<p class="body-line">ICMP (Internet Control Message Protocol) is a protocol used by network devices to report problems and provide diagnostic information about IP communication. It does not carry normal application data; instead, it sends control and error messages when certain network events occur.</p>
+<p class="body-line">Common ICMP messages include:</p>
+<div class="table-wrap"><table><thead><tr><th>ICMP Message</th><th>Purpose</th></tr></thead><tbody><tr><td>Echo Request</td><td>Sent to test whether a destination is reachable.</td></tr><tr><td>Echo Reply</td><td>Returned by the destination in response to an Echo Request.</td></tr><tr><td>Destination Unreachable</td><td>Indicates that a packet could not reach its destination or required service.</td></tr><tr><td>Time Exceeded</td><td>Sent by a router when a packet's TTL reaches 0 and the packet is discarded.</td></tr></tbody></table></div>
+<p class="body-line">One of the most common tools that uses ICMP is <code>ping</code>. Ping tests whether a destination is reachable by sending an ICMP Echo Request to the target IP address and waiting for an ICMP Echo Reply. It can also measure the round-trip time (RTT), which is the time required for the request to reach the destination and for the reply to return.</p>
+<pre class="command-line"><code>ping <i>ip-address</i></code></pre>
+<p class="body-line">Receiving an Echo Reply confirms that IP communication is working between the two devices, although a failed ping does not always mean the destination is unavailable because ICMP traffic may be blocked or filtered.</p>
+<aside class="callout"><strong>Note:</strong><p>When pinging an IPv4 device on the same subnet for the first time, ARP may need to resolve the destination MAC address before the ICMP packet can be placed inside an Ethernet frame and sent. This can make the first ping slower or occasionally cause the first Echo Request to time out.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose and Values</th></tr></thead><tbody><tr><td>Version</td><td>4 bits</td><td>Internet Protocol version: 4 = IPv4, 6 = IPv6.</td></tr><tr><td>Internet Header Length (IHL)</td><td>4 bits</td><td>Length of the IP header in 32-bit words. Minimum = 5 (5 × 4 = 20 bytes, no options). Maximum = 15 (60 bytes, with options present).</td></tr><tr><td>Differentiated Services Code Point (DSCP)</td><td>6 bits</td><td>Used for Quality of Service (QoS) — allows routers to prioritize delay-sensitive traffic such as voice calls and video.</td></tr><tr><td>Explicit Congestion Notification (ECN)</td><td>2 bits</td><td>Allows routers to signal network congestion to endpoints without dropping packets. Requires all devices along the path to support it.</td></tr><tr><td>Total Length</td><td>16 bits</td><td>Total size of the IP packet in bytes (header + payload). Minimum = 20 bytes. Maximum = 65,535 bytes.</td></tr><tr><td>Identification</td><td>16 bits</td><td>A unique value per original packet. When fragmented, all fragments of the same packet share this value for reassembly.</td></tr><tr><td>Flags</td><td>3 bits</td><td>Bit 0: Reserved (always 0). Bit 1: Don&#x27;t Fragment (DF) — if set, routers must not fragment this packet; if too large, it is dropped and an error is returned. Bit 2: More Fragments (MF) — set to 1 on all fragments except the last.</td></tr><tr><td>Fragment Offset</td><td>13 bits</td><td>Position (in 8-byte units) of this fragment within the original packet. Allows correct reassembly even if fragments arrive out of order.</td></tr><tr><td>TTL (Time to Live)</td><td>8 bits</td><td>A hop counter decremented by 1 at each router. When it reaches 0, the router drops the packet and sends an ICMP &#x27;Time Exceeded&#x27; message to the source. Prevents packets from looping indefinitely. Recommended default: 64.</td></tr><tr><td>Protocol</td><td>8 bits</td><td>Identifies the Layer 4 protocol in the payload: 1 = ICMP (Internet Control Message Protocol), 6 = TCP (Transmission Control Protocol), 17 = UDP (User Datagram Protocol), 89 = OSPF (Open Shortest Path First).</td></tr><tr><td>Header Checksum</td><td>16 bits</td><td>Cyclic Redundancy Check (CRC) covering the IP header only — not the payload. Recalculated at every router because the TTL (Time to Live) changes each hop. A mismatch causes the packet to be dropped.</td></tr><tr><td>Source IP Address</td><td>32 bits</td><td>IP address of the original sender. Does not change as the packet travels through the network.</td></tr><tr><td>Destination IP Address</td><td>32 bits</td><td>IP address of the final destination. Routers use this field to make every forwarding decision.</td></tr><tr><td>Options</td><td>0–320 bits</td><td>Optional, variable-length field. Rarely used in practice. Present only when Internet Header Length (IHL) is greater than 5.</td></tr></tbody></table></div>
-<aside class="callout"><strong>Important:</strong><p>The Header Checksum protects only the IP header — not the payload data. Payload error detection is the responsibility of Layer 4: TCP (Transmission Control Protocol) and UDP (User Datagram Protocol) each have their own checksum fields.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="ip-fragmentation">IP Fragmentation</h4>
-<p class="body-line">Every network link has a MTU (Maximum Transmission Unit) — the largest packet it can carry. For standard Ethernet, the MTU is 1,500 bytes. If an IP packet exceeds the MTU of a link, the router fragments it. The receiving host — not intermediate routers — reassembles the fragments using the Identification, Flags, and Fragment Offset fields.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="subheading" id="address-resolution-protocol-arp">Address Resolution Protocol</h3>
-<p class="body-line">ARP (Address Resolution Protocol) operates at the boundary between Layer 2 and Layer 3. When a device knows the destination IP address but needs the destination MAC address to build an Ethernet frame (L2PDU), ARP discovers that MAC address automatically.</p>
-<!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: ARP flow: PC-A knows destination IP 192.168.1.20 but not its MAC → broadcasts ARP Request (Who has 192.168.1.20?) to FF:FF:FF:FF:FF:FF → PC-B replies with unicast ARP Reply containing its MAC address ]</p></aside> -->
-<div class="doc-spacer" aria-hidden="true"></div>
-<div class="table-wrap"><table><thead><tr><th>ARP Message</th><th>Sent By</th><th>Destination</th><th>Meaning</th></tr></thead><tbody><tr><td>ARP Request</td><td>Device that needs the MAC address</td><td>Broadcast — FF:FF:FF:FF:FF:FF (all devices on the local network receive it)</td><td>&quot;Who has IP address X.X.X.X? Please reply with your MAC address.&quot;</td></tr><tr><td>ARP Reply</td><td>Device that owns that IP address</td><td>Unicast — sent directly to the MAC address of the requesting device</td><td>&quot;I have IP address X.X.X.X. My MAC address is AA:BB:CC:DD:EE:FF.&quot;</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">After the ARP Reply is received, the IP-to-MAC mapping is stored in the ARP table (also called the ARP cache).</p>
-<ul class="doc-list">
-  <li>Static ARP entry: manually configured, permanent — does not expire. Used for security-sensitive or critical devices.</li>
-  <li>Dynamic ARP entry: learned automatically via ARP. Expires after inactivity.</li>
-<pre class="command-line"><code>arp -a                → Windows, Linux, macOS: view the ARP table</code></pre>
-<pre class="command-line"><code>show arp              → Cisco IOS: view the ARP table</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="subheading" id="the-ping-utility">Ping Utility</h3>
-<p class="body-line">Ping is a network diagnostic tool that tests whether a destination is reachable and measures the round-trip time (RTT). It uses ICMP (Internet Control Message Protocol) — sending an ICMP Echo Request to the destination and waiting for an ICMP Echo Reply. A successful reply confirms the path is working end-to-end.</p>
-<ul class="doc-list">
-  <li>ICMP Echo Request: sent by the initiating device to the target IP address.</li>
-  <li>ICMP Echo Reply: sent back by the target device if it is reachable.</li>
-</ul><aside class="callout"><strong>Note:</strong><p>When pinging a device on the same subnet for the first time, ARP must run first to resolve the destination MAC address. Only then can the ICMP packet be encapsulated in an Ethernet frame and sent. This is why the very first ping can occasionally be slow or fail.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
+
 <h3 class="subheading" id="the-routing-table">Routing Table</h3>
 <p class="body-line">A router consults its routing table for every forwarding decision — a database mapping destination networks to the interface or next-hop address used to reach them.</p>
 <h4 class="subheading" id="types-of-routing">Types of Routing</h4>
@@ -800,6 +819,7 @@ show etherchannel load-balance</code></pre>
 <pre class="command-line"><code>ip route 0.0.0.0 0.0.0.0 &lt;next-hop-ip&gt;     → configure a default route</code></pre>
 <!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: &#x27;show ip route&#x27; output: &#x27;Gateway of last resort is X.X.X.X to network 0.0.0.0&#x27; at the top, C and L routes for connected interfaces, S* for the default static route. ]</p></aside> -->
 <div class="doc-spacer" aria-hidden="true"></div>
+
 <h4 class="subheading" id="inter-vlan-routing">Inter-VLAN Routing</h4>
 <p class="body-line">VLANs (Virtual Local Area Networks) create isolated Layer 2 broadcast domains. For hosts in different VLANs to communicate, their traffic must be routed at Layer 3. There are two main approaches:</p>
 <div class="doc-spacer" aria-hidden="true"></div>
@@ -841,15 +861,6 @@ channel-group <i>channel-group-number</i> mode {active|passive|auto|desirable|on
 <pre class="command-line"><code>int port-channel <i>channel-group-number</i>
 no switchport                                   → ensure the port-channel itself is a routed interface
 ip address &lt;ip-address&gt; &lt;subnet-mask&gt;           → assign IP address to the logical EtherChannel interface</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="cisco-ios-interface-status">Interface Status</h5>
-<!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Example output of &#x27;show ip interface brief&#x27;: columns are Interface, IP-Address, OK?, Method, Status, and Protocol ]</p></aside> -->
-<ul class="doc-list">
-  <li><strong>Status column (Layer 1):</strong> &#x27;up&#x27; means cable connected and physical signal detected. &#x27;administratively down&#x27; means manually disabled with the &#x27;shutdown&#x27; command.</li>
-  <li><strong>Protocol column (Layer 2):</strong> &#x27;up&#x27; means data link layer is functioning. &#x27;down&#x27; means Layer 2 has failed even if Layer 1 is up.</li>
-</ul>
-  <pre class="command-line"><code>show ip interface brief</code></pre>
-<aside class="callout"><strong>Important:</strong><p>Router interfaces are administratively down by default — must be manually enabled with &#x27;no shutdown&#x27;. Switch interfaces come up automatically when a device is physically connected.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="cisco-ios-configuration-files">Configuration Files</h3>
 <ul class="doc-list">
