@@ -558,7 +558,7 @@ show interfaces trunk                            → view trunk configurations</
 <pre class="command-line"><code>show spanning-tree [summary | {int &lt;interface-id&gt;} | {vlan &lt;vlan-id&gt;} | detail]</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <!-- ---------- the perfect one -->
- <h4 class="subheading" id="stp-toolkit">STP Toolkit</h4>
+<h4 class="subheading" id="stp-toolkit">STP Toolkit</h4>
 <p class="body-line">The STP Toolkit includes several features that improve the speed, security, and stability of Spanning Tree Protocol. These features are used on different types of ports depending on what the network needs to protect.</p>
 <h5 class="subheading" id="portfast">1. PortFast</h5>
 <p class="body-line">PortFast allows an STP edge port to skip the normal Listening and Learning states and move immediately to the Forwarding state when the port becomes active. It is normally used on ports connected to end devices, where waiting for the normal STP convergence process is unnecessary.</p>
@@ -785,23 +785,41 @@ show etherchannel load-balance</code></pre>
 
 <h3 class="subheading" id="routing">Routing</h3>
 <p class="body-line">Routing is the process of forwarding IP packets between different networks. A router examines the destination IP address of each packet and determines the next path the packet should take toward its destination.</p>
-<p class="body-line">Routers can learn routes in three main ways:</p>
+<p class="body-line">To forward packets, routers must know how to reach different networks. These routes can be learned in three main ways:</p>
 <ul class="doc-list">
-  <li><strong>Directly Connected:</strong> when an IP address is configured on an active router interface, the router automatically learns the connected network.</li>
-  <li><strong>Static Routing:</strong> routes are manually configured by a network administrator. They remain unchanged unless the configuration is modified, making them suitable for small or predictable networks.</li>
-  <li><strong>Dynamic Routing:</strong> routers automatically exchange routing information using routing protocols and can adapt when the network topology changes. Common examples include RIP, OSPF, EIGRP, and BGP.</li>
+  <li><strong>Connected Routes:</strong> automatically learned when an IP address is configured on an active router interface. The router knows that the connected network is directly reachable.</li>
+  <li><strong>Static Routes:</strong> manually configured by a network administrator. They remain unchanged until the configuration is modified and are suitable for small or predictable networks.</li>
+  <li><strong>Dynamic Routes:</strong> automatically learned through routing protocols. Routers exchange routing information with neighboring routers and update their routing tables when the network changes.</li>
 </ul>
-<aside class="callout"><strong>Note:</strong><p>When an IP address is configured on an interface and the interface becomes active, the router automatically creates a Connected route for the subnet and a Local route for the interface's own IP address.</p></aside>
+<aside class="callout"><strong>Note:</strong><p>When an IP address is configured on an active router interface, the router automatically creates two routes: a Connected route for the directly attached network using the configured subnet prefix, and a Local route for the interface's IP address using a /32 prefix to represent only that single address.</p></aside>
 <p class="body-line">Static routes are manually added using the <code>ip route</code> command. The route can specify the next-hop IP address, the exit interface, or both:</p>
 <pre class="command-line"><code>ip route <i>destination-network</i> <i>subnet-mask</i> {<i>next-hop-ip</i> | <i>exit-interface</i> [<i>next-hop-ip</i>]}</code></pre>
-<p class="body-line">Routers store all known routes in a routing table. Each entry identifies a destination network and how the router can reach it, such as through a specific next-hop IP address or exit interface. The router consults this table whenever it needs to forward a packet.</p>
-<p class="body-line">The IPv4 routing table can be viewed using:</p>
+<p class="body-line">As networks grow, manually configuring every route becomes difficult to maintain. Dynamic routing protocols solve this problem by allowing routers to automatically exchange routing information, discover available networks, and update their routing tables when topology changes occur.</p>
+<p class="body-line">Dynamic routing protocols are classified based on their scope:</p>
+<div class="table-wrap"><table><thead><tr><th>Category</th><th>Scope</th><th>Examples</th></tr></thead><tbody><tr><td>IGP (Interior Gateway Protocol)</td><td>Used to exchange routing information inside a single Autonomous System (AS), such as one organization's network.</td><td>RIP, EIGRP, OSPF, IS-IS</td></tr><tr><td>EGP (Exterior Gateway Protocol)</td><td>Used to exchange routing information between different Autonomous Systems, such as between organizations or ISPs.</td><td>BGP</td></tr></tbody></table></div>
+<p class="body-line">Routing protocols also differ in how they share information and calculate the best path:</p>
+<div class="table-wrap"><table><thead><tr><th>Routing Method</th><th>How It Works</th><th>Examples</th></tr></thead><tbody><tr><td>Distance Vector</td><td>Routers share their known routes with neighboring routers. Each router learns the direction and distance to a destination but does not have a complete view of the network topology that's why this is often called "routing by rumor".</td><td>RIP, EIGRP</td></tr><tr><td>Link State</td><td>Routers exchange information about their connected links to build a complete map of the network. Each router independently calculates the shortest path using an algorithm such as SPF (Shortest Path First).</td><td>OSPF, IS-IS</td></tr><tr><td>Path Vector</td><td>Routers exchange complete path information between Autonomous Systems. Instead of selecting only the next hop, the router evaluates the entire path and uses path attributes to select the best route.</td><td>BGP</td></tr></tbody></table></div>
+<p class="body-line">A router stores all learned routes in its routing table. When forwarding a packet, it compares the destination IP address with the entries in this table and selects the best matching route.</p>
+<p class="body-line">The routing table can be viewed using:</p>
 <pre class="command-line"><code>show ip route</code></pre>
-<p class="body-line">If the router does not have a route in its routing table that matches the destination network, it normally drops the packet. To provide a final path for these unknown destinations, a default route can be configured.</p>
-<p class="body-line">The default route acts as the router's last option and is used only when no more specific route matches the destination. It is commonly used to forward traffic toward an ISP.</p>
-<pre class="command-line"><code>ip route 0.0.0.0 0.0.0.0 <i>next-hop-ip</i></code></pre>
-<aside class="callout"><strong>Note:</strong><p>The IPv4 default route is represented as <code>0.0.0.0/0</code> which matches every possible destination when no more specific route exists.. On a router, it is known as the Gateway of Last Resort, which serves a similar purpose to the Default Gateway used by end devices.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
+<p class="body-line">When a router receives a packet, it searches the routing table for the best matching route. If no matching route exists, the packet is normally dropped. A default route provides a final path for unknown destinations and is commonly used to forward traffic toward an ISP.</p>
+<pre class="command-line"><code>ip route 0.0.0.0 0.0.0.0 {<i>next-hop-ip</i> | <i>exit-interface</i> [<i>next-hop-ip</i>]}</code></pre>
+<aside class="callout"><strong>Note:</strong><p>The IPv4 default route is represented as <code>0.0.0.0/0</code>. On routers, it is called the Gateway of Last Resort and serves a similar purpose to the Default Gateway configured on end devices.</p></aside>
+<p class="body-line">Dynamic routing protocols can also advertise a default route to their neighbors. This avoids manually configuring a default route on every router and is commonly used on routers connected toward an ISP to distribute Internet access information throughout the network. The command used to configure this is:</p>
+<pre class="command-line"><code>default-information originate</code></pre>
+<p class="body-line">To prevent unnecessary routing updates from being sent toward devices that do not participate in routing, interfaces connected to end devices are commonly configured as passive interfaces. A passive interface stops routing protocol advertisements on that interface while still allowing the connected network to be advertised to other routers.</p>
+<pre class="command-line"><code>passive-interface <i>interface-id</i></code></pre>
+<p class="body-line">Passive interfaces are typically used on interfaces connected to PCs, servers, or other end devices. This reduces unnecessary routing traffic and prevents routing information from being exposed where it is not required.</p>
+<p class="body-line">When a router learns multiple paths to the same destination using the same routing protocol, it uses the protocol's metric to determine the preferred path. The metric represents the cost of using a route, and the route with the best metric value is selected.</p>
+<p class="body-line">If multiple routes to the same destination have the same metric, they are considered equal-cost paths. In this case, the router can install multiple routes in its routing table and distribute traffic between them using ECMP (Equal Cost Multi-Path) for load balancing.</p>
+<p class="body-line">However, a router may also learn the same destination network from different routing sources, such as a static route and a dynamic routing protocol. In this case, the router uses Administrative Distance (AD) to decide which source is more trusted. A lower AD is more preferred.</p>
+<div class="table-wrap"><table><thead><tr><th>Route Source</th><th>Administrative Distance</th></tr></thead><tbody><tr><td>Connected</td><td>0</td></tr><tr><td>Static</td><td>1</td></tr><tr><td>External BGP (eBGP)</td><td>20</td></tr><tr><td>EIGRP</td><td>90</td></tr><tr><td>IGRP</td><td>100</td></tr><tr><td>OSPF</td><td>110</td></tr><tr><td>IS-IS</td><td>115</td></tr><tr><td>RIP</td><td>120</td></tr><tr><td>EIGRP (external)</td><td>170</td></tr><tr><td>Internal BGP (iBGP)</td><td>200</td></tr><tr><td>Unknown</td><td>255</td></tr></tbody></table></div>
+<aside class="callout"><strong>Important:</strong><p>Metric is used to compare routes learned from the same routing protocol, while Administrative Distance is used to compare routes learned from different routing sources. Metrics from different protocols cannot be compared.</p></aside>
+<p class="body-line">A static route can also be used as a backup path by increasing its Administrative Distance. This is called a floating static route. Because its AD is higher than the primary route, it remains inactive until the preferred route is removed from the routing table.</p>
+<pre class="command-line"><code>ip route <i>destination-network</i> <i>subnet-mask</i> {<i>next-hop-ip</i> | <i>exit-interface</i> [<i>next-hop-ip</i>]} <i>administrative-distance</i></code></pre>
+<p class="body-line">Floating static routes are commonly used as backup paths for dynamic routes. If the dynamic route fails because of a link failure or a lost neighbor relationship, the floating static route becomes active automatically.</p>
+<h4 class="subheading" id="rip">1. RIP</h4>
+
 
 <h3 class="subheading" id="inter-vlan-routing">Inter-VLAN Routing</h3>
 <p class="body-line">VLANs create separate Layer 2 broadcast domains, so devices in different VLANs cannot communicate directly through Layer 2 switching. Inter-VLAN routing uses a Layer 3 device to route traffic between these VLANs.</p>
@@ -843,37 +861,7 @@ show etherchannel load-balance</code></pre>
   no shutdown</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="topic-heading" id="dynamic-routing">Dynamic Routing Protocols</h3>
-<p class="body-line">Static routes require manual configuration and do not adapt to network changes. Dynamic routing protocols allow routers to automatically discover networks, share route information with neighbors, and update their routing tables when the topology changes.</p>
-<h4 class="subheading" id="dynamic-routing-fundamentals">Dynamic Routing Fundamentals</h4>
-<p class="body-line">Routers running a dynamic routing protocol form adjacencies (also called neighbor relationships or neighborships) with directly connected routers and exchange routing information automatically. When multiple routes to the same destination are learned, the router selects the best one using the route&#x27;s metric — a value that represents the cost of using that path. A lower metric is always preferred.</p>
-<ul class="doc-list">
-  <li><strong>Network route:</strong> a route to a network or subnet (e.g., 192.168.1.0/24).</li>
-  <li><strong>Host route:</strong> a route to a single specific host, using a /32 prefix (e.g., 192.168.1.1/32).</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="administrative-distance-ad">Administrative Distance</h5>
-<p class="body-line">When a router learns routes from multiple different routing protocols, it needs a way to decide which protocol&#x27;s routes to trust. AD (Administrative Distance) is a value assigned to each routing source that indicates its trustworthiness. A lower AD is more preferred.</p>
-<div class="table-wrap"><table><thead><tr><th>Route Source</th><th>AD (Administrative Distance)</th></tr></thead><tbody><tr><td>Directly Connected</td><td>0</td></tr><tr><td>Static Route</td><td>1</td></tr><tr><td>EIGRP (Enhanced Interior Gateway Routing Protocol) Summary Route</td><td>5</td></tr><tr><td>External BGP (Border Gateway Protocol)</td><td>20</td></tr><tr><td>EIGRP (Internal)</td><td>90</td></tr><tr><td>OSPF (Open Shortest Path First)</td><td>110</td></tr><tr><td>IS-IS (Intermediate System to Intermediate System)</td><td>115</td></tr><tr><td>RIP (Routing Information Protocol)</td><td>120</td></tr><tr><td>Unknown / Untrusted</td><td>255 — route is never installed in the routing table</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Note:</strong><p>Metric is used to compare routes learned via the same routing protocol. AD (Administrative Distance) is used to compare routes learned via different routing protocols. You cannot compare metrics across different protocols.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="floating-static-routes">Floating Static Routes</h4>
-<p class="body-line">The Administrative Distance of a static route can be manually increased so that it is only used when a dynamic routing protocol&#x27;s route to the same destination is no longer available:</p>
-<pre class="command-line"><code>ip route &lt;network&gt; &lt;mask&gt; &lt;next-hop&gt; &lt;AD&gt;     → configure a static route with a custom AD</code></pre>
-<p class="body-line">This is called a floating static route. It sits in the background and becomes active only if the dynamic route disappears — for example, when a neighbor adjacency is lost or an interface fails.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="equal-cost-multi-path-ecmp">Equal Cost Multi-Path</h4>
-<p class="body-line">If a router learns two or more routes to the same destination via the same routing protocol with the same metric, all routes are added to the routing table and traffic is load-balanced across them. This is called ECMP (Equal Cost Multi-Path). Most routing protocols support up to 4 ECMP paths by default.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="routing-protocol-categories">Routing Protocol Categories</h4>
-<div class="table-wrap"><table><thead><tr><th>Category</th><th>Full Name</th><th>Scope</th><th>Examples</th><th>Algorithm</th></tr></thead><tbody><tr><td>IGP</td><td>Interior Gateway Protocol</td><td>Used to share routes within a single Autonomous System (AS) — typically one organization.</td><td>RIP, EIGRP, OSPF, IS-IS</td><td>Distance Vector or Link State</td></tr><tr><td>EGP</td><td>Exterior Gateway Protocol</td><td>Used to share routes between different Autonomous Systems — between organizations or ISPs.</td><td>BGP (Border Gateway Protocol) — the only EGP in use today</td><td>Path Vector</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="distance-vector-protocols">Distance Vector Protocols</h5>
-<p class="body-line">Distance Vector protocols share route information by sending their known destinations and metrics to directly connected neighbors only. Each router knows the direction (next hop) and distance (metric) to reach a destination, but has no knowledge of the full network topology beyond its neighbors. This is often called &#x27;routing by rumor&#x27;. Examples: RIP (Routing Information Protocol), EIGRP (Enhanced Interior Gateway Routing Protocol).</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="link-state-protocols">Link State Protocols</h5>
-<p class="body-line">Link State protocols work differently — each router advertises information about its own directly connected interfaces to all routers in the network. These advertisements (called LSAs (Link State Advertisements)) are flooded through the entire area until every router has an identical map of the network. Each router then independently runs the Shortest Path First (SPF) algorithm on this map to calculate the best routes. Link State protocols react faster to network changes than Distance Vector protocols, but use more CPU and memory resources. Examples: OSPF (Open Shortest Path First), Intermediate System to Intermediate System (IS-IS).</p>
-<div class="doc-spacer" aria-hidden="true"></div>
+
 <h4 class="subheading" id="routing-information-protocol-rip">Routing Information Protocol</h4>
 <p class="body-line">RIP (Routing Information Protocol) is a Distance Vector IGP (Interior Gateway Protocol). It uses hop count as its metric — each router in the path counts as one hop, regardless of bandwidth. The maximum hop count is 15; any destination more than 15 hops away is considered unreachable.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
