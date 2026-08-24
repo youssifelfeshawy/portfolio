@@ -61,6 +61,7 @@
   <img src="assets/network_overview.png" alt="Network Overview">
 </figure>
 <div class="doc-spacer" aria-hidden="true"></div>
+
 <h3 class="topic-heading" id="network-types">Network Types</h3>
 <ul class="doc-list">
   <li><strong>LAN (Local Area Network):</strong> a network within a small area — a single building, office, or home. Provides high-speed connectivity over short distances. Most LANs use Ethernet (wired) or Wi-Fi (wireless).</li>
@@ -68,6 +69,18 @@
   <li><strong>WAN (Wide Area Network):</strong> spans large geographic areas — cities, countries, or the entire globe. The internet is the largest WAN. Connects remote LANs together over long distances.</li>
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="communication-types">Communication Types</h3>
+<p class="body-line">Network communication is classified by how many destinations a single transmission is intended for:</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/cast_types.jpg" alt="Unicast Broadcast Multicast and Anycast Communication Types"></figure>
+<ul class="doc-list">
+  <li><strong>Unicast (One to One):</strong> a message sent from one source to one specific destination.</li>
+  <li><strong>Broadcast (One to All):</strong> a message sent from one source to every device on the local network.</li>
+  <li><strong>Multicast (One to Many):</strong> a message sent from one source to a specific group of devices — not all, only those that have subscribed to receive it.</li>
+  <li><strong>Anycast (One to Nearest):</strong> a message sent from one source to the nearest device out of several that share the same address.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+
 <h3 class="topic-heading" id="network-devices">Network Devices</h3>
 <p class="body-line">Every device in a network is called a node. Nodes include routers, switches, firewalls, servers, and clients. Servers and clients are specifically called end hosts or endpoints.</p>
 <ul class="doc-list">
@@ -77,8 +90,8 @@
   <li><strong>Router:</strong> has fewer network interfaces than a switch. Used to provide connectivity between LANs and to send data over the internet.</li>
   <li><strong>Firewall:</strong> monitors and control network traffic based on configured security rules. Can be placed inside or outside the network perimeter. Known as a Next-Generation Firewall (NGFW) when it includes more modern and advanced filtering capabilities.</li>
 </ul>
-
 <div class="doc-spacer" aria-hidden="true"></div>
+
 <div class="table-wrap"><table><thead><tr><th style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">Firewall Types</th><th style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">Description</th></tr></thead><tbody>
 <tr><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;"><strong>Network Firewall</strong></td><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">A hardware device that filters traffic between networks. Sits at the boundary between a private network and the internet (or between internal network segments).</td></tr>
 <tr><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;"><strong>Host-Based Firewall</strong></td><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">A software application that filters traffic entering and exiting a single host machine, such as a PC. Even with a network firewall in place, each host should have its own firewall as an extra line of defense.</td></tr>
@@ -100,40 +113,41 @@
 <tr><td>Zettabit</td><td>Zb</td><td>10²¹ bits</td></tr>
 <tr><td>Yottabit</td><td>Yb</td><td>10²⁴ bits</td></tr>
 </tbody></table></div>
-<h3 class="topic-heading" id="console-port">Console Port</h3>
-<p class="body-line">Network devices such as Cisco routers and switches have a console port that allows direct out-of-band access to the device — meaning you can configure it even without a network connection. This is used for initial setup, recovery, and troubleshooting.</p>
-<ul class="doc-list">
-  <li>The cable used is called a rollover cable — the pins are reversed end-to-end: pin 1 connects to pin 8, pin 2 to pin 7, and so on.</li>
-  <li>The rollover cable has one end with an RJ-45 connector that connects to the network device, while the other end has a DB9 (serial) connector that connects to the PC, or uses a USB-to-serial adapter on modern PCs.</li>
-  <li>You need a terminal emulator application (such as PuTTY) on your PC to access and configure the device through the console port.</li>
-</ul>
 <div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">Terminal emulator settings for a Cisco console connection:</p>
+
+<h3 class="topic-heading" id="console-access-and-cisco-ios-cli">Console and CLI</h3>
+<p class="body-line">Network devices such as routers and switches have a console port that provides direct out-of-band access to the device, allowing it to be configured even when no network connection is available. Console access is commonly used for initial configuration, recovery, and troubleshooting.</p>
+<aside class="figure-block figure-with-image"><img src="assets/rollover_cable.png" alt="Rollover Cable"></aside>
+<p class="body-line">A traditional Cisco console connection uses a rollover cable, where the pins are reversed from one end to the other. The RJ-45 end connects to the network device, while the other end connects to the computer through a DB9 (serial) connector. Some modern devices also provide a direct USB console port.</p>
+<p class="body-line">A terminal emulator such as PuTTY is then used to open the console session. A typical Cisco console connection uses <code>9600</code> speed (baud) rate, <code>8</code> data bits, <code>1</code> stop bit, no parity, and no flow control. The stop bit is sent after the 8 data bits to mark the end of each byte.</p>
+<p class="body-line">Once the connection is established, the Cisco IOS (Internetwork Operating System) command-line interface becomes available. Cisco IOS organizes commands into different modes, with each mode providing a different level of access:</p>
 <ul class="doc-list">
-  <li>Speed (Baud Rate): 9600</li>
-  <li>Data Bits: 8</li>
-  <li>Stop Bits: 1 — one stop bit is sent after every 8 data bits to mark the end of each byte.</li>
-  <li>Parity: None</li>
-  <li>Flow Control: None</li>
+  <li><strong>User EXEC Mode (<code>Router&gt;</code>):</strong> the initial mode after accessing the device. It provides limited monitoring commands but does not allow configuration changes.</li>
+  <li><strong>Privileged EXEC Mode (<code>Router#</code>):</strong> entered using <code>enable</code>. It provides access to advanced monitoring, management, saving, and configuration functions.</li>
+  <li><strong>Global Configuration Mode (<code>Router(config)#</code>):</strong> entered using <code>configure terminal</code> from Privileged EXEC mode and is used to make configuration changes to the device.</li>
 </ul>
-<h3 class="topic-heading" id="cisco-ios-cli-modes">Cisco IOS CLI</h3>
-<p class="body-line">Cisco IOS (Internetwork Operating System) organizes its command-line interface into different access levels called modes. Each mode controls what commands are available and what changes can be made.</p>
+<aside class="callout"><strong>Note:</strong><p>A question mark (<code>?</code>) can be entered at any point in the Cisco IOS CLI to display the commands or options available in the current mode or at the current position in a command.</p></aside>
+<p class="body-line">Because Privileged EXEC mode provides extensive control over the device, access to it can be protected with a password:</p>
+<pre class="command-line"><code>enable password <i>password</i>
+enable secret <i>password</i></code></pre>
+<p class="body-line">The <code>enable password</code> command is the older and less secure method, while <code>enable secret</code> stores the password using a one-way hash and is the preferred method. If both are configured, <code>enable secret</code> takes precedence.</p>
+<p class="body-line">Supported plaintext passwords in the configuration can also be protected from being displayed directly using:</p>
+<pre class="command-line"><code>service password-encryption</code></pre>
+<p class="body-line">This command converts supported plaintext passwords to Cisco Type 7 obfuscation. Type 7 is reversible and provides only limited protection, while <code>enable secret</code> uses stronger one-way protection.</p>
+<aside class="callout"><strong>Note:</strong><p>In Cisco IOS, prefixing a configuration command with <code>no</code> normally removes or disables that configuration. For example, <code>no service password-encryption</code> stops the feature from being applied to newly configured supported passwords, but passwords that are already encrypted are not automatically decrypted.</p></aside>
+<p class="body-line">Network devices manage configuration changes using two main configuration files:</p>
 <ul class="doc-list">
-  <li><strong>User EXEC Mode</strong> — prompt: <code>Router&gt;</code>: the initial mode when you log in. Very limited — you can view some basic information but cannot make any configuration changes. Also called "user mode".</li>
-  <li><strong>Privileged EXEC Mode</strong> — prompt: <code>Router#</code>: entered by typing <code>enable</code> from User EXEC mode. Provides complete access to view the device configuration, restart the device, and save configurations. Cannot change the configuration directly, but can change the system clock, save config files, etc.</li>
-  <li><strong>Global Configuration Mode</strong> — prompt: <code>Router(config)#</code>: entered by typing <code>configure terminal</code> from Privileged EXEC mode. This is where you make configuration changes that affect the entire device.</li>
-</ul>
-<aside class="callout"><strong>Note:</strong><p>Use a question mark (<code>?</code>) at any point in the CLI to view the available commands or options for the current mode or partial command.</p></aside>
+  <li><strong>Running-Config:</strong> the active configuration currently being used by the device. It is stored in RAM, which is volatile, so unsaved changes are lost when the device restarts.</li>
+  <li><strong>Startup-Config:</strong> the saved configuration stored in NVRAM (Non-Volatile RAM). It is loaded when the device starts and remains available after a restart.</li>
+</ul><p class="body-line">The current and saved configurations can be viewed using:</p>
+<pre class="command-line"><code>show running-config
+show startup-config</code></pre>
+<p class="body-line">The Running-Config can be saved to the Startup-Config using:</p>
+<pre class="command-line"><code>copy running-config startup-config
+write memory</code></pre>
+<aside class="callout"><strong>Tip:</strong><p>Always save important configuration changes before restarting the device. Unsaved changes are permanently lost when the device restarts.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="password-security">Password Security</h4>
-<p class="body-line">Cisco IOS provides several commands to protect access to the device. Passwords are case-sensitive.</p>
-<ul class="doc-list">
-  <li><strong>enable password &lt;password&gt;:</strong> sets a password required to enter Privileged EXEC mode. Stored using Cisco's proprietary Type 7 encryption — weak, easily reversible.</li>
-  <li><strong>enable secret &lt;password&gt;:</strong> sets a password for Privileged EXEC mode using MD5 hashing (Type 5) — significantly more secure than Type 7. If both <code>enable password</code> and <code>enable secret</code> are configured, the <code>enable password</code> is ignored — only the secret is used.</li>
-  <li><strong>service password-encryption:</strong> encrypts all currently configured plaintext passwords (and all future passwords) using Type 7 encryption. Does not affect the <code>enable secret</code> command.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Note:</strong><p>In Cisco IOS, prefixing a command with <code>no</code> removes or disables that command. For example, <code>no service password-encryption</code> disables password encryption for future passwords, but passwords that are already encrypted remain encrypted and are not decrypted. The <code>enable secret</code> password is always hashed regardless of this setting.</p></aside><div class="doc-spacer" aria-hidden="true"></div>
+
 <h3 class="topic-heading" id="osi-model">OSI Model</h3>
 <p class="body-line">When two devices from different manufacturers need to communicate — a Cisco router with a Juniper router, a Windows PC with a Linux server — they can do so because everyone follows the same universal rules defined by the OSI (Open Systems Interconnection) model.</p>
 <p class="body-line">The OSI model divides the complex job of networking into 7 separate layers. Each layer has a specific responsibility and only communicates with the layers directly above and below it. This clean separation means manufacturers can build equipment for one layer without affecting how other layers work.</p>
@@ -265,7 +279,6 @@
   <li>Bits: the L1PDU (Layer 1 Protocol Data Unit). The frame converted into raw electrical, light, or radio signals for physical transmission.</li>
 </ul><aside class="callout"><strong>Note:</strong><p>A payload at any layer means everything that layer is carrying, excluding its own header and trailer. For example, the payload of an Ethernet frame (L2PDU) is the IP packet (L3PDU) inside it.</p></aside>
 <p class="body-line">At the receiving device, the process reverses — each layer strips its own header and passes the data upward. This is called de-encapsulation.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
 <h2 class="major-heading" id="layer-1">Layer 1: Physical Layer</h2>
 <p class="body-line">The Physical Layer is the foundation of all networking. It defines the physical medium that carries raw bits — electrical signals on copper wire, light pulses through fiber optic cable, or radio waves through the air. Every higher layer depends on this layer to physically move data from one place to another.</p>
 <h3 class="subheading" id="transmission-media">Transmission Media</h3>
@@ -769,109 +782,72 @@ show etherchannel load-balance</code></pre>
 <pre class="command-line"><code>ping <i>ip-address</i></code></pre>
 <p class="body-line">Receiving an Echo Reply confirms that IP communication is working between the two devices, although a failed ping does not always mean the destination is unavailable because ICMP traffic may be blocked or filtered.</p>
 <aside class="callout"><strong>Note:</strong><p>When pinging an IPv4 device on the same subnet for the first time, ARP may need to resolve the destination MAC address before the ICMP packet can be placed inside an Ethernet frame and sent. This can make the first ping slower or occasionally cause the first Echo Request to time out.</p></aside>
+<p class="body-line">Another diagnostic tool that relies on ICMP is <code>traceroute</code>. While Ping checks whether a destination is reachable, Traceroute identifies the routers, or hops, that packets pass through on the way to that destination.</p>
+<p class="body-line">Traceroute works by sending probes with gradually increasing TTL values. When a probe's TTL reaches 0 at a router, that router discards the packet and normally returns an ICMP Time Exceeded message. Traceroute uses these replies to discover each hop along the path until the destination is reached.</p>
+<pre class="command-line"><code>traceroute <i>ip-address</i>                         → Cisco IOS, Linux, macOS
+tracert <i>ip-address</i>                            → Windows</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="the-routing-table">Routing Table</h3>
-<p class="body-line">A router consults its routing table for every forwarding decision — a database mapping destination networks to the interface or next-hop address used to reach them.</p>
-<h4 class="subheading" id="types-of-routing">Types of Routing</h4>
+<h3 class="subheading" id="routing">Routing</h3>
+<p class="body-line">Routing is the process of forwarding IP packets between different networks. A router examines the destination IP address of each packet and determines the next path the packet should take toward its destination.</p>
+<p class="body-line">Routers can learn routes in three main ways:</p>
 <ul class="doc-list">
-  <li><strong>Static Routing:</strong> a network engineer manually configures routes using the <code>ip route</code> command. The router only knows what it is explicitly told and does not adapt automatically to topology changes. Appropriate for small networks or specific fixed routes.</li>
-  <li><strong>Dynamic Routing:</strong> routers automatically exchange routing information with neighboring routers and build their tables without manual intervention. When the network changes, routers update their tables automatically. Examples: OSPF (Open Shortest Path First), EIGRP (Enhanced Interior Gateway Routing Protocol), BGP (Border Gateway Protocol). Scales well for large networks.</li>
+  <li><strong>Directly Connected:</strong> when an IP address is configured on an active router interface, the router automatically learns the connected network.</li>
+  <li><strong>Static Routing:</strong> routes are manually configured by a network administrator. They remain unchanged unless the configuration is modified, making them suitable for small or predictable networks.</li>
+  <li><strong>Dynamic Routing:</strong> routers automatically exchange routing information using routing protocols and can adapt when the network topology changes. Common examples include RIP, OSPF, EIGRP, and BGP.</li>
 </ul>
-<p class="body-line">To view the routing tables on a router:</p>
+<aside class="callout"><strong>Note:</strong><p>When an IP address is configured on an interface and the interface becomes active, the router automatically creates a Connected route for the subnet and a Local route for the interface's own IP address.</p></aside>
+<p class="body-line">Static routes are manually added using the <code>ip route</code> command. The route can specify the next-hop IP address, the exit interface, or both:</p>
+<pre class="command-line"><code>ip route <i>destination-network</i> <i>subnet-mask</i> {<i>next-hop-ip</i> | <i>exit-interface</i> [<i>next-hop-ip</i>]}</code></pre>
+<p class="body-line">Routers store all known routes in a routing table. Each entry identifies a destination network and how the router can reach it, such as through a specific next-hop IP address or exit interface. The router consults this table whenever it needs to forward a packet.</p>
+<p class="body-line">The IPv4 routing table can be viewed using:</p>
 <pre class="command-line"><code>show ip route</code></pre>
-<p class="body-line">The output shows a codes legend at the top listing all the protocols the router can use to learn routes, followed by the actual routing table entries.</p>
-<h4 class="subheading" id="route-codes-how-routes-are-learned">Route Codes</h4>
-<ul class="doc-list">
-  <li>L — Local: a route to the exact IP address configured on this router&#x27;s own interface. Uses a /32 prefix (e.g., 192.168.1.1/32) — the /32 mask has no host bits, matching exactly this one specific address.</li>
-  <li>C — Connected: a route to the network the interface is directly part of. Uses the actual configured subnet prefix (e.g., 192.168.1.0/24 — the entire subnet).</li>
-  <li>S — Static: a route manually configured by a network administrator using the <code>ip route</code> command.</li>
-  <li>O — OSPF: a route learned from a neighboring router via the OSPF (Open Shortest Path First) dynamic routing protocol.</li>
-</ul><aside class="callout"><strong>Note:</strong><p>When you configure an IP address on an interface and enable it with &#x27;no shutdown&#x27;, two routes are automatically added: one Local (L) route for the interface&#x27;s exact IP, and one Connected (C) route for the subnet. These appear automatically — they are neither static nor dynamic.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="configuring-static-routes">Configuring Static Routes</h4>
-<p class="body-line">Static routes are added to the routing table using the &#x27;ip route&#x27; command. Three methods exist:</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<ul class="doc-list">
-  <li><strong>Method 1 — Next-Hop IP Address:</strong> specify the IP address of the next router in the path.</li>
-</ul><pre class="command-line"><code>ip route &lt;destination-network&gt; &lt;subnet-mask&gt; &lt;next-hop-ip&gt;</code></pre>
-<p class="body-line">Example: ip route 10.0.0.0 255.255.255.0 192.168.1.2</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<ul class="doc-list">
-  <li><strong>Method 2 — Exit Interface:</strong> specify which local interface the packet should leave through.</li>
-</ul><pre class="command-line"><code>ip route &lt;destination-network&gt; &lt;subnet-mask&gt; &lt;exit-interface&gt;</code></pre>
-<p class="body-line">Example: ip route 10.0.0.0 255.255.255.0 GigabitEthernet0/0</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<ul class="doc-list">
-  <li><strong>Method 3 — Both (recommended):</strong> specify both the exit interface and the next-hop IP address.</li>
-</ul><pre class="command-line"><code>ip route &lt;destination-network&gt; &lt;subnet-mask&gt; &lt;exit-interface&gt; &lt;next-hop-ip&gt;</code></pre>
-<p class="body-line">Example: ip route 10.0.0.0 255.255.255.0 GigabitEthernet0/0 192.168.1.2</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="default-route-gateway-of-last-resort">Default Route</h4>
-<p class="body-line">A default route is a catch-all route that matches any destination IP address that does not match a more specific entry in the routing table.</p>
-<ul class="doc-list">
-  <li><strong>Notation:</strong> 0.0.0.0/0 — both the network address and mask are all zeros. This matches every possible destination when no more specific route exists.</li>
-  <li><strong>Behavior:</strong> when a router has no specific match for a packet&#x27;s destination, it forwards using the default route. Without one, unmatched packets are dropped.</li>
-  <li><strong>Common use:</strong> sending all internet-bound traffic toward the Internet Service Provider (ISP). Home routers use exactly this — a single default route handles all outbound internet traffic.</li>
-  <li><strong>Terminology:</strong> called the Default Gateway on end hosts (PCs, servers); called the Gateway of Last Resort on routers, as shown in &#x27;show ip route&#x27; output.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
-<pre class="command-line"><code>ip route 0.0.0.0 0.0.0.0 &lt;next-hop-ip&gt;     → configure a default route</code></pre>
-<!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: &#x27;show ip route&#x27; output: &#x27;Gateway of last resort is X.X.X.X to network 0.0.0.0&#x27; at the top, C and L routes for connected interfaces, S* for the default static route. ]</p></aside> -->
+<p class="body-line">If the router does not have a route in its routing table that matches the destination network, it normally drops the packet. To provide a final path for these unknown destinations, a default route can be configured.</p>
+<p class="body-line">The default route acts as the router's last option and is used only when no more specific route matches the destination. It is commonly used to forward traffic toward an ISP.</p>
+<pre class="command-line"><code>ip route 0.0.0.0 0.0.0.0 <i>next-hop-ip</i></code></pre>
+<aside class="callout"><strong>Note:</strong><p>The IPv4 default route is represented as <code>0.0.0.0/0</code> which matches every possible destination when no more specific route exists.. On a router, it is known as the Gateway of Last Resort, which serves a similar purpose to the Default Gateway used by end devices.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h4 class="subheading" id="inter-vlan-routing">Inter-VLAN Routing</h4>
-<p class="body-line">VLANs (Virtual Local Area Networks) create isolated Layer 2 broadcast domains. For hosts in different VLANs to communicate, their traffic must be routed at Layer 3. There are two main approaches:</p>
+<h3 class="subheading" id="inter-vlan-routing">Inter-VLAN Routing</h3>
+<p class="body-line">VLANs create separate Layer 2 broadcast domains, so devices in different VLANs cannot communicate directly through Layer 2 switching. Inter-VLAN routing uses a Layer 3 device to route traffic between these VLANs.</p>
+<p class="body-line">One way to provide inter-VLAN routing is Router on a Stick (ROAS), where a router uses a single physical interface connected to a trunk port on the switch. The router interface is divided into logical subinterfaces, with one subinterface for each VLAN.</p>
+
+<p class="body-line">Each subinterface is associated with a VLAN using IEEE 802.1Q and is assigned an IP address that acts as the default gateway for devices in that VLAN. If the subinterface represents the native VLAN, the <code>native</code> keyword is added:</p>
+<pre class="command-line"><code>interface <i>interface-id.vlan-id</i>
+  encapsulation dot1q <i>vlan-id</i> [native]
+  ip address <i>ip-address subnet-mask</i></code></pre>
+<p class="body-line">Because native VLAN traffic is sent untagged, its IP address can alternatively be configured directly on the physical interface instead of using a native subinterface:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  ip address <i>ip-address subnet-mask</i>
+  no shutdown</code></pre>
+<aside class="callout"><strong>Note:</strong><p>The physical router interface must be enabled using <code>no shutdown</code> for the physical interface and all of its subinterfaces to operate.</p></aside>
+<aside class="figure-block"><img src="assets/multilayer_switch.png" alt="Cisco Multilayer Switch"></aside>
+<p class="body-line">Router on a Stick sends all inter-VLAN traffic through the same physical link between the switch and router, which can become a bottleneck as traffic increases. To avoid this limitation, larger networks commonly use a multilayer switch, also called a Layer 3 switch, which can perform both Layer 2 switching and Layer 3 routing directly on the switch.</p>
+<p class="body-line">Instead of sending inter-VLAN traffic to an external router, the multilayer switch creates an SVI (Switch Virtual Interface) for each VLAN. An SVI is a virtual Layer 3 interface associated with a VLAN, and its IP address normally acts as the default gateway for devices in that VLAN.</p>
+<p class="body-line">Layer 3 routing must first be enabled on the multilayer switch:</p>
+<pre class="command-line"><code>ip routing</code></pre>
+<p class="body-line">An SVI can then be configured for each VLAN:</p>
+<pre class="command-line"><code>interface vlan <i>vlan-id</i>
+  ip address <i>ip-address subnet-mask</i>
+  no shutdown</code></pre>
+<figure class="overview-figure-block figure-with-image"><img src="" alt="Multilayer Switch Routing Between VLANs Using SVIs"></figure>
+<p class="body-line">A multilayer switch can also use physical switch ports as Layer 3 routed interfaces. The <code>no switchport</code> command removes the Layer 2 switching function from the port so an IP address can be assigned directly to it:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  no switchport
+  ip address <i>ip-address subnet-mask</i>
+  no shutdown</code></pre>
+<p class="body-line">Routed interfaces are commonly used to connect a multilayer switch to another Layer 3 device. If more bandwidth or redundancy is required, multiple routed interfaces can also be combined into a Layer 3 EtherChannel.</p>
+<p class="body-line">The physical member interfaces are first converted to routed ports and added to the EtherChannel:</p>
+<pre class="command-line"><code>interface range <i>interfaces-ids</i>
+  no switchport
+  channel-group <i>channel-group-number</i> mode {active | passive | desirable | auto | on}</code></pre>
+<p class="body-line">The resulting Port-Channel is then configured as a Layer 3 interface and assigned an IP address:</p>
+<pre class="command-line"><code>interface port-channel <i>channel-group-number</i>
+  no switchport
+  ip address <i>ip-address subnet-mask</i>
+  no shutdown</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="router-on-a-stick-roas">1- Router on a Stick (ROAS)</h5>
-<p class="body-line">Router on a Stick (ROAS) routes between multiple VLANs using a single physical router interface connected to a trunk port on the switch. The router&#x27;s physical interface is divided into logical subinterfaces — one per VLAN — each configured with its own IP address, which becomes the default gateway for hosts in that VLAN.</p>
-<!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: ROAS topology: Switch trunk port connects to Router G0/0. Router G0/0 is divided into subinterfaces: G0/0.10 (VLAN 10 gateway 192.168.10.1), G0/0.20 (VLAN 20 gateway 192.168.20.1), G0/0.30 (VLAN 30 gateway 192.168.30.1). ]</p></aside> -->
-<div class="doc-spacer" aria-hidden="true"></div>
-<pre class="command-line"><code>int g0/0.10                                           → create subinterface for VLAN 10
-encapsulation dot1q 10                                → handle frames tagged with VLAN 10
-ip address 192.168.10.1 255.255.255.0                 → default gateway IP for VLAN 10 hosts</code></pre>
-<p class="body-line">Repeat for each VLAN. For the native VLAN, two options exist:</p>
-<ul class="doc-list">
-  <li><strong>Option 1:</strong> use a subinterface and add the &#x27;native&#x27; keyword: <code>encapsulation dot1q 1001 native</code></li>
-  <li><strong>Option 2:</strong> configure the IP directly on the physical interface — native VLAN frames arrive untagged, so no encapsulation command is needed.</li>
-</ul><aside class="callout"><strong>Note:</strong><p>Router-on-a-Stick (ROAS) can create a bottleneck because all inter-VLAN traffic must pass through the trunk link to the router and back. EtherChannel can increase the available bandwidth and provide redundancy, but for larger or high-traffic networks, a Layer 3 (multilayer) switch is generally the preferred solution because it performs inter-VLAN routing directly on the switch.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="layer-3-multilayer-switches">2- Multilayer Switches</h5>
-<p class="body-line">A multilayer switch (also called a Layer 3 switch) can both switch at Layer 2 and route at Layer 3. Inter-VLAN routing happens inside the switch itself at wire speed — eliminating the ROAS bottleneck entirely.</p>
-<p class="body-line">Instead of an external router, each VLAN gets a SVI (Switch Virtual Interface) — a virtual Layer 3 interface on the switch that acts as the default gateway for hosts in that VLAN.</p>
-<!-- <aside class="figure-block"><span>FIGURE SPACE</span><p>[ Figure: Multilayer switch: VLAN 10 hosts → SVI for VLAN 10 (192.168.10.1) → routed internally → SVI for VLAN 20 (192.168.20.1) → VLAN 20 hosts. No external router needed. ]</p></aside> -->
-<div class="doc-spacer" aria-hidden="true"></div>
-<pre class="command-line"><code>ip routing                                 → enable Layer 3 routing on the switch</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">To configure a routed uplink port (connecting to an external router):</p>
-<pre class="command-line"><code>int g0/1
-no switchport                                      → convert from Layer 2 switch port to Layer 3 routed port
-ip address 192.168.1.2 255.255.255.0               → assign IP to the routed port</code></pre>
-<p class="body-line">To create SVIs (Switch Virtual Interfaces) as default gateways:</p>
-<pre class="command-line"><code>int vlan 10
-ip address 192.168.10.1 255.255.255.0             → this IP is the default gateway for all VLAN 10 hosts</code></pre>
-<pre class="command-line"><code>int vlan 20
-ip address 192.168.20.1 255.255.255.0             → default gateway for VLAN 20 hosts</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="layer-3-etherchannel">Layer 3 EtherChannel</h4>
-<p class="body-line">EtherChannel can also be used on Layer 3 (multilayer) switches. Instead of carrying switched traffic, the port-channel interface is configured as a routed Layer 3 interface with an IP address. Because Layer 3 routing does not rely on broadcasts in the same way as Layer 2 switching, Spanning Tree Protocol is not required for Layer 3 EtherChannels.</p>
-<pre class="command-line"><code>int range <i>interfaces-ids</i>
-no switchport                 → convert the interfaces to Layer 3 routed ports
-channel-group <i>channel-group-number</i> mode {active|passive|auto|desirable|on}</code></pre>
-<pre class="command-line"><code>int port-channel <i>channel-group-number</i>
-no switchport                                   → ensure the port-channel itself is a routed interface
-ip address &lt;ip-address&gt; &lt;subnet-mask&gt;           → assign IP address to the logical EtherChannel interface</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="subheading" id="cisco-ios-configuration-files">Configuration Files</h3>
-<ul class="doc-list">
-  <li><strong>Running-Config (stored in RAM — volatile):</strong> the active configuration currently running on the device. Every CLI command immediately modifies this file. Lost completely on reboot without saving.</li>
-  <li><strong>Startup-Config (stored in NVRAM (Non-Volatile RAM) — non-volatile):</strong> the configuration that loads on boot. Must be explicitly updated by saving the running configuration.</li>
-<pre class="command-line"><code>show running-config                    → view the current active configuration
-show startup-config                    → view the saved startup configuration
-copy running-config startup-config     → save running config to NVRAM (persists across reboots)
-write memory                           → alternative shorthand for the above</code></pre>
-<aside class="callout"><strong>Tip:</strong><p>Always save your configuration before rebooting. Unsaved changes in RAM are permanently lost when the device restarts.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
+
 <h3 class="topic-heading" id="dynamic-routing">Dynamic Routing Protocols</h3>
 <p class="body-line">Static routes require manual configuration and do not adapt to network changes. Dynamic routing protocols allow routers to automatically discover networks, share route information with neighbors, and update their routing tables when the topology changes.</p>
 <h4 class="subheading" id="dynamic-routing-fundamentals">Dynamic Routing Fundamentals</h4>
