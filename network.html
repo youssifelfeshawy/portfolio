@@ -584,9 +584,9 @@ show interfaces trunk                            → view trunk configurations</
   <li><strong>Automatic recovery:</strong> configure the switch to automatically re-enable the port after the recovery timer expires.</li>
 </ul>
 <p class="body-line">To configure and verify automatic recovery from BPDU Guard violations:</p>
-<pre class="command-line"><code>errdisable recovery cause bpduguard        → enable automatic recovery for BPDU Guard
-errdisable recovery interval <i>seconds</i>       → set the recovery timer
-show errdisable recovery                   → view recovery settings and timers</code></pre>
+<pre class="command-line"><code>errdisable recovery cause bpduguard   → enable automatic recovery for BPDU Guard
+errdisable recovery interval <i>seconds</i>  → set the recovery timer
+show errdisable recovery              → view recovery settings and timers</code></pre>
 <aside class="callout"><strong>Note:</strong><p>The default ErrDisable recovery interval is 300 seconds. The underlying problem should always be fixed first; otherwise, the port may enter ErrDisable again after it recovers.</p></aside>
 <h5 class="subheading" id="bpdu-filter">4. BPDU Filter</h5>
 <p class="body-line">BPDU Filter controls whether STP BPDUs are sent and processed on an edge port. It is used when the port should not normally participate in STP communication.</p>
@@ -884,109 +884,100 @@ Wildcard Mask: 0.0.0.255</code></pre>
 <pre class="command-line"><code>show ip eigrp neighbors                  → view EIGRP neighbor relationships
 show ip eigrp topology                   → view the EIGRP topology table</code></pre>
 
---------------------------------
-
---------------------------------
-
-<!-- ----------OSPF--------------- -->
-<h4 class="topic-heading" id="ospf">Open Shortest Path First</h4>
-<p class="body-line">OSPF (Open Shortest Path First) is a Link State IGP (Interior Gateway Protocol). It uses Dijkstra&#x27;s Shortest Path First (SPF) algorithm to calculate the best routes. OSPF routers store network topology information in LSAs (Link State Advertisements), which are organized in a LSDB (Link State Database). All routers in an OSPF area flood LSAs until every router has an identical LSDB, then each independently calculates the best routes.</p>
-<div class="table-wrap"><table><thead><tr><th>Version</th><th>Usage</th></tr></thead><tbody><tr><td>OSPFv1</td><td>Original version. No longer used.</td></tr><tr><td>OSPFv2</td><td>Used for IPv4. The standard version in use today.</td></tr><tr><td>OSPFv3</td><td>Used for IPv6. Can also support IPv4 but OSPFv2 is typically used for IPv4.</td></tr></tbody></table></div>
-
-<p class="body-line">OSPF divides the network into areas to improve scalability. In a large single-area OSPF network, every topology change causes all routers to re-run the SPF algorithm and reflood LSAs — consuming CPU, memory, and bandwidth. Dividing the network into multiple areas limits the scope of these updates.</p>
+<h4 class="subheading" id="ospf">3. OSPF</h4>
+<p class="body-line">OSPF (Open Shortest Path First) is a Link State IGP. Unlike Distance Vector protocols that only exchange routing information with neighbors, OSPF routers build a complete view of the network topology by exchanging LSAs (Link State Advertisements). These LSAs are stored in the LSDB (Link State Database), and every router independently runs the SPF (Shortest Path First) algorithm to calculate the best routes.</p>
+<p class="body-line">OSPF supports different versions depending on the IP version being used:</p>
+<div class="table-wrap"><table><thead><tr><th>Version</th><th>Usage</th></tr></thead><tbody><tr><td>OSPFv1</td><td>Original version. No longer used.</td></tr><tr><td>OSPFv2</td><td>The standard version for IPv4 networks.</td></tr><tr><td>OSPFv3</td><td>Designed for IPv6 networks and can also support IPv4.</td></tr></tbody></table></div>
+<p class="body-line">OSPF is designed for large networks by dividing the network into areas. Instead of every router processing all topology changes in the entire network, areas limit LSA flooding and reduce the CPU, memory, and bandwidth required for SPF calculations.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/ospf_areas.jpg" alt="OSPF topology showing Area 0 backbone, ABRs, and an ASBR connected to the Internet"></figure>
 <ul class="doc-list">
-  <li><strong>Area 0 (Backbone Area):</strong> the central area that all other areas must connect to directly.</li>
-  <li><strong>Internal Router:</strong> all interfaces are in the same OSPF area.</li>
-  <li><strong>ABR (Area Border Router):</strong> has interfaces in multiple areas. Maintains a separate LSDB for each area. Recommended maximum of 2 areas per ABR — connecting to 3 or more areas can overburden the router.</li>
-  <li><strong>Backbone Router:</strong> any router with an interface in Area 0.</li>
-  <li><strong>ASBR (Autonomous System Boundary Router):</strong> an OSPF router that connects the OSPF network to an external network (e.g., the internet).</li>
-  <li><strong>Intra-area route:</strong> a route to a destination within the same OSPF area.</li>
-  <li><strong>Inter-area route:</strong> a route to a destination in a different OSPF area.</li>
+  <li><strong>Area 0 (Backbone Area):</strong> is the central OSPF area, and all other OSPF areas must connect to it.</li>
+  <li><strong>Backbone Router:</strong> is any router that has at least one interface in Area 0.</li>
+  <li><strong>ABR (Area Border Router):</strong> connects multiple OSPF areas and keeps a separate LSDB for each area.</li>
+  <li><strong>ASBR (Autonomous System Boundary Router):</strong> connects the OSPF domain to external networks, such as the Internet.</li>
+  <li><strong>Internal Router:</strong> has all of its interfaces in the same OSPF area.</li>
+  <li><strong>Intra-area Route:</strong> a route to a destination inside the same OSPF area.</li>
+  <li><strong>Inter-area Route:</strong> a route to a destination located in a different OSPF area.</li>
 </ul>
-<pre class="command-line"><code>router ospf &lt;process-id&gt;                                 → enter OSPF configuration mode. The process ID is locally significant — routers with different process IDs can still become neighbors.
-network &lt;ip-address&gt; &lt;wildcard-mask&gt; area &lt;area-id&gt;      → activate OSPF on interfaces matching this range and assign them to the specified area</code></pre>
-<p class="body-line">Alternatively, OSPF can be activated directly on an interface:</p>
-<pre class="command-line"><code>int &lt;interface-id&gt;
-ip ospf &lt;process-id&gt; area &lt;area-id&gt;     → activate OSPF on this interface directly (replaces the network command)</code></pre>
-<pre class="command-line"><code>router-id &lt;#.#.#.#&gt;                    → manually configure the OSPF Router ID (same priority order as EIGRP)
-passive-interface &lt;interface-id&gt;       → stop sending OSPF Hello messages out of this interface (still advertises the subnet in LSAs)
-passive-interface default              → make ALL interfaces passive by default
-no passive-interface &lt;interface-id&gt;     → re-activate a specific interface after using passive-interface default
-default-information originate          → advertise a default route into OSPF (makes this router an ASBR)
-maximum-paths &lt;number&gt;                 → change the maximum number of ECMP paths (default is 4)</code></pre>
-<aside class="callout"><strong>Note:</strong><p>All OSPF areas must be contiguous (connected). All areas must connect to the backbone area (Area 0). OSPF interfaces in the same subnet must be in the same area.</p></aside>
-  <div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="ospf-metric-cost">OSPF Metric</h5>
-<p class="body-line">OSPF&#x27;s metric is called cost. It is calculated by dividing the reference bandwidth by the interface bandwidth. The default reference bandwidth is 100 Mbps:</p>
-<div class="table-wrap"><table><thead><tr><th>Interface Speed</th><th>Cost (default 100 Mbps reference)</th><th>Cost (100,000 Mbps reference — recommended)</th></tr></thead><tbody><tr><td>10 Mbps (Ethernet)</td><td>100 / 10 = 10</td><td>100,000 / 10 = 10,000</td></tr><tr><td>100 Mbps (FastEthernet)</td><td>100 / 100 = 1</td><td>100,000 / 100 = 1,000</td></tr><tr><td>1 Gbps (Gigabit)</td><td>100 / 1,000 = 1 (min)</td><td>100,000 / 1,000 = 100</td></tr><tr><td>10 Gbps</td><td>100 / 10,000 = 1 (min)</td><td>100,000 / 10,000 = 10</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">Because any value below 1 is rounded up to 1, FastEthernet, Gigabit, and 10 Gigabit all have the same default cost of 1 — which makes them indistinguishable to OSPF. To fix this, change the reference bandwidth to a value greater than your fastest link:</p>
-<pre class="command-line"><code>auto-cost reference-bandwidth &lt;Mbps&gt;          → change the reference bandwidth (configure the same value on ALL OSPF routers)</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">Three ways to set the OSPF cost on an interface (highest priority first):</p>
+<p class="body-line">OSPF is configured by enabling OSPF on interfaces and assigning them to an area:</p>
+<pre class="command-line"><code>router ospf <i>process-id</i>                           → enter OSPF configuration mode
+  network <i>ip-address</i> <i>wildcard-mask</i> area <i>area-id</i>    → enable it on matching interfaces</code></pre>
+<p class="body-line">Instead of using the network command, OSPF can also be enabled directly on an interface:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  ip ospf <i>process-id</i> area <i>area-id</i></code></pre>
+<aside class="callout"><strong>Note:</strong><p>The OSPF process ID is locally significant, so neighboring routers can use different process IDs and still form an adjacency. The OSPF area number, however, must match between neighboring interfaces.</p></aside>
+<p class="body-line">OSPF behaves differently depending on the type of network connected to the interface. The main network types differ in how many routers share the link and how neighbors communicate:</p>
+<div class="table-wrap"><table><thead><tr><th>Network Types</th><th>How It Works</th></tr></thead><tbody><tr><td>Broadcast</td><td>Multiple routers can share the same network segment and automatically discover each other using multicast Hello messages.</td></tr><tr><td>Point-to-Point</td><td>Only two routers share the link, so they communicate directly with each other.</td></tr><tr><td>Non-Broadcast</td><td>Multiple routers may share the network, but broadcast and multicast are not available, so neighbors may need to be configured manually.</td></tr></tbody></table></div>
+<p class="body-line">The OSPF network type can be changed manually on an interface:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  ip ospf network {broadcast | non-broadcast | point-to-point}</code></pre>
+<p class="body-line">On a broadcast network, multiple OSPF routers may share the same segment. If every router exchanged routing information directly with every other router, the number of adjacencies and LSA exchanges would grow quickly. To reduce this overhead, OSPF elects a DR and BDR.</p>
 <ul class="doc-list">
-  <li><strong>Direct cost override:</strong>  ip ospf cost &lt;value&gt;  — takes priority over all other methods.</li>
-  <li><strong>Change interface bandwidth:</strong>  bandwidth &lt;Kbps&gt;  — affects cost calculation but also affects EIGRP metric. Not recommended.</li>
-  <li><strong>Change the reference bandwidth:</strong>  auto-cost reference-bandwidth  — affects all interfaces globally.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">The total OSPF cost to a destination is the sum of the costs of all outgoing (exit) interfaces along the path — the same concept as STP path cost. Loopback interfaces always have a cost of 1.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="ospf-dr-and-bdr">DR and BDR</h5>
-<p class="body-line">On broadcast network types (Ethernet by default), OSPF elects a DR (Designated Router) and a BDR (Backup Designated Router) on each subnet to reduce the number of LSA exchanges. Without a DR/BDR, every pair of routers on the segment would need to form a full adjacency — creating n(n-1)/2 adjacencies for n routers.</p>
+  <li><strong>DR (Designated Router):</strong> acts as the main exchange point for OSPF information on the segment. All other routers form a Full adjacency with the DR and exchange LSAs through it.</li>
+  <li><strong>BDR (Backup Designated Router):</strong> serves as the backup and takes over if the DR fails.</li>
+  <li><strong>DROther:</strong> any router that is neither the DR nor the BDR. DROthers form Full adjacencies with the DR and BDR.</li>
+</ul>
+<p class="body-line">To decide which routers become the DR and BDR, OSPF uses the following election order:</p>
+<ol class="doc-list">
+  <li><strong>Interface Priority:</strong> the router with the highest OSPF interface priority is preferred.</li>
+  <pre class="command-line"><code>interface <i>interface-id</i>
+  ip ospf priority <i>number-value</i>          → change the OSPF interface priority</code></pre>
+  <li><strong>Router ID:</strong> if the interface priorities are equal, the router with the highest Router ID is preferred. The Router ID uniquely identifies the router during OSPF operations and can be configured manually.</li>
+  <pre class="command-line"><code>router ospf <i>process-id</i>
+  router-id <i>router-id</i>                   → manually configure the OSPF Router ID</code></pre>
+</ol>
+<p class="body-line">The router that wins the election becomes the DR, while the second-best router becomes the BDR. The election is non-preemptive, meaning that once a DR or BDR is selected, a router with a higher priority joining later will not replace it unless the current DR/BDR fails or the OSPF process is restarted.</p>
+<p class="body-line">If the DR fails, the BDR takes over as the new DR, and another election is performed to select a new BDR from the remaining routers.</p>
+<aside class="callout"><strong>Note:</strong><p>The default OSPF interface priority is <code>1</code>. Setting the priority to <code>0</code> prevents the router from being elected as either the DR or BDR on that segment.</p></aside>
+<p class="body-line">A Point-to-Point network connects exactly two routers, allowing them to communicate directly without electing a DR or BDR. When the connection uses a serial link, both interfaces must use the same encapsulation:</p>
+<pre class="command-line"><code>encapsulation {hdlc | ppp}              → configure PPP or HDLC encapsulation</code></pre>
+<p class="body-line">On serial links, one side operates as DCE (Data Communications Equipment) and the other as DTE (Data Terminal Equipment). The DCE side provides the clocking signal and must configure the clock rate:</p>
+<pre class="command-line"><code>show controllers <i>interface-id</i>       → identify whether the interface is DCE or DTE</code></pre>
+<pre class="command-line"><code>clock rate <i>bits-per-second</i>          → configure the clock rate on the DCE side</code></pre>
+<p class="body-line">OSPF routers pass through several states before reaching a Full adjacency and synchronizing their LSDBs:</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/ospf_states.png" alt="OSPF States"></figure>
+<div class="table-wrap"><table><thead><tr><th>State</th><th>Description</th></tr></thead><tbody><tr><td>Down</td><td>OSPF is enabled on the interface and begins sending Hello messages, but no OSPF neighbors have been discovered yet.</td></tr><tr><td>Init</td><td>A Hello packet is received from a neighbor, but the router's own Router ID is not yet seen in the neighbor's Hello packet.</td></tr><tr><td>2-Way</td><td>Both routers have discovered each other. On broadcast networks, the DR and BDR election takes place at this stage, while DROther routers stay in this stage with each other and do not continue to the Full state.</td></tr><tr><td>Exstart</td><td>Routers choose a Master and Slave to organize the DBD exchange. The router with the highest Router ID becomes the Master and starts sending first, which prevents both routers from sending at the same time.</td></tr><tr><td>Exchange</td><td>Routers exchange DBD (Database Description) packets containing summaries of their LSDB information so they can compare their information and determine whether any LSAs are missing or different.</td></tr><tr><td>Loading</td><td>Routers send LSR (Link State Request) messages to request specific missing LSAs. The requested LSAs are sent in LSU (Link State Update) messages and are acknowledged using LSAck (Link State Acknowledgment) messages.</td></tr><tr><td>Full</td><td>Routers have synchronized LSDBs and a complete OSPF adjacency.</td></tr></tbody></table></div>
+<p class="body-line">After OSPF neighbors reach the required adjacency state, they continue sending Hello messages to make sure the neighbor relationship is still active. On Broadcast and Point-to-Point networks, the default Hello and Dead timers are <code>10</code> and <code>40</code> seconds, while Non-Broadcast networks use <code>30</code> and <code>120</code> seconds. If the Dead timer expires without receiving a Hello message, the neighbor relationship is removed.</p>
+<p class="body-line">The Hello and Dead timer values can be changed manually on an OSPF-enabled interface:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  ip ospf hello-interval <i>seconds</i>       → change the Hello timer
+  ip ospf dead-interval <i>seconds</i>        → change the Dead timer</code></pre>
+<p class="body-line">OSPF supports authentication to verify that routing updates are received from trusted neighbors. Authentication settings must match on both sides of the connection.</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  ip ospf authentication-key <i>password</i>    → configure the authentication password
+  ip ospf authentication                 → enable OSPF authentication</code></pre>
+<p class="body-line">OSPF uses cost as its metric to select the best path. The cost of an interface is normally calculated by dividing the reference bandwidth by the interface bandwidth. The total cost of a route is the sum of the interface costs along the path, and the route with the lowest total cost is selected.</p>
+<pre class="command-line"><code>OSPF Cost = Reference Bandwidth / Interface Bandwidth</code></pre>
+<p class="body-line">By default, OSPF uses a reference bandwidth of <code>100 Mbps</code>. OSPF rounds any cost value below <code>1</code> up to <code>1</code>, so multiple modern high-speed interfaces can end up with the same cost.</p>
+<div class="table-wrap"><table><thead><tr><th>Interface Speed</th><th>Cost (Default 100 Mbps Reference)</th><th>Cost (100,000 Mbps Reference)</th></tr></thead><tbody><tr><td>10 Mbps (Ethernet)</td><td>100 / 10 = 10</td><td>100,000 / 10 = 10,000</td></tr><tr><td>100 Mbps (FastEthernet)</td><td>100 / 100 = 1</td><td>100,000 / 100 = 1,000</td></tr><tr><td>1 Gbps (Gigabit)</td><td>100 / 1,000 = 0.1 → 1</td><td>100,000 / 1,000 = 100</td></tr><tr><td>10 Gbps</td><td>100 / 10,000 = 0.01 → 1</td><td>100,000 / 10,000 = 10</td></tr></tbody></table></div>
+<p class="body-line">OSPF cost can be controlled in three ways:</p>
 <ul class="doc-list">
-  <li><strong>DR:</strong> all routers on the segment form a Full adjacency with the DR and exchange LSAs through it.</li>
-  <li><strong>BDR:</strong> monitors the DR and takes over if the DR fails.</li>
-  <li><strong>DROther:</strong> any router that is not the DR or BDR. DROthers form a Full adjacency only with the DR and BDR — they remain in the 2-Way state with other DROthers.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">DR/BDR election priority order:</p>
-<ul class="doc-list">
-  <li>Highest OSPF interface priority (default is 1 on all interfaces — set to 0 to prevent a router from being elected DR/BDR).</li>
-  <li>Highest OSPF Router ID.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">&#x27;First place&#x27; becomes the DR; &#x27;second place&#x27; becomes the BDR. The election is non-preemptive — once elected, the DR and BDR keep their roles until OSPF is reset or the interface fails.</p>
-<pre class="command-line"><code>ip ospf priority &lt;0-255&gt;            → change the OSPF priority on an interface (0 = never DR/BDR)</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">When the DR goes down, the BDR immediately becomes the new DR, and a new BDR election is held among the remaining DROthers.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="ospf-neighbor-states">Neighbor States</h5>
-<p class="body-line">OSPF routers go through a series of states before establishing a full adjacency and exchanging their LSDBs:</p>
-<div class="table-wrap"><table><thead><tr><th>State</th><th>Description</th></tr></thead><tbody><tr><td>Down</td><td>OSPF activated on the interface. Hello messages sent to 224.0.0.5. No neighbors known yet.</td></tr><tr><td>Init</td><td>A Hello packet was received from a neighbor, but this router&#x27;s own Router ID is not yet in the neighbor&#x27;s Hello packet.</td></tr><tr><td>2-Way</td><td>Both routers have seen each other&#x27;s Router ID in Hello packets. All conditions for adjacency are met. On broadcast networks, the DR/BDR election occurs here. DROthers remain in the 2-Way state with each other.</td></tr><tr><td>Exstart</td><td>The routers negotiate which will be Master (higher Router ID) and which will be Slave before exchanging DBD (Database Description) packets.</td></tr><tr><td>Exchange</td><td>Routers exchange DBD (Database Description) packets — summaries of their LSDBs — to find out what LSAs the other router has.</td></tr><tr><td>Loading</td><td>Routers send LSR (Link State Request) messages to request specific LSAs they are missing. LSAs are delivered in LSU (Link State Update) messages and acknowledged with LSAck messages.</td></tr><tr><td>Full</td><td>Routers have identical LSDBs and a complete OSPF adjacency. They continue exchanging Hello packets to maintain the adjacency (Hello every 10 s, Dead timer 40 s).</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Note:</strong><p>OSPF Hello messages are multicast to 224.0.0.5 (all OSPF routers). Messages to the DR (Designated Router) and BDR (Backup Designated Router) use 224.0.0.6. OSPF is encapsulated directly in IP with Protocol field value 89.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="ospf-network-types">Network Types</h5>
-<div class="table-wrap"><table><thead><tr><th>Network Type</th><th>Default On</th><th>DR/BDR Elected?</th><th>Notes</th></tr></thead><tbody><tr><td>Broadcast</td><td>Ethernet, FDDI</td><td>Yes</td><td>Default for Ethernet. DR/BDR reduce LSA flooding.</td></tr><tr><td>Point-to-Point</td><td>PPP, HDLC (serial links)</td><td>No</td><td>Only 2 routers — no need for DR/BDR. Routers go directly to Full state.</td></tr><tr><td>Non-Broadcast</td><td>Frame Relay, X.25</td><td>Yes</td><td>Manually configure neighbors. DR/BDR elected but no multicast.</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">On serial interfaces, one side functions as DCE (Data Communications Equipment) and the other as DTE (Data Terminal Equipment). The DCE side must set the clock rate (speed):</p>
-<pre class="command-line"><code>clock rate &lt;bits-per-second&gt;        → set the clock rate on the DCE side of a serial link</code></pre>
-<pre class="command-line"><code>show controllers &lt;interface-id&gt;    → identify which side is DCE and which is DTE</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">The default encapsulation on serial interfaces is Cisco HDLC (cHDLC). To change it (must match on both ends):</p>
-<pre class="command-line"><code>encapsulation &lt;ppp|hdlc&gt;            → change the serial encapsulation</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<p class="body-line">To change the OSPF network type on an interface:</p>
-<pre class="command-line"><code>ip ospf network &lt;broadcast|point-to-point|non-broadcast&gt;   → override the default network type</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="ospf-timers-and-authentication">OSPF Timers and Authentication</h5>
-<pre class="command-line"><code>ip ospf hello-interval &lt;seconds&gt;   → change the Hello timer (default 10 s on Ethernet)
-ip ospf dead-interval &lt;seconds&gt;    → change the Dead timer (default 40 s on Ethernet — 4× Hello)
-ip ospf authentication-key &lt;password&gt;  → set an OSPF authentication password
-ip ospf authentication             → enable OSPF authentication on the interface
-ip mtu &lt;bytes&gt;                     → set the IP Maximum Transmission Unit on an interface</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="ospf-neighbor-requirements">Neighbor Requirements</h5>
-<div class="table-wrap"><table><thead><tr><th>Requirement</th><th>Notes</th></tr></thead><tbody><tr><td>Area number must match</td><td>Interfaces in different areas cannot become neighbors.</td></tr><tr><td>Interfaces must be in same subnet</td><td></td></tr><tr><td>OSPF process must not be shutdown</td><td></td></tr><tr><td>Router IDs must be unique</td><td>Duplicate Router IDs prevent adjacency.</td></tr><tr><td>Hello and Dead timers must match</td><td>Mismatched timers prevent adjacency.</td></tr><tr><td>Authentication settings must match</td><td></td></tr><tr><td>IP MTU must match</td><td>Routers can become neighbors but OSPF will not function correctly.</td></tr><tr><td>OSPF network type must match</td><td>Routers can become neighbors but OSPF will not function correctly.</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="ospf-lsa-types">LSA Types</h5>
-<div class="table-wrap"><table><thead><tr><th>LSA Type</th><th>Name</th><th>Generated By</th><th>Purpose</th></tr></thead><tbody><tr><td>Type 1</td><td>Router LSA</td><td>Every OSPF router</td><td>Identifies the router by its Router ID and lists networks on its OSPF-activated interfaces.</td></tr><tr><td>Type 2</td><td>Network LSA</td><td>The DR of each broadcast segment</td><td>Lists all routers attached to the multi-access network segment.</td></tr><tr><td>Type 5</td><td>AS-External LSA</td><td>ASBR</td><td>Describes routes to destinations outside the OSPF domain (external networks).</td></tr></tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h5 class="subheading" id="useful-ospf-show-commands">Show Commands</h5>
-<pre class="command-line"><code>show ip ospf neighbor                     → view established OSPF neighbors and their states
-show ip ospf database                     → view all LSAs in the LSDB
-show ip ospf interface                    → view OSPF settings on all interfaces
-show ip ospf interface &lt;int-id&gt;           → view OSPF settings on a specific interface
-show ip protocols                         → view active routing protocol configuration</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
+  <li><strong>Direct Cost:</strong> manually assigns the OSPF cost to one interface. This overrides the automatically calculated cost.</li>
+  <pre class="command-line"><code>interface <i>interface-id</i>
+    ip ospf cost <i>cost-value</i>              → manually set the OSPF interface cost</code></pre>
+  <li><strong>Interface Bandwidth:</strong> changes the bandwidth value used in the cost calculation. Because this value can also affect other protocols such as EIGRP, changing it only to control OSPF cost is generally not recommended.</li>
+  <pre class="command-line"><code>interface <i>interface-id</i>
+    bandwidth <i>Kbps</i>                       → change the interface bandwidth value</code></pre>
+  <li><strong>Reference Bandwidth:</strong> changes the reference value used to calculate the cost of all OSPF interfaces in the process. This is useful when the network contains high-speed links.</li>
+  <pre class="command-line"><code>router ospf <i>process-id</i>
+    auto-cost reference-bandwidth <i>Mbps</i>    → change the OSPF reference bandwidth</code></pre>
+</ul>
+<aside class="callout"><strong>Note:</strong><p>Changing the OSPF reference bandwidth is usually the better approach for high-speed networks because it produces distinct costs while preserving the relative interface speeds. The same reference bandwidth should be configured on all OSPF routers to keep cost calculations consistent.</p></aside>
+<p class="body-line">If multiple paths to the same destination have the same lowest OSPF cost, OSPF can install them as equal-cost routes and use ECMP to distribute traffic across them. The maximum number of equal-cost paths can be changed under the OSPF process:</p>
+<pre class="command-line"><code>router ospf <i>process-id</i>
+  maximum-paths <i>number</i>                → change the maximum number of ECMP paths</code></pre>
+<aside class="callout"><strong>Note:</strong><p>The default maximum is commonly <code>4</code> equal-cost paths on Cisco IOS, although the supported value can depend on the platform and IOS version.</p></aside>
+<p class="body-line">For OSPF neighbors to establish a successful adjacency, several parameters must match:</p>
+<div class="table-wrap"><table><thead><tr><th>Requirement</th><th>Description</th></tr></thead><tbody><tr><td>Area Number</td><td>Both interfaces must belong to the same OSPF area.</td></tr><tr><td>Subnet</td><td>Neighboring interfaces must be in the same IP subnet.</td></tr><tr><td>Router ID</td><td>Each router must have a unique Router ID.</td></tr><tr><td>Hello and Dead Timers</td><td>Both routers must use the same timer values.</td></tr><tr><td>Authentication</td><td>Authentication settings must match.</td></tr><tr><td>IP MTU</td><td>The MTU value must match to allow proper database synchronization.</td></tr><tr><td>Network Type</td><td>Both interfaces must use compatible OSPF network types.</td></tr></tbody></table></div>
+<p class="body-line">The MTU can be changed manually on an interface:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  ip mtu <i>bytes</i>              → set the IP Maximum Transmission Unit</code></pre>
+<p class="body-line">OSPF stores topology information in LSAs. Different LSA types describe different parts of the network:</p>
+<div class="table-wrap"><table><thead><tr><th>LSA Type</th><th>Name</th><th>Generated By</th><th>Purpose</th></tr></thead><tbody><tr><td>Type 1</td><td>Router LSA</td><td>Every router</td><td>Shares information about the router and the OSPF networks directly connected to it.</td></tr><tr><td>Type 2</td><td>Network LSA</td><td>DR</td><td>Shows which OSPF routers are connected to the same shared network.</td></tr><tr><td>Type 5</td><td>AS External LSA</td><td>ASBR</td><td>Describes routes learned from outside the OSPF network.</td></tr></tbody></table></div>
+<p class="body-line">The following commands are used to verify OSPF operation:</p>
+<pre class="command-line"><code>show ip ospf neighbor                 → view OSPF neighbors and their states
+show ip ospf database                 → view LSAs stored in the LSDB
+show ip ospf interface                → view OSPF settings on interfaces</code></pre>
 
 <h3 class="subheading" id="inter-vlan-routing">Inter-VLAN Routing</h3>
 <p class="body-line">VLANs create separate Layer 2 broadcast domains, so devices in different VLANs cannot communicate directly through Layer 2 switching. Inter-VLAN routing uses a Layer 3 device to route traffic between these VLANs.</p>
@@ -1028,18 +1019,42 @@ show ip protocols                         → view active routing protocol confi
   no shutdown</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="topic-heading" id="fhrp">First Hop Redundancy Protocols (FHRP)</h3>
-<p class="body-line">A FHRP (First Hop Redundancy Protocol) is designed to protect the default gateway used on a subnet. If the router acting as the default gateway fails, the backup router automatically takes over the address — usually within a few seconds — so hosts continue to reach other networks without any manual reconfiguration.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="fhrp-how-it-works">How FHRPs Work</h4>
-<p class="body-line">Two or more routers share a virtual IP address and a virtual MAC address. One router is elected as active (or master) and handles all traffic sent to the virtual IP. The others are in standby. End hosts are configured to use the virtual IP as their default gateway — they are unaware of which physical router is currently active.</p>
+
+<h3 class="topic-heading" id="fhrp">FHRP</h3>
+<p class="body-line">Hosts normally depend on one default gateway to reach other networks. If that gateway fails, the hosts lose connectivity even if another router is available. FHRPs (First Hop Redundancy Protocols) solve this problem by allowing multiple routers to provide one redundant default gateway.</p>
+<p class="body-line">The routers share a Virtual IP address and a Virtual MAC address. Hosts use the Virtual IP as their default gateway instead of the physical IP address of a specific router. One router forwards the traffic while another remains ready to take over if the forwarding router fails.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/fhrp.png" alt="Two routers sharing a virtual IP address to provide a redundant default gateway"></figure>
+<p class="body-line">When a host needs to send traffic outside its subnet, it sends an ARP request for the Virtual IP. The router currently responsible for forwarding traffic responds using the Virtual MAC address, so the host sends its gateway traffic to that router.</p>
+<p class="body-line">If the forwarding router fails, a backup router takes over the same Virtual IP and Virtual MAC. Because the hosts continue using the same default gateway address, no manual reconfiguration is required. The new forwarding router can also send a Gratuitous ARP to announce the change and help devices update their forwarding information.</p>
+<aside class="callout"><strong>Note:</strong><p>A Gratuitous ARP is sent without first receiving an ARP request. It is broadcast on the local network and can be used to announce or refresh an IP-to-MAC mapping after a gateway change.</p></aside>
+<p class="body-line">Several FHRPs provide this gateway redundancy, but they differ in terminology and behavior:</p>
+<div class="table-wrap"><table><thead><tr><th>Protocol</th><th>Type</th><th>Router Roles</th><th>Multicast Address</th><th>Virtual MAC Format</th></tr></thead><tbody><tr><td>HSRP v1</td><td>Cisco Proprietary</td><td>Active / Standby</td><td>224.0.0.2</td><td>0000.0c07.acXX</td></tr><tr><td>HSRP v2</td><td>Cisco Proprietary</td><td>Active / Standby</td><td>224.0.0.102</td><td>0000.0c9f.fXXX</td></tr><tr><td>VRRP</td><td>Open Standard</td><td>Master / Backup</td><td>224.0.0.18</td><td>0000.5e00.01XX</td></tr><tr><td>GLBP</td><td>Cisco Proprietary</td><td>AVG / AVF</td><td>224.0.0.102</td><td>0007.b400.XXYY</td></tr></tbody></table></div>
 <ul class="doc-list">
-  <li>The active router replies to ARP requests using the virtual MAC address, so all traffic destined for other networks is sent to it.</li>
-  <li>If the active router fails, the standby router takes over and sends gratuitous ARP replies to all switches — broadcasting the virtual MAC address so that switch MAC address tables are updated to point to the new active router.</li>
-  <li><strong>Gratuitous ARP:</strong> an ARP reply sent without being requested by any ARP request. Frames are broadcast to FF:FF:FF:FF:FF:FF (unlike normal ARP replies which are unicast). Used by the new active router to immediately update switches.</li>
-  <li>FHRPs are non-preemptive by default — if the original active router comes back online, it will not automatically reclaim the active role. It becomes the standby instead. You can configure preemption to change this behavior and make the returning router take back its active role automatically.</li>
-  <li>In networks with multiple subnets or VLANs, you can configure a different active router per subnet to achieve load balancing across routers.</li>
+  <li><strong>HSRP (Hot Standby Router Protocol):</strong> elects one Active router to forward traffic and one Standby router to take over if the Active router fails. HSRP versions must match between routers in the same group.</li>
+  <li><strong>VRRP (Virtual Router Redundancy Protocol):</strong> provides a similar function using the terms Master and Backup and is an open standard.</li>
+  <li><strong>GLBP (Gateway Load Balancing Protocol):</strong> provides redundancy while also allowing multiple routers to actively forward traffic. An AVG (Active Virtual Gateway) manages the virtual gateway and assigns traffic to AVFs (Active Virtual Forwarders).</li>
 </ul>
+<p class="body-line">With HSRP, routers are placed in the same HSRP group and share a Virtual IP address. The router with the highest priority becomes the Active router, while another router becomes the Standby.</p>
+<ol class="doc-list">
+  <li><strong>Priority:</strong> the router with the highest HSRP priority is preferred. The default priority is <code>100</code>.</li>
+  <li><strong>Interface IP Address:</strong> if the priorities are equal, the router with the highest interface IP address is preferred.</li>
+</ol>
+<p class="body-line">By default, HSRP does not use preemption. This means that if a higher-priority router joins after an Active router has already been selected, it does not automatically take over. Preemption can be enabled when the higher-priority router should reclaim the Active role.</p>
+<p class="body-line">HSRP is configured on the router interface connected to the local subnet or VLAN where hosts use the Virtual IP as their default gateway:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  standby version <i>1|2</i>                         → select the HSRP version
+  standby <i>group-number</i> ip <i>virtual-ip</i>        → configure the shared Virtual IP
+  standby <i>group-number</i> priority <i>value</i>       → configure the HSRP priority
+  standby <i>group-number</i> preempt                → allow this router to take over when preferred</code></pre>
+<aside class="callout"><strong>Note:</strong><p>The routers in the same HSRP group must use the same HSRP version and Virtual IP. Their physical interface IP addresses remain different.</p></aside>
+<p class="body-line">In networks with multiple VLANs or subnets, different routers can be configured as Active for different HSRP groups. This allows the gateway traffic to be distributed across the routers instead of always using the same Active router.</p>
+<p class="body-line">The HSRP state and the current Active and Standby routers can be verified using:</p>
+<pre class="command-line"><code>show standby                         → view detailed HSRP information
+show standby brief                   → view a summarized HSRP status</code></pre>
+
+
+------------------------
+
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="fhrp-types">FHRP Types</h4>
 <div class="table-wrap"><table><thead><tr><th>Protocol</th><th>Standard</th><th>Active/Standby Terms</th><th>Multicast Address</th><th>Virtual MAC Format</th></tr></thead><tbody>
@@ -1050,23 +1065,13 @@ show ip protocols                         → view active routing protocol confi
 </tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 <ul class="doc-list">
-  <li><strong>HSRP (Hot Standby Router Protocol):</strong> Cisco proprietary. Elects one active and one standby router. Version 1 and Version 2 are not compatible — all routers in the group must use the same version.</li>
-  <li><strong>VRRP (Virtual Router Redundancy Protocol):</strong> open standard (not Cisco proprietary). Same function as HSRP but uses "master" and "backup" terminology.</li>
   <li><strong>GLBP (Gateway Load Balancing Protocol):</strong> Cisco proprietary. Unlike HSRP and VRRP, GLBP actively load-balances traffic across multiple routers within a single subnet simultaneously. An AVG (Active Virtual Gateway) is elected and assigns up to 4 AVFs (Active Virtual Forwarders) — each AVF handles traffic for a portion of the hosts. The AVG itself can also be an AVF.</li>
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="hsrp-configuration">HSRP Configuration</h4>
-<p class="body-line">Configure HSRP on the interface that connects to the local network (the interface hosts use as their default gateway — not the WAN/internet-facing interface).</p>
-<pre class="command-line"><code>int g#/#
-standby version &lt;1|2&gt;                          → set HSRP version (must match on all routers in the group)
-standby &lt;group-number&gt; ip &lt;virtual-ip&gt;         → set the shared virtual IP address for this group
-standby &lt;group-number&gt; priority &lt;value&gt;        → set priority (default 100); highest priority = active router
-standby &lt;group-number&gt; preempt                 → enable preemption — this router takes active role if it has higher priority</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Note:</strong><p>The active router is elected based on: 1 — Highest priority (default 100). 2 — Highest IP address (used as tiebreaker if priorities are equal). Preemption is disabled by default — the currently active router keeps its role even if a higher-priority router comes back online.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-<pre class="command-line"><code>show standby                                   → view HSRP configuration and current active/standby status</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
+
+
+
+
 
 <h2 class="major-heading" id="layer-4">Layer 4: Transport Layer</h2>
 <p class="body-line">The Transport Layer provides transparent, end-to-end transfer of data between applications on different hosts. Layers 1–3 move data across the network without understanding what that data is — Layer 4 is where the data becomes meaningful to applications. It provides port-based addressing, session multiplexing, and optionally: reliable delivery, error recovery, sequencing, and flow control.</p>
@@ -1145,7 +1150,7 @@ standby &lt;group-number&gt; preempt                 → enable preemption — t
 <tr><td>Ordering</td><td>Sequence numbers ensure correct order</td><td>No sequencing</td></tr>
 <tr><td>Flow Control</td><td>Yes — Window Size field</td><td>No</td></tr>
 <tr><td>Speed / Overhead</td><td>Slower — more overhead</td><td>Faster — minimal overhead</td></tr>
-<tr><td>Use Cases</td><td>File transfers, web browsing, email — anything requiring reliability</td><td>Real-time voice, video, gaming, DNS — anything requiring speed</td></tr>
+<tr><td>Use Cases</td><td>File transfers, web browsing, email — anything requiring reliability</td><td>Real-time voice, video, gaming — anything requiring speed</td></tr>
 </tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 <aside class="callout"><strong>Note:</strong><p>Some applications use UDP but implement their own reliability mechanisms at the application layer. Some applications use both TCP and UDP depending on the situation.</p></aside>
@@ -1169,13 +1174,13 @@ standby &lt;group-number&gt; preempt                 → enable preemption — t
 <tr><td>514</td><td>Syslog</td><td>UDP</td><td>System logging protocol</td></tr>
 </tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="wireshark">Wireshark</h3>
+<!-- <h3 class="topic-heading" id="wireshark">Wireshark</h3>
 <p class="body-line">Wireshark is a network packet capture and analysis tool. It captures all network traffic visible on an interface and lets you inspect every layer of every packet — from the physical frame up through the application layer. It supports filtering by protocol, IP address, port, and many other criteria, making it an essential tool for network troubleshooting, learning, and security analysis.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
+<div class="doc-spacer" aria-hidden="true"></div> -->
 
 <h2 class="major-heading" id="ipv6">IPv6</h2>
 <p class="body-line">The fundamental reason for IPv6 is address exhaustion. IPv4 provides only 2³² = 4,294,967,296 addresses. When IPv4 was designed, no one anticipated the scale the Internet would reach. Short-term solutions like VLSM, private IPv4 addresses, and NAT have helped delay exhaustion, but the long-term solution is IPv6, which provides 2¹²⁸ = 340,282,366,920,938,463,463,374,607,431,768,211,456 addresses — effectively unlimited.</p>
-<p class="body-line">IPv4 address assignments are managed by IANA (Internet Assigned Numbers Authority), which distributes blocks to RIRs (Regional Internet Registries), which then assign them to organizations.</p>
+<!-- <p class="body-line">IPv4 address assignments are managed by IANA (Internet Assigned Numbers Authority), which distributes blocks to RIRs (Regional Internet Registries), which then assign them to organizations.</p> -->
 <div class="doc-spacer" aria-hidden="true"></div>
 
 <h3 class="topic-heading" id="ipv6-address-format">IPv6 Address Format</h3>
@@ -1202,31 +1207,31 @@ standby &lt;group-number&gt; preempt                 → enable preemption — t
 <h3 class="topic-heading" id="ipv6-prefix">IPv6 Prefix Structure</h3>
 <p class="body-line">Enterprises typically receive a /48 block from their ISP and use /64 subnets internally, leaving 16 bits for subnet IDs and 64 bits for host (interface) identifiers.</p>
 <div class="table-wrap"><table><thead><tr><th>Portion</th><th>Bits</th><th>Description</th></tr></thead><tbody>
-<tr><td>Global Routing Prefix</td><td>48 bits (first 3 quartets)</td><td>Assigned by the ISP. Identifies the organization globally.</td></tr>
-<tr><td>Subnet Identifier</td><td>16 bits (4th quartet)</td><td>Used by the enterprise to create internal subnets.</td></tr>
-<tr><td>Interface Identifier</td><td>64 bits (last 4 quartets)</td><td>The host portion — uniquely identifies the interface within the subnet.</td></tr>
+  <tr><td>Global Routing Prefix</td><td>48 bits (first 3 quartets)</td><td>Assigned by the ISP. Identifies the organization globally.</td></tr>
+  <tr><td>Subnet Identifier</td><td>16 bits (4th quartet)</td><td>Used by the enterprise to create internal subnets.</td></tr>
+  <tr><td>Interface Identifier</td><td>64 bits (last 4 quartets)</td><td>The host portion — uniquely identifies the interface within the subnet.</td></tr>
 </tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 
 <h3 class="topic-heading" id="ipv6-address-types">IPv6 Address Types</h3>
 <div class="table-wrap"><table><thead><tr><th>Type</th><th>Range / Block</th><th>Description</th></tr></thead><tbody>
-<tr><td>Global Unicast</td><td>2000::/3 (originally; now all non-reserved addresses)</td><td>Public, routable addresses — equivalent to public IPv4. Must be globally unique. Registered with IANA/RIRs.</td></tr>
-<tr><td>Unique Local</td><td>FC00::/7 (8th bit must be 1, so effectively FD00::/8)</td><td>Private, non-routable addresses — equivalent to RFC 1918 private IPv4. No registration needed. The first 2 digits are FD, followed by a randomly generated 40-bit global ID, then a 16-bit subnet ID, then a 64-bit interface identifier.</td></tr>
-<tr><td>Link-Local</td><td>FE80::/10 (FE80:: to FEBF::, but effectively always FE80:: in practice)</td><td>Automatically generated on every IPv6-enabled interface. Used only within a single link/subnet — routers do not forward packets with link-local destinations. Used by routing protocols, NDP, and next-hop addresses for static routes.</td></tr>
-<tr><td>Multicast</td><td>FF00::/8</td><td>One-to-many. Replaces broadcast in IPv6 — there is no broadcast in IPv6. Multiple scopes define how far the packet travels.</td></tr>
-<tr><td>Anycast</td><td>No specific range — uses regular unicast addresses</td><td>One-to-one-of-many. Multiple routers share the same address; traffic is forwarded to the nearest one by routing metric.</td></tr>
-<tr><td>Unspecified</td><td>::</td><td>Used when a device does not yet know its IPv6 address. Equivalent to 0.0.0.0 in IPv4.</td></tr>
-<tr><td>Loopback</td><td>::1</td><td>Tests the local protocol stack. Never leaves the device. Equivalent to 127.0.0.0/8 in IPv4.</td></tr>
+  <tr><td>Global Unicast</td><td>2000::/3 (originally; now all non-reserved addresses)</td><td>Public, routable addresses — equivalent to public IPv4. Must be globally unique. Registered with IANA/RIRs.</td></tr>
+  <tr><td>Unique Local</td><td>FC00::/7 (8th bit must be 1, so effectively FD00::/8)</td><td>Private, non-routable addresses — equivalent to RFC 1918 private IPv4. No registration needed. The first 2 digits are FD, followed by a randomly generated 40-bit global ID, then a 16-bit subnet ID, then a 64-bit interface identifier.</td></tr>
+  <tr><td>Link-Local</td><td>FE80::/10 (FE80:: to FEBF::, but effectively always FE80:: in practice)</td><td>Automatically generated on every IPv6-enabled interface. Used only within a single link/subnet — routers do not forward packets with link-local destinations. Used by routing protocols, NDP, and next-hop addresses for static routes.</td></tr>
+  <tr><td>Multicast</td><td>FF00::/8</td><td>One-to-many. Replaces broadcast in IPv6 — there is no broadcast in IPv6. Mac address FF:FF:FF:FF:FF:FF can't be use so no unnecessary congestion in the network. Multiple scopes define how far the packet travels.</td></tr>
+  <tr><td>Anycast</td><td>No specific range — uses regular unicast addresses</td><td>One-to-one-of-many. Multiple routers share the same address; traffic is forwarded to the nearest one by routing metric.</td></tr>
+  <tr><td>Unspecified</td><td>::</td><td>Used when a device does not yet know its IPv6 address. Equivalent to 0.0.0.0 in IPv4.</td></tr>
+  <tr><td>Loopback</td><td>::1</td><td>Tests the local protocol stack. Never leaves the device. Equivalent to 127.0.0.0/8 in IPv4.</td></tr>
 </tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 
 <h4 class="subheading" id="ipv6-multicast-scopes">Multicast Scopes</h4>
 <div class="table-wrap"><table><thead><tr><th>Scope</th><th>Prefix</th><th>Reach</th></tr></thead><tbody>
-<tr><td>Interface-local</td><td>FF01::</td><td>Stays on the local device only. Used for intra-device communication.</td></tr>
-<tr><td>Link-local</td><td>FF02::</td><td>Stays within the local subnet. Routers do not forward.</td></tr>
-<tr><td>Site-local</td><td>FF05::</td><td>Forwarded by routers within a single physical site. Not forwarded over WAN.</td></tr>
-<tr><td>Organization-local</td><td>FF08::</td><td>Forwarded across an entire organization.</td></tr>
-<tr><td>Global</td><td>FF0E::</td><td>No boundary — can be routed over the Internet.</td></tr>
+  <tr><td>Interface-local</td><td>FF01::</td><td>Stays on the local device only. Used for intra-device communication. To test the multicast capability of a single, specific interface. work as loopback address but for multicast.</td></tr>
+  <tr><td>Link-local</td><td>FF02::</td><td>Stays within the local subnet. Routers do not forward.</td></tr>
+  <tr><td>Site-local</td><td>FF05::</td><td>Forwarded by routers within a single physical site. Not forwarded over WAN to reach just the other organization.</td></tr>
+  <tr><td>Organization-local</td><td>FF08::</td><td>Forwarded across an entire organization. Forwarded over WAN.</td></tr>
+  <tr><td>Global</td><td>FF0E::</td><td>No boundary — can be routed over the Internet.</td></tr>
 </tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 
@@ -1244,9 +1249,10 @@ standby &lt;group-number&gt; preempt                 → enable preemption — t
 
 <h3 class="topic-heading" id="ipv6-configuration">Configuring IPv6</h3>
 <h4 class="subheading" id="ipv6-static">Static IPv6 Address</h4>
+<p class="body-line">the same commmands for all the ipv6 types and the device knows from the range like FD00:: so unique local and so on.</p>
 <pre class="command-line"><code>ipv6 unicast-routing                               → enable IPv6 routing on the router (disabled by default)
-int &lt;interface&gt;
-ipv6 address &lt;ipv6-address/prefix-length&gt;          → assign a static IPv6 address
+  int &lt;interface&gt;
+  ipv6 address &lt;ipv6-address/prefix-length&gt;          → assign a static IPv6 address
 no shutdown
 show ipv6 interface brief                          → view IPv6 addresses on all interfaces</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
@@ -1263,7 +1269,8 @@ ipv6 enable                                        → enables IPv6 and generate
 <h3 class="topic-heading" id="slaac">SLAAC — Stateless Address Auto-configuration</h3>
 <p class="body-line">SLAAC (Stateless Address Auto-configuration) allows a host to automatically configure its own IPv6 address without a DHCPv6 server. The host uses NDP (Neighbor Discovery Protocol) to learn the network prefix from a local router, then generates the interface identifier using EUI-64 or a random value.</p>
 <pre class="command-line"><code>int &lt;interface&gt;
-ipv6 address autoconfig                            → enable SLAAC — device learns prefix via NDP and generates its own address</code></pre>
+  ipv6 address autoconfig                            → enable SLAAC — device learns prefix via NDP and generates its own address</code></pre>
+  <p class="body-line">SLAAC can be used to create global and unique local address if the device found them from another device but no need for this to create link local just <code>ipv6 enable</code> can do it.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 
 <h3 class="topic-heading" id="ndp">Neighbor Discovery Protocol (NDP)</h3>
@@ -1286,6 +1293,7 @@ ipv6 address autoconfig                            → enable SLAAC — device l
 <h4 class="subheading" id="ndp-solicited-node">Solicited-Node Multicast Address</h4>
 <p class="body-line">Each IPv6 unicast address has a corresponding solicited-node multicast address used by NDP. It is formed by taking the prefix <code>FF02::1:FF00:0000/104</code> and appending the last 24 bits (6 hex digits) of the unicast address.</p>
 <p class="body-line">Example: <code>2001:0DB8:0000:0001:0f2a:4fff:fea3:00b1</code> → solicited-node: <code>FF02::1:ffa3:b1</code></p>
+<p class="body-line">This is the concept of NDP which a device knows the unicast of a device but can't send the message because it doesn't have its mac address so calculate its mulitcast from the unicast already knows and send the message and Because the group is based on the last 24 bits of the IP, it is highly likely that this device is the only device in the world listening to that frequency. Then after getting the reply it can send the unicast message.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="dad">Duplicate Address Detection (DAD)</h4>
 <p class="body-line">DAD runs automatically whenever an IPv6 address is configured on an interface (whether manually, via SLAAC, or any other method). The host sends an NS message to its own solicited-node multicast address. If no NA reply is received, the address is unique and is assigned. If a reply is received, another device on the link already uses that address.</p>
@@ -1304,10 +1312,9 @@ ipv6 route &lt;destination/prefix-length&gt; &lt;exit-interface&gt;        → d
 ipv6 route &lt;destination/prefix-length&gt; &lt;exit-interface&gt; &lt;next-hop&gt;  → fully specified static route (both — required when using link-local next-hop)
 ipv6 route ::/0 &lt;next-hop&gt;                                      → default route (::/0 is the IPv6 equivalent of 0.0.0.0/0)</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Note:</strong><p>When the next-hop address is a link-local address, you must use a fully specified static route (providing both the exit interface and the next-hop) — because link-local addresses are not unique across the whole router, the router needs the exit interface to know which link the next-hop belongs to.</p></aside>
+<aside class="callout"><strong>Note:</strong><p>When the next-hop address is a link-local address, you must use a fully specified static route (providing both the exit interface and the next-hop) — because link-local addresses are not unique across the whole router, the router needs the exit interface to know which link the next-hop belongs to. Because the router look up for the network do know which intrerface to work on and all the link-local has the same network portion.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<pre class="command-line"><code>tracert &lt;destination&gt;                              → (Windows) trace the hops a packet takes to reach the destination</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
+
 
 <h3 class="topic-heading" id="ipv6-header">IPv6 Packet Header</h3>
 <p class="body-line">The IPv6 header is simpler and fixed at exactly 40 bytes (unlike IPv4 which varies from 20–60 bytes). Several fields from the IPv4 header were removed or simplified.</p>
