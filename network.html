@@ -558,8 +558,8 @@ show interfaces trunk                            → view trunk configurations</
 <p class="body-line">To view the STP configurations:</p>
 <pre class="command-line"><code>show spanning-tree [summary | {int &lt;interface-id&gt;} | {vlan &lt;vlan-id&gt;} | detail]</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<!-- ---------- the perfect one -->
- <h4 class="subheading" id="stp-toolkit">STP Toolkit</h4>
+
+<h4 class="subheading" id="stp-toolkit">STP Toolkit</h4>
 <p class="body-line">The STP Toolkit includes several features that improve the speed, security, and stability of Spanning Tree Protocol. These features are used on different types of ports depending on what the network needs to protect.</p>
 <h5 class="subheading" id="portfast">1. PortFast</h5>
 <p class="body-line">PortFast allows an STP edge port to skip the normal Listening and Learning states and move immediately to the Forwarding state when the port becomes active. It is normally used on ports connected to end devices, where waiting for the normal STP convergence process is unnecessary.</p>
@@ -692,6 +692,48 @@ show etherchannel load-balance</code></pre>
 </ul>
 <p class="body-line">After the EtherChannel forms, the switch creates a logical Port-Channel interface representing all of its physical members. To verify the bundle, its members, and their status:</p>
 <pre class="command-line"><code>show etherchannel {summary | port-channel | detail}</code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="discovery-protocols">Discovery Protocols</h3>
+<p class="body-line">Discovery protocols allow directly connected network devices to automatically share information such as their hostname, IP address, device type, capabilities, and connected interfaces. The two commonly used protocols are CDP and LLDP. Discovery messages are exchanged only between directly connected devices and are not forwarded beyond the local link. Because they can reveal useful information about the network topology, discovery protocols may be disabled on interfaces where they are not required.</p>
+<h4 class="subheading" id="cdp">1. CDP</h4>
+<p class="body-line">CDP (Cisco Discovery Protocol) is a Cisco proprietary protocol. It can be enabled globally using:</p>
+<pre class="command-line"><code>cdp run</code></pre>
+<p class="body-line">CDP periodically sends advertisements to directly connected devices. The CDP Timer is <code>60</code> seconds by default and controls how often advertisements are sent, while the CDP Holdtime is <code>180</code> seconds by default and determines how long neighbor information is kept before it is removed if no new advertisement is received. These values can be changed using:</p>
+<pre class="command-line"><code>cdp timer <i>seconds</i>                  → change the advertisement interval
+cdp holdtime <i>seconds</i>               → change the holdtime</code></pre>
+<p class="body-line">CDP can also be controlled separately on each interface:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  cdp enable</code></pre>
+<p class="body-line">Cisco devices use CDPv2 advertisements by default. CDPv2 carries additional information compared with the older CDPv1 format. If CDPv2 advertisements are disabled, the device uses the older CDPv1 format instead:</p>
+<pre class="command-line"><code>[no] cdp advertise-v2               → enable or disable CDPv2 advertisements</code></pre>
+<p class="body-line">CDP operation and discovered neighbors can be verified using:</p>
+<pre class="command-line"><code>show cdp                         → view global CDP status and timer settings
+show cdp interface               → view CDP status on interfaces
+show cdp neighbors               → view a summary of discovered neighbors
+show cdp neighbors detail        → view detailed information about all neighbors
+show cdp entry <i>name</i>              → view detailed information about one neighbor
+show cdp traffic                 → view CDP packet statistics</code></pre>
+<aside class="callout"><strong>Note:</strong><p>CDP is typically enabled by default on Cisco devices and supported interfaces. For security, the <code>no cdp run</code> command can disable it globally, or <code>no cdp enable</code> can disable it only on interfaces where neighbor discovery is not required.</p></aside>
+<h4 class="subheading" id="lldp">2. LLDP</h4>
+<p class="body-line">LLDP (Link Layer Discovery Protocol) is an IEEE 802.1AB industry-standard protocol, allowing devices from different vendors to discover information about each other. On Cisco devices, LLDP must normally be enabled globally before it can operate:</p>
+<pre class="command-line"><code>lldp run</code></pre>
+<p class="body-line">Like CDP, LLDP uses a Timer and Holdtime The LLDP Timer is <code>30</code> seconds by default and controls how often advertisements are sent, while the LLDP Holdtime is <code>120</code> seconds and determines how long neighbor information is kept. Unlike CDP, LLDP also has a Reinitialization Timer, which is <code>2</code> seconds by default and controls how long LLDP waits before restarting after it is re-enabled. These values can be changed using:</p>
+<pre class="command-line"><code>lldp timer <i>seconds</i>                 → change the advertisement interval
+lldp holdtime <i>seconds</i>              → change the holdtime
+lldp reinit <i>seconds</i>                → change the reinitialization delay</code></pre>
+<p class="body-line">Unlike CDP, which uses one interface command to control discovery, LLDP allows transmission and reception to be controlled independently on each interface:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  [no] lldp transmit           → enable or disable sending LLDP advertisements
+  [no] lldp receive            → enable or disable receiving LLDP advertisements</code></pre>
+<p class="body-line">LLDP operation and discovered neighbors can be verified using:</p>
+<pre class="command-line"><code>show lldp                        → view global LLDP status and timer settings
+show lldp interface              → view LLDP status on interfaces
+show lldp neighbors              → view a summary of discovered LLDP neighbors
+show lldp neighbors detail       → view detailed information about all neighbors
+show lldp entry <i>name</i>             → view detailed information about one neighbor
+show lldp traffic                → view LLDP packet statistics</code></pre>
+<aside class="callout"><strong>Note:</strong><p>CDP and LLDP are separate protocols and can operate at the same time on the same Cisco device and interfaces.</p></aside>
 
 <h2 class="major-heading" id="layer-3">Layer 3: Network Layer</h2>
 <p class="body-line">While Layer 2 handles communication within a local network, Layer 3 allows data to travel between different networks. It provides the addressing and path-selection mechanisms needed to move packets from one network to another.</p>
@@ -1019,56 +1061,146 @@ show ip ospf interface                → view OSPF settings on interfaces</code
   no shutdown</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-
 <h3 class="topic-heading" id="fhrp">FHRP</h3>
 <p class="body-line">Hosts normally depend on one default gateway to reach other networks. If that gateway fails, the hosts lose connectivity even if another router is available. FHRPs (First Hop Redundancy Protocols) solve this problem by allowing multiple routers to provide one redundant default gateway.</p>
 <p class="body-line">The routers share a Virtual IP address and a Virtual MAC address. Hosts use the Virtual IP as their default gateway instead of the physical IP address of a specific router. One router forwards the traffic while another remains ready to take over if the forwarding router fails.</p>
 <figure class="overview-figure-block figure-with-image"><img src="assets/fhrp.png" alt="Two routers sharing a virtual IP address to provide a redundant default gateway"></figure>
 <p class="body-line">When a host needs to send traffic outside its subnet, it sends an ARP request for the Virtual IP. The router currently responsible for forwarding traffic responds using the Virtual MAC address, so the host sends its gateway traffic to that router.</p>
-<p class="body-line">If the forwarding router fails, a backup router takes over the same Virtual IP and Virtual MAC. Because the hosts continue using the same default gateway address, no manual reconfiguration is required. The new forwarding router can also send a Gratuitous ARP to announce the change and help devices update their forwarding information.</p>
-<aside class="callout"><strong>Note:</strong><p>A Gratuitous ARP is sent without first receiving an ARP request. It is broadcast on the local network and can be used to announce or refresh an IP-to-MAC mapping after a gateway change.</p></aside>
+<p class="body-line">If the forwarding router fails, a backup router takes over the same Virtual IP and Virtual MAC. For the hosts, nothing changes during the failover. They continue using the same Virtual IP as their default gateway, and their ARP table still maps that IP to the same Virtual MAC address.</p>
+<p class="body-line">However, switches use their MAC address tables to map the Virtual MAC address to a physical port. When the backup router takes over, it sends a Gratuitous ARP without waiting for an ARP request. Because this message is broadcast using the Virtual MAC, switches relearn that MAC on the new port and update their MAC address tables.</p>
+<aside class="callout"><strong>Note:</strong><p>In networks with multiple VLANs or subnets, different routers can be preferred for different FHRP groups, allowing load balancing across the available routers instead of relying on the same router for every subnet.</p></aside>
 <p class="body-line">Several FHRPs provide this gateway redundancy, but they differ in terminology and behavior:</p>
-<div class="table-wrap"><table><thead><tr><th>Protocol</th><th>Type</th><th>Router Roles</th><th>Multicast Address</th><th>Virtual MAC Format</th></tr></thead><tbody><tr><td>HSRP v1</td><td>Cisco Proprietary</td><td>Active / Standby</td><td>224.0.0.2</td><td>0000.0c07.acXX</td></tr><tr><td>HSRP v2</td><td>Cisco Proprietary</td><td>Active / Standby</td><td>224.0.0.102</td><td>0000.0c9f.fXXX</td></tr><tr><td>VRRP</td><td>Open Standard</td><td>Master / Backup</td><td>224.0.0.18</td><td>0000.5e00.01XX</td></tr><tr><td>GLBP</td><td>Cisco Proprietary</td><td>AVG / AVF</td><td>224.0.0.102</td><td>0007.b400.XXYY</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Protocol</th><th>Type</th><th>Router Roles</th><th>Multicast Address</th><th>Virtual MAC Format</th></tr></thead><tbody><tr><td>HSRP v1</td><td>Cisco Proprietary</td><td>Active / Standby</td><td>224.0.0.2</td><td>0000.0c07.acXX (XX = group number)</td></tr><tr><td>HSRP v2</td><td>Cisco Proprietary</td><td>Active / Standby</td><td>224.0.0.102</td><td>0000.0c9f.fXXX (XXX = group number). Adds IPv6 support and more groups.</td></tr><tr><td>VRRP</td><td>Open Standard</td><td>Master / Backup</td><td>224.0.0.18</td><td>0000.5e00.01XX (XX = group number)</td></tr><tr><td>GLBP</td><td>Cisco Proprietary</td><td>AVG / AVF</td><td>224.0.0.102</td><td>0007.b400.XXYY (XX = group, YY = AVF number)</td></tr></tbody></table></div>
 <ul class="doc-list">
   <li><strong>HSRP (Hot Standby Router Protocol):</strong> elects one Active router to forward traffic and one Standby router to take over if the Active router fails. HSRP versions must match between routers in the same group.</li>
   <li><strong>VRRP (Virtual Router Redundancy Protocol):</strong> provides a similar function using the terms Master and Backup and is an open standard.</li>
-  <li><strong>GLBP (Gateway Load Balancing Protocol):</strong> provides redundancy while also allowing multiple routers to actively forward traffic. An AVG (Active Virtual Gateway) manages the virtual gateway and assigns traffic to AVFs (Active Virtual Forwarders).</li>
+  <li><strong>GLBP (Gateway Load Balancing Protocol):</strong> unlike HSRP and VRRP, GLBP can actively load-balance traffic across multiple routers in the same subnet at the same time. One router is elected as the AVG (Active Virtual Gateway), which manages the virtual gateway and assigns traffic to up to 4 AVFs (Active Virtual Forwarders). Each AVF forwards traffic for a portion of the hosts, and the AVG can also act as an AVF.</li>
 </ul>
-<p class="body-line">With HSRP, routers are placed in the same HSRP group and share a Virtual IP address. The router with the highest priority becomes the Active router, while another router becomes the Standby.</p>
+<p class="body-line">To decide which router becomes the Active router, HSRP uses the following election order:</p>
 <ol class="doc-list">
   <li><strong>Priority:</strong> the router with the highest HSRP priority is preferred. The default priority is <code>100</code>.</li>
   <li><strong>Interface IP Address:</strong> if the priorities are equal, the router with the highest interface IP address is preferred.</li>
 </ol>
-<p class="body-line">By default, HSRP does not use preemption. This means that if a higher-priority router joins after an Active router has already been selected, it does not automatically take over. Preemption can be enabled when the higher-priority router should reclaim the Active role.</p>
+<p class="body-line">The preferred router becomes the Active router, while another router becomes the Standby router and remains ready to take over if the Active router fails.</p>
+<p class="body-line">By default, HSRP is non-preemptive which means that if a higher-priority router joins after an Active router has already been selected, it does not automatically take over. Preemption can be enabled when the higher-priority router should reclaim the Active role.</p>
 <p class="body-line">HSRP is configured on the router interface connected to the local subnet or VLAN where hosts use the Virtual IP as their default gateway:</p>
 <pre class="command-line"><code>interface <i>interface-id</i>
-  standby version <i>1|2</i>                         → select the HSRP version
-  standby <i>group-number</i> ip <i>virtual-ip</i>        → configure the shared Virtual IP
+  standby version {1 | 2}                   → select the HSRP version
   standby <i>group-number</i> priority <i>value</i>       → configure the HSRP priority
-  standby <i>group-number</i> preempt                → allow this router to take over when preferred</code></pre>
+  standby <i>group-number</i> preempt              → allow to take over when preferred
+  standby <i>group-number</i> ip <i>virtual-ip</i>        → configure the shared Virtual IP</code></pre>
 <aside class="callout"><strong>Note:</strong><p>The routers in the same HSRP group must use the same HSRP version and Virtual IP. Their physical interface IP addresses remain different.</p></aside>
 <p class="body-line">In networks with multiple VLANs or subnets, different routers can be configured as Active for different HSRP groups. This allows the gateway traffic to be distributed across the routers instead of always using the same Active router.</p>
 <p class="body-line">The HSRP state and the current Active and Standby routers can be verified using:</p>
-<pre class="command-line"><code>show standby                         → view detailed HSRP information
-show standby brief                   → view a summarized HSRP status</code></pre>
-
-
-------------------------
-
+<pre class="command-line"><code>show standby [brief]</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="fhrp-types">FHRP Types</h4>
-<div class="table-wrap"><table><thead><tr><th>Protocol</th><th>Standard</th><th>Active/Standby Terms</th><th>Multicast Address</th><th>Virtual MAC Format</th></tr></thead><tbody>
-<tr><td>HSRP v1</td><td>Cisco proprietary</td><td>Active / Standby</td><td>224.0.0.2</td><td>0000.0c07.acXX (XX = group number)</td></tr>
-<tr><td>HSRP v2</td><td>Cisco proprietary</td><td>Active / Standby</td><td>224.0.0.102</td><td>0000.0c9f.fXXX (XXX = group number). Adds IPv6 support and more groups.</td></tr>
-<tr><td>VRRP</td><td>Open standard</td><td>Master / Backup</td><td>224.0.0.18</td><td>0000.5e00.01XX (XX = group number)</td></tr>
-<tr><td>GLBP</td><td>Cisco proprietary</td><td>AVG + AVFs</td><td>224.0.0.102</td><td>0007.b400.XXYY (XX = group, YY = AVF number)</td></tr>
-</tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="ipv6">IPv6 Addressing</h3>
+<p class="body-line">IPv6 (Internet Protocol version 6) was developed mainly to solve IPv4 address exhaustion. While IPv4 uses <code>32-bit</code> addresses, IPv6 uses <code>128-bit</code> addresses, providing a much larger address space and reducing the need for short-term solutions such as private IPv4 addresses and VLSM.</p>
+<p class="body-line">An IPv6 address is written as eight groups of four hexadecimal characters, called quartets, separated by colons. IPv6 uses prefix-length notation instead of a dotted-decimal subnet mask.</p>
+<pre class="command-line"><code>2001:0db8:5917:eabd:6562:17ea:c92d:59bd/64</code></pre>
+<p class="body-line">Because a full IPv6 address can be long, it can be abbreviated using two rules:</p>
 <ul class="doc-list">
-  <li><strong>GLBP (Gateway Load Balancing Protocol):</strong> Cisco proprietary. Unlike HSRP and VRRP, GLBP actively load-balances traffic across multiple routers within a single subnet simultaneously. An AVG (Active Virtual Gateway) is elected and assigns up to 4 AVFs (Active Virtual Forwarders) — each AVF handles traffic for a portion of the hosts. The AVG itself can also be an AVF.</li>
+  <li><strong>Remove leading zeros:</strong> zeros at the beginning of each quartet can be removed. <code>0DB8</code> becomes <code>DB8</code>, and <code>000A</code> becomes <code>A</code>.</li>
+  <li><strong>Use <code>::</code> for consecutive zero quartets:</strong> one continuous group of all-zero quartets can be replaced by <code>::</code>. This can be done only once in an IPv6 address.</li>
 </ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-
+<pre class="command-line"><code>2001:0db8:0000:0000:0000:0000:0080:34bd   →   2001:db8::80:34bd</code></pre>
+<p class="body-line">To expand an abbreviated address, restore leading zeros until every quartet contains four characters, then replace <code>::</code> with enough <code>0000</code> quartets to make a total of eight quartets.</p>
+<pre class="command-line"><code>fe80::2:0:0:fbe8   →   fe80:0000:0000:0000:0002:0000:0000:fbe8</code></pre>
+<aside class="callout"><strong>Note:</strong><p>If multiple sequences of zero quartets are present, use <code>::</code> for the longest sequence. If two or more sequences are equal in length, use <code>::</code> for the leftmost one. A single zero quartet is always written as <code>0</code>.</p></aside>
+<p class="body-line">IPv6 uses several address types, each designed for a different purpose:</p>
+<p class="body-line"><strong>Global Unicast Address (GUA):</strong> a globally unique and Internet-routable IPv6 address, similar to a public IPv4 address. The GUA addresses commonly use the <code>2000::/3</code> range and are allocated through the global addressing hierarchy, starting with IANA (Internet Assigned Numbers Authority), which allocates address blocks to RIRs (Regional Internet Registries). RIRs then distribute these blocks to ISPs and organizations within their respective regions.</p>
+<p class="body-line">Organizations commonly receive a <code>/48</code> Global Routing Prefix and create <code>/64</code> subnets from it. This leaves a 16-bit Subnet ID and a 64-bit Interface Identifier:</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/global_unicast_address_structure.png" alt="Global Unicast Address Structure"></figure>
+<p class="body-line">A Global Unicast address can be manually assigned to an interface using:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  ipv6 address <i>global-unicast-address</i>/<i>prefix-length</i>
+  no shutdown</code></pre>
+<p class="body-line"><strong>Unique Local Address (ULA):</strong> is used for private communication inside an organization and is not intended to be routed on the public Internet. The ULA address space is <code>FC00::/7</code>, covering addresses beginning with <code>FC</code> or <code>FD</code>. Locally generated ULA addresses use the <code>FD00::/8</code> range because the <strong>8th bit is set to 1</strong>, changing the first byte from <code>FC</code> (<code>11111100</code>) to <code>FD</code> (<code>11111101</code>). The <code>FC00::/8</code> range is reserved for future use.</p>
+<p class="body-line">Its structure is similar to a Global Unicast address, but instead of receiving the prefix from an ISP, the organization randomly generates its own 40-bit ID locally:</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/unique_local_address_structure.jpg" alt="Unique Local Address Structure"></figure>
+<p class="body-line">A Unique Local address uses the same IPv6 address command because the router identifies the address type from its prefix:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  ipv6 address <i>unique-local-address</i>/<i>prefix-length</i>
+  no shutdown</code></pre>
+<p class="body-line"><strong>Link-Local Address (LLA):</strong> is used only to communicate with devices on the same local link and is not forwarded by routers. Link-Local addresses use the <code>FE80::/10</code> range and are automatically created when IPv6 is enabled on an interface, so the address does not normally need to be configured manually.</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  ipv6 enable</code></pre>
+<aside class="callout"><strong>Note:</strong><p>When a Global Unicast or Unique Local IPv6 address is configured on an interface, a Link-Local address is also created automatically.</p></aside>
+<p class="body-line"><strong>Multicast Address:</strong> uses the <code>FF00::/8</code> range and sends traffic to a group of devices. IPv6 does not use broadcast addresses; multicast is used instead when traffic needs to reach multiple devices.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/ipv6_multicast_scope.png" alt="Multicast Scope"></figure>
+<ul class="doc-list">
+  <li><code>FF01::</code> — Interface-Local: remains inside the local device.</li>
+  <li><code>FF02::</code> — Link-Local: remains inside the local link or subnet.</li>
+  <li><code>FF05::</code> — Site-Local: can reach devices within a site.</li>
+  <li><code>FF08::</code> — Organization-Local: can reach devices across an organization.</li>
+  <li><code>FF0E::</code> — Global: has global scope.</li>
+</ul>
+<p class="body-line">The <code>FF02::</code> multicast scope is commonly used by network protocols to communicate with specific groups of devices:</p>
+<div class="table-wrap"><table><thead><tr><th>Purpose</th><th>IPv6 Multicast Address</th><th>IPv4 Equivalent</th></tr></thead><tbody><tr><td>All nodes (functions like broadcast)</td><td><code>FF02::1</code></td><td><code>224.0.0.1</code></td></tr><tr><td>All routers</td><td><code>FF02::2</code></td><td><code>224.0.0.2</code></td></tr><tr><td>All OSPF routers</td><td><code>FF02::5</code></td><td><code>224.0.0.5</code></td></tr><tr><td>All OSPF DRs/BDRs</td><td><code>FF02::6</code></td><td><code>224.0.0.6</code></td></tr><tr><td>All RIP routers</td><td><code>FF02::9</code></td><td><code>224.0.0.9</code></td></tr><tr><td>All EIGRP routers</td><td><code>FF02::A</code></td><td><code>224.0.0.10</code></td></tr></tbody></table></div>
+<p class="body-line"><strong>Anycast Address:</strong> uses a normal unicast address that is assigned to multiple devices. Routing directs the traffic toward the nearest device using that address according to the routing metric.</p>
+<p class="body-line"><strong>Unspecified Address:</strong> <code>::</code> represents the absence of an IPv6 address and is used when a device does not yet know its own address. It serves a similar purpose to <code>0.0.0.0</code> in IPv4.</p>
+<p class="body-line"><strong>Loopback Address:</strong> <code>::1</code> is used by a device to communicate with itself and test its local IPv6 protocol stack.</p>
+<p class="body-line">Instead of manually configuring a Global Unicast or Unique Local address, a device can dynamically create its own IPv6 address using SLAAC (Stateless Address Autoconfiguration). SLAAC allows the device to learn the network prefix from a neighbor router and then generate its own Interface Identifier without requiring a DHCPv6 server.</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  ipv6 address autoconfig       → dynamically create an IPv6 address using SLAAC</code></pre>
+<aside class="callout"><strong>Note:</strong><p>SLAAC is used to create addresses such as Global Unicast or Unique Local addresses from a prefix advertised by a router. A Link-Local address does not require SLAAC because it is created automatically when IPv6 is enabled.</p></aside>
+<p class="body-line">One method that SLAAC can be used to generate the 64-bit Interface Identifier is EUI-64 (Extended Unique Identifier). EUI-64 builds the Interface Identifier from the interface's 48-bit MAC address.</p>
+<ol class="doc-list">
+  <li><strong>Split the MAC address:</strong> divide the 48-bit MAC address into two halves.</li>
+  <li><strong>Insert <code>FFFE</code>:</strong> place <code>FFFE</code> between the two halves to expand the value to 64 bits.</li>
+  <li><strong>Invert the U/L bit:</strong> invert the seventh bit of the first byte to complete the EUI-64 Interface Identifier.</li>
+</ol>
+<pre class="command-line"><code>MAC Address:      12:34:56:78:90:AB
+Split:            12:34:56 | 78:90:AB
+Insert FFFE:      12:34:56:FF:FE:78:90:AB
+Invert U/L Bit:   12 → 0001 0010 → 0001 0000 → 10
+Interface ID:     1034:56FF:FE78:90AB</code></pre>
+<p class="body-line">However, EUI-64 can also be configured manually by providing only the network portion. The router will then automatically generate the remaining interface identifier from its MAC address:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  ipv6 address <i>network-prefix/64</i> eui-64
+  no shutdown</code></pre>
+<p class="body-line">The IPv6 addresses configured on interfaces can be verified using:</p>
+<pre class="command-line"><code>show ipv6 interface brief</code></pre>
+<h4 class="subheading" id="ipv6-header">IPv6 Header</h4>
+<p class="body-line">IPv6 uses a simpler and fixed-size header of <code>40 bytes</code>, unlike the IPv4 header which can vary from <code>20</code> to <code>60 bytes</code>. Several IPv4 header fields were removed or simplified to make packet processing more efficient.</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody><tr><td>Version</td><td>4 bits</td><td>Identifies the packet as IPv6 using the value <code>6</code>.</td></tr><tr><td>Traffic Class</td><td>8 bits</td><td>Marks traffic for QoS so important traffic such as voice or video can receive priority.</td></tr><tr><td>Flow Label</td><td>20 bits</td><td>Identifies packets that belong to the same traffic flow so routers can handle them consistently.</td></tr><tr><td>Payload Length</td><td>16 bits</td><td>Specifies the size of the data following the IPv6 header. The fixed 40-byte IPv6 header is not included.</td></tr><tr><td>Next Header</td><td>8 bits</td><td>Identifies what comes after the IPv6 header, such as TCP, UDP, or another IPv6 extension header.</td></tr><tr><td>Hop Limit</td><td>8 bits</td><td>Decreases by <code>1</code> each time the packet passes through a router. The packet is discarded when the value reaches <code>0</code>.</td></tr><tr><td>Source Address</td><td>128 bits</td><td>Contains the IPv6 address of the original sender.</td></tr><tr><td>Destination Address</td><td>128 bits</td><td>Contains the IPv6 address of the intended destination.</td></tr></tbody></table></div>
+<h4 class="subheading" id="ndp">Neighbor Discovery Protocol (NDP)</h4>
+<p class="body-line">NDP (Neighbor Discovery Protocol) is used by IPv6 devices to discover neighbors, learn their MAC addresses, discover routers, and verify that IPv6 addresses are unique. It uses ICMPv6 messages and multicast instead of the broadcast-based ARP process used by IPv4.</p>
+<p class="body-line">When a device knows the IPv6 address of another device on the same link but does not know its MAC address, NDP uses two messages to discover it:</p>
+<ul class="doc-list">
+  <li><strong>Neighbor Solicitation (NS) — ICMPv6 Type 135:</strong> asks for information about a neighboring IPv6 device, including its MAC address.</li>
+  <li><strong>Neighbor Advertisement (NA) — ICMPv6 Type 136:</strong> replies to the NS and provides the requested neighbor information.</li>
+</ul>
+<p class="body-line">The learned IPv6-to-MAC mappings are stored in the IPv6 Neighbor Table instead of an ARP table and can be viewed using:</p>
+<pre class="command-line"><code>show ipv6 neighbor</code></pre>
+<p class="body-line">NDP avoids sending the Neighbor Solicitation to every device on the local network. Instead, each IPv6 unicast address has a corresponding Solicited-Node Multicast address. It is created using the prefix <code>FF02::1:FF00:0000/104</code> followed by the last <code>24 bits</code> of the destination IPv6 address.</p>
+<pre class="command-line"><code>IPv6 Address:              2001:DB8:0:1:F2A:4FFF:FEA3:00B1
+Last 24 bits:                                      A3:00B1
+Solicited-Node Multicast:  FF02::1:FFA3:B1</code></pre>
+<p class="body-line">The Neighbor Solicitation is sent to this multicast address, so only devices listening to the matching Solicited-Node group need to process it. The destination device then responds with a Neighbor Advertisement, allowing normal unicast communication to begin.</p>
+<p class="body-line">NDP is also used for router discovery. When a host connects to an IPv6 network, it can request information from local routers using Router Solicitation and Router Advertisement messages:</p>
+<ul class="doc-list">
+  <li><strong>Router Solicitation (RS) — ICMPv6 Type 133:</strong> is sent by a host to <code>FF02::2</code>, the All-Routers multicast address, to request information from local routers.</li>
+  <li><strong>Router Advertisement (RA) — ICMPv6 Type 134:</strong> is sent by routers to provide information such as the network prefix and default gateway information. RAs can be sent in response to an RS or periodically without being requested.</li>
+</ul>
+<p class="body-line">These Router Advertisements are what allow SLAAC to work. A host learns the network prefix from the router and then uses that prefix to create its own IPv6 address.</p>
+<p class="body-line">NDP also performs DAD (Duplicate Address Detection) whenever an IPv6 address is assigned to an interface. Before using the address, the device sends a Neighbor Solicitation for that same address to check whether another device on the link is already using it.</p>
+<ul class="doc-list">
+  <li>If no Neighbor Advertisement is received, the address is considered unique and can be used.</li>
+  <li>If a Neighbor Advertisement is received, another device is already using the address, so the address cannot be assigned normally.</li>
+</ul>
+<h4 class="subheading" id="ipv6-routing">IPv6 Routing</h4>
+<p class="body-line">IPv6 routing works similarly to IPv4 routing, but the two use separate routing tables. IPv4 routing is enabled by default on a router, while IPv6 packet forwarding must be enabled manually using:</p>
+<pre class="command-line"><code>ipv6 unicast-routing                  → enable IPv6 routing
+show ipv6 route                       → view the IPv6 routing table</code></pre>
+<aside class="callout"><strong>Note:</strong><p>Without <code>ipv6 unicast-routing</code>, the router can still send and receive IPv6 traffic on its own interfaces, but it will not forward (route) IPv6 packets between networks.</p></aside>
+<p class="body-line">When an IPv6 address is configured on an active interface, the router automatically adds a Connected route for the directly attached network and a Local route for the interface's own IPv6 address. Link-Local addresses are not added to the IPv6 routing table.</p>
+<p class="body-line">Routes can be configured manually using static routes. Like IPv4, an IPv6 static route can specify the next-hop address, the exit interface, or both:</p>
+<pre class="command-line"><code>ipv6 route <i>destination-network</i>/<i>prefix-length</i> {<i>next-hop-ip</i> | <i>exit-interface</i> [<i>next-hop-ip</i>]}</code></pre>
+<p class="body-line">When a Link-Local address is used as the next hop, the exit interface must also be specified. Because all Link-Local addresses share the same network portion (fe80::/10) and these addresses are valid only on their local link, they can be repeated across different interfaces so the router can't determine which interface to use. Therefore, the router explicitly needs the exit interface to know which physical link contains the next-hop device.</p>
+<p class="body-line">If no more specific IPv6 route matches the destination, a default route can provide the final path. The IPv6 default route uses the prefix <code>::/0</code>, which serves the same purpose as <code>0.0.0.0/0</code> in IPv4:</p>
+<pre class="command-line"><code>ipv6 route ::/0 {<i>next-hop-ip</i> | <i>exit-interface</i> [<i>next-hop-ip</i>]}</code></pre>
 
 
 
@@ -1174,170 +1306,11 @@ show standby brief                   → view a summarized HSRP status</code></p
 <tr><td>514</td><td>Syslog</td><td>UDP</td><td>System logging protocol</td></tr>
 </tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
+
 <!-- <h3 class="topic-heading" id="wireshark">Wireshark</h3>
 <p class="body-line">Wireshark is a network packet capture and analysis tool. It captures all network traffic visible on an interface and lets you inspect every layer of every packet — from the physical frame up through the application layer. It supports filtering by protocol, IP address, port, and many other criteria, making it an essential tool for network troubleshooting, learning, and security analysis.</p>
 <div class="doc-spacer" aria-hidden="true"></div> -->
 
-<h2 class="major-heading" id="ipv6">IPv6</h2>
-<p class="body-line">The fundamental reason for IPv6 is address exhaustion. IPv4 provides only 2³² = 4,294,967,296 addresses. When IPv4 was designed, no one anticipated the scale the Internet would reach. Short-term solutions like VLSM, private IPv4 addresses, and NAT have helped delay exhaustion, but the long-term solution is IPv6, which provides 2¹²⁸ = 340,282,366,920,938,463,463,374,607,431,768,211,456 addresses — effectively unlimited.</p>
-<!-- <p class="body-line">IPv4 address assignments are managed by IANA (Internet Assigned Numbers Authority), which distributes blocks to RIRs (Regional Internet Registries), which then assign them to organizations.</p> -->
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h3 class="topic-heading" id="ipv6-address-format">IPv6 Address Format</h3>
-<p class="body-line">An IPv6 address is 128 bits, written as 8 groups of 4 hexadecimal characters (quartets) separated by colons. There are no dotted-decimal subnet masks — prefix length notation (e.g. /64) is used instead.</p>
-<p class="body-line">Example: <code>2001:0DB8:5917:EABD:6562:17EA:C92D:59BD/64</code></p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="ipv6-abbreviation">Abbreviating IPv6 Addresses</h4>
-<ul class="doc-list">
-  <li><strong>Remove leading zeros</strong> in each quartet: <code>2001:0DB8:000A:001B:20A1:0020:0080:34BD</code> → <code>2001:DB8:A:1B:20A1:20:80:34BD</code></li>
-  <li><strong>Replace consecutive all-zero quartets</strong> with a double colon (::): <code>2001:0DB8:0000:0000:0000:0000:0080:34BD</code> → <code>2001:DB8::80:34BD</code></li>
-  <li>The :: can only be used <strong>once</strong> in an address. If there are two separate groups of all-zero quartets, only the longest group uses :: — the other uses explicit zeros. If both groups are equal length, use :: on the left one.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="ipv6-expanding">Expanding Shortened IPv6 Addresses</h4>
-<ul class="doc-list">
-  <li>Add leading zeros to each quartet until all have 4 hex digits.</li>
-  <li><strong>Replace ::</strong> with the number of all-zero quartets needed to bring the total to 8 quartets.</li>
-  <li>Example: <code>FE80::2:0:0:FBE8</code> → 5 quartets written, so :: = 3 all-zero quartets → <code>FE80:0000:0000:0000:0002:0000:0000:FBE8</code></li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Note — RFC 5952 (Standard Representation):</strong><p>Leading zeros MUST be removed. :: MUST be used for the longest string of all-zero quartets (if tied, use the leftmost). If there is only one all-zero quartet, do not use :: — write it as <code>0</code>. Hex letters a–f MUST be lowercase.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h3 class="topic-heading" id="ipv6-prefix">IPv6 Prefix Structure</h3>
-<p class="body-line">Enterprises typically receive a /48 block from their ISP and use /64 subnets internally, leaving 16 bits for subnet IDs and 64 bits for host (interface) identifiers.</p>
-<div class="table-wrap"><table><thead><tr><th>Portion</th><th>Bits</th><th>Description</th></tr></thead><tbody>
-  <tr><td>Global Routing Prefix</td><td>48 bits (first 3 quartets)</td><td>Assigned by the ISP. Identifies the organization globally.</td></tr>
-  <tr><td>Subnet Identifier</td><td>16 bits (4th quartet)</td><td>Used by the enterprise to create internal subnets.</td></tr>
-  <tr><td>Interface Identifier</td><td>64 bits (last 4 quartets)</td><td>The host portion — uniquely identifies the interface within the subnet.</td></tr>
-</tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h3 class="topic-heading" id="ipv6-address-types">IPv6 Address Types</h3>
-<div class="table-wrap"><table><thead><tr><th>Type</th><th>Range / Block</th><th>Description</th></tr></thead><tbody>
-  <tr><td>Global Unicast</td><td>2000::/3 (originally; now all non-reserved addresses)</td><td>Public, routable addresses — equivalent to public IPv4. Must be globally unique. Registered with IANA/RIRs.</td></tr>
-  <tr><td>Unique Local</td><td>FC00::/7 (8th bit must be 1, so effectively FD00::/8)</td><td>Private, non-routable addresses — equivalent to RFC 1918 private IPv4. No registration needed. The first 2 digits are FD, followed by a randomly generated 40-bit global ID, then a 16-bit subnet ID, then a 64-bit interface identifier.</td></tr>
-  <tr><td>Link-Local</td><td>FE80::/10 (FE80:: to FEBF::, but effectively always FE80:: in practice)</td><td>Automatically generated on every IPv6-enabled interface. Used only within a single link/subnet — routers do not forward packets with link-local destinations. Used by routing protocols, NDP, and next-hop addresses for static routes.</td></tr>
-  <tr><td>Multicast</td><td>FF00::/8</td><td>One-to-many. Replaces broadcast in IPv6 — there is no broadcast in IPv6. Mac address FF:FF:FF:FF:FF:FF can't be use so no unnecessary congestion in the network. Multiple scopes define how far the packet travels.</td></tr>
-  <tr><td>Anycast</td><td>No specific range — uses regular unicast addresses</td><td>One-to-one-of-many. Multiple routers share the same address; traffic is forwarded to the nearest one by routing metric.</td></tr>
-  <tr><td>Unspecified</td><td>::</td><td>Used when a device does not yet know its IPv6 address. Equivalent to 0.0.0.0 in IPv4.</td></tr>
-  <tr><td>Loopback</td><td>::1</td><td>Tests the local protocol stack. Never leaves the device. Equivalent to 127.0.0.0/8 in IPv4.</td></tr>
-</tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h4 class="subheading" id="ipv6-multicast-scopes">Multicast Scopes</h4>
-<div class="table-wrap"><table><thead><tr><th>Scope</th><th>Prefix</th><th>Reach</th></tr></thead><tbody>
-  <tr><td>Interface-local</td><td>FF01::</td><td>Stays on the local device only. Used for intra-device communication. To test the multicast capability of a single, specific interface. work as loopback address but for multicast.</td></tr>
-  <tr><td>Link-local</td><td>FF02::</td><td>Stays within the local subnet. Routers do not forward.</td></tr>
-  <tr><td>Site-local</td><td>FF05::</td><td>Forwarded by routers within a single physical site. Not forwarded over WAN to reach just the other organization.</td></tr>
-  <tr><td>Organization-local</td><td>FF08::</td><td>Forwarded across an entire organization. Forwarded over WAN.</td></tr>
-  <tr><td>Global</td><td>FF0E::</td><td>No boundary — can be routed over the Internet.</td></tr>
-</tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h3 class="topic-heading" id="eui-64">EUI-64 Interface Identifier</h3>
-<p class="body-line">EUI-64 (Extended Unique Identifier — 64-bit) is a method of automatically generating the 64-bit host portion of an IPv6 address from the interface's 48-bit MAC address.</p>
-<h4 class="subheading" id="eui-64-conversion">Conversion Steps</h4>
-<ul class="doc-list">
-  <li><strong>Step 1 — Split the MAC address in half:</strong> <code>1234:5678:90AB</code> → <code>1234:56 | 78:90AB</code></li>
-  <li><strong>Step 2 — Insert FFFE in the middle:</strong> <code>1234:56FF:FE78:90AB</code></li>
-  <li><strong>Step 3 — Invert the 7th bit (U/L bit):</strong> <code>1234:56FF:FE78:90AB</code> → <code>1034:56FF:FE78:90AB</code></li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Why invert the 7th bit?</strong><p>The 7th bit is the U/L bit — Universal/Local. In MAC addresses: 0 = UAA (Universally Administered, manufacturer-assigned), 1 = LAA (Locally Administered, manually set). IPv6/EUI-64 reverses this meaning: 0 = made from an LAA, 1 = made from a UAA. Most real NICs have UAA addresses (bit = 0 in MAC), so after inversion the EUI-64 bit becomes 1.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h3 class="topic-heading" id="ipv6-configuration">Configuring IPv6</h3>
-<h4 class="subheading" id="ipv6-static">Static IPv6 Address</h4>
-<p class="body-line">the same commmands for all the ipv6 types and the device knows from the range like FD00:: so unique local and so on.</p>
-<pre class="command-line"><code>ipv6 unicast-routing                               → enable IPv6 routing on the router (disabled by default)
-  int &lt;interface&gt;
-  ipv6 address &lt;ipv6-address/prefix-length&gt;          → assign a static IPv6 address
-no shutdown
-show ipv6 interface brief                          → view IPv6 addresses on all interfaces</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="ipv6-eui64-cmd">EUI-64 Address</h4>
-<pre class="command-line"><code>int &lt;interface&gt;
-ipv6 address &lt;network-prefix/prefix-length&gt; eui-64  → use MAC address to auto-generate the host portion
-no shutdown</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="ipv6-link-local-cmd">Enabling Link-Local Only</h4>
-<pre class="command-line"><code>int &lt;interface&gt;
-ipv6 enable                                        → enables IPv6 and generates a link-local address automatically (no global address needed)</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h3 class="topic-heading" id="slaac">SLAAC — Stateless Address Auto-configuration</h3>
-<p class="body-line">SLAAC (Stateless Address Auto-configuration) allows a host to automatically configure its own IPv6 address without a DHCPv6 server. The host uses NDP (Neighbor Discovery Protocol) to learn the network prefix from a local router, then generates the interface identifier using EUI-64 or a random value.</p>
-<pre class="command-line"><code>int &lt;interface&gt;
-  ipv6 address autoconfig                            → enable SLAAC — device learns prefix via NDP and generates its own address</code></pre>
-  <p class="body-line">SLAAC can be used to create global and unique local address if the device found them from another device but no need for this to create link local just <code>ipv6 enable</code> can do it.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h3 class="topic-heading" id="ndp">Neighbor Discovery Protocol (NDP)</h3>
-<p class="body-line">NDP (Neighbor Discovery Protocol) is IPv6's replacement for ARP. It uses ICMPv6 messages and solicited-node multicast addresses — instead of broadcasts — to discover the MAC addresses of neighboring devices and perform other network functions.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="ndp-mac-discovery">MAC Address Discovery (replaces ARP)</h4>
-<ul class="doc-list">
-  <li><strong>Neighbor Solicitation (NS) — ICMPv6 Type 135:</strong> sent to the solicited-node multicast address of the target. Asks "What is your MAC address?" Equivalent to an ARP Request.</li>
-  <li><strong>Neighbor Advertisement (NA) — ICMPv6 Type 136:</strong> the reply containing the sender's MAC address. Equivalent to an ARP Reply.</li>
-  <li>Results are stored in the IPv6 Neighbor Table (not an ARP table).</li>
-</ul>
-<pre class="command-line"><code>show ipv6 neighbor                                 → view the IPv6 neighbor table (equivalent to show arp for IPv4)</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="ndp-router-discovery">Router Discovery</h4>
-<ul class="doc-list">
-  <li><strong>Router Solicitation (RS) — ICMPv6 Type 133:</strong> sent to FF02::2 (all-routers multicast). Sent when an interface is enabled or a host joins a network. Asks routers to identify themselves and provide prefix information.</li>
-  <li><strong>Router Advertisement (RA) — ICMPv6 Type 134:</strong> sent to FF02::1 (all-nodes multicast). Routers send RAs in response to RS messages, and also periodically without being asked. Contains the network prefix, router address, and other link information used by SLAAC.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="ndp-solicited-node">Solicited-Node Multicast Address</h4>
-<p class="body-line">Each IPv6 unicast address has a corresponding solicited-node multicast address used by NDP. It is formed by taking the prefix <code>FF02::1:FF00:0000/104</code> and appending the last 24 bits (6 hex digits) of the unicast address.</p>
-<p class="body-line">Example: <code>2001:0DB8:0000:0001:0f2a:4fff:fea3:00b1</code> → solicited-node: <code>FF02::1:ffa3:b1</code></p>
-<p class="body-line">This is the concept of NDP which a device knows the unicast of a device but can't send the message because it doesn't have its mac address so calculate its mulitcast from the unicast already knows and send the message and Because the group is based on the last 24 bits of the IP, it is highly likely that this device is the only device in the world listening to that frequency. Then after getting the reply it can send the unicast message.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="dad">Duplicate Address Detection (DAD)</h4>
-<p class="body-line">DAD runs automatically whenever an IPv6 address is configured on an interface (whether manually, via SLAAC, or any other method). The host sends an NS message to its own solicited-node multicast address. If no NA reply is received, the address is unique and is assigned. If a reply is received, another device on the link already uses that address.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h3 class="topic-heading" id="ipv6-routing">IPv6 Routing</h3>
-<p class="body-line">IPv6 routing works the same way as IPv4 routing, but the two processes are completely separate — each has its own routing table. IPv4 routing is enabled by default; IPv6 routing must be explicitly enabled.</p>
-<pre class="command-line"><code>ipv6 unicast-routing                               → enable IPv6 routing (disabled by default)
-show ipv6 route                                    → view the IPv6 routing table</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Note:</strong><p>When IPv6 routing is disabled, the router can still send and receive IPv6 traffic on its own interfaces — it just will not forward (route) IPv6 packets between networks. A connected network route and a local host route are automatically added for each configured IPv6 address. Link-local addresses do NOT appear in the routing table.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="ipv6-static-routes">IPv6 Static Routes</h4>
-<pre class="command-line"><code>ipv6 route &lt;destination/prefix-length&gt; &lt;next-hop&gt;              → recursive static route (next-hop only)
-ipv6 route &lt;destination/prefix-length&gt; &lt;exit-interface&gt;        → directly attached static route (exit interface only — NOT valid on Ethernet interfaces)
-ipv6 route &lt;destination/prefix-length&gt; &lt;exit-interface&gt; &lt;next-hop&gt;  → fully specified static route (both — required when using link-local next-hop)
-ipv6 route ::/0 &lt;next-hop&gt;                                      → default route (::/0 is the IPv6 equivalent of 0.0.0.0/0)</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Note:</strong><p>When the next-hop address is a link-local address, you must use a fully specified static route (providing both the exit interface and the next-hop) — because link-local addresses are not unique across the whole router, the router needs the exit interface to know which link the next-hop belongs to. Because the router look up for the network do know which intrerface to work on and all the link-local has the same network portion.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-
-<h3 class="topic-heading" id="ipv6-header">IPv6 Packet Header</h3>
-<p class="body-line">The IPv6 header is simpler and fixed at exactly 40 bytes (unlike IPv4 which varies from 20–60 bytes). Several fields from the IPv4 header were removed or simplified.</p>
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody>
-<tr><td>Version</td><td>4 bits</td><td>Fixed value of 6 (0b0110) — identifies this as an IPv6 packet.</td></tr>
-<tr><td>Traffic Class</td><td>8 bits</td><td>Used for QoS — marks high-priority traffic (e.g., voice, live video) to be prioritized by routers. Equivalent to IPv4's DSCP field.</td></tr>
-<tr><td>Flow Label</td><td>20 bits</td><td>Identifies a specific traffic flow (communication between a specific source and destination) so routers can handle all packets of the same flow consistently.</td></tr>
-<tr><td>Payload Length</td><td>16 bits</td><td>Length of the payload (encapsulated Layer 4 segment) in bytes. The 40-byte IPv6 header itself is not included in this value.</td></tr>
-<tr><td>Next Header</td><td>8 bits</td><td>Identifies the type of the next header — the protocol of the encapsulated data (e.g., TCP = 6, UDP = 17). Equivalent to IPv4's Protocol field.</td></tr>
-<tr><td>Hop Limit</td><td>8 bits</td><td>Decremented by 1 at each router. Packet is discarded when it reaches 0. Equivalent to IPv4's TTL field.</td></tr>
-<tr><td>Source Address</td><td>128 bits</td><td>IPv6 address of the original sender.</td></tr>
-<tr><td>Destination Address</td><td>128 bits</td><td>IPv6 address of the intended recipient.</td></tr>
-</tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h3 class="topic-heading" id="number-systems">Number Systems</h3>
-<p class="body-line">Networking uses three number systems. Each has a standard prefix used in documentation:</p>
-<ul class="doc-list">
-  <li><strong>Binary (Base 2, prefix 0b):</strong> only digits 0 and 1. Used internally by all digital systems. IPv4 addresses, subnet masks, and MAC addresses are all binary at the hardware level.</li>
-  <li><strong>Decimal (Base 10, prefix 0d):</strong> digits 0–9. The standard human number system. IPv4 addresses are written in dotted decimal.</li>
-  <li><strong>Hexadecimal (Base 16, prefix 0x):</strong> digits 0–9 and letters A–F (or a–f). Compact representation of binary — one hex digit = 4 binary bits. MAC addresses and IPv6 addresses are written in hexadecimal.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
 
 <h2 class="major-heading" id="acls">Access Control Lists (ACLs)</h2>
 <p class="body-line">An Access Control List (ACL) functions as a packet filter on a router — it instructs the router to permit or deny specific traffic based on defined criteria. ACLs can filter based on source/destination IP addresses, Layer 4 protocol, source/destination port numbers, and more. An ACL is an ordered sequence of ACEs (Access Control Entries), processed top to bottom.</p>
@@ -1403,53 +1376,6 @@ ip access-group &lt;name&gt; {in|out}                             → apply the 
 <tr><td>neq &lt;port&gt;</td><td>Not equal to the specified port number</td></tr>
 <tr><td>range &lt;p1&gt; &lt;p2&gt;</td><td>From port p1 to port p2 (inclusive)</td></tr>
 </tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h2 class="major-heading" id="discovery-protocols">Layer 2 Discovery Protocols</h2>
-<p class="body-line">Layer 2 discovery protocols allow directly connected network devices to automatically share information about themselves — hostname, IP address, device type, interface details, and more. Because they expose network topology information, they are a potential security risk and are often disabled in security-sensitive environments.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<div class="table-wrap"><table><thead><tr><th>Feature</th><th>CDP</th><th>LLDP</th></tr></thead><tbody>
-<tr><td>Standard</td><td>Cisco proprietary</td><td>Industry standard (IEEE 802.1AB)</td></tr>
-<tr><td>Default state on Cisco</td><td>Enabled globally and per-interface</td><td>Disabled — must be manually enabled</td></tr>
-<tr><td>Can run simultaneously?</td><td colspan="2" style="text-align:center">Yes — CDP and LLDP can run at the same time on the same device</td></tr>
-<tr><td>Multicast MAC address</td><td>0100.0CCC.CCCC</td><td>0180.C200.000E</td></tr>
-<tr><td>Message interval</td><td>60 seconds</td><td>30 seconds</td></tr>
-<tr><td>Holdtime</td><td>180 seconds</td><td>120 seconds</td></tr>
-<tr><td>Reinitialization delay</td><td>—</td><td>2 seconds (delays LLDP init after being enabled)</td></tr>
-<tr><td>Forwarded to other devices?</td><td>No — processed and discarded locally</td><td>No — processed and discarded locally</td></tr>
-</tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="cdp">CDP — Cisco Discovery Protocol</h3>
-<p class="body-line">CDP is enabled globally and per-interface by default on all Cisco devices (routers, switches, firewalls, IP phones). CDPv2 is sent by default and provides more detailed device information than CDPv1.</p>
-<pre class="command-line"><code>[no] cdp run                     → enable/disable CDP globally
-[no] cdp enable                  → enable/disable CDP on a specific interface
-cdp timer &lt;seconds&gt;             → change the CDP message interval (default 60 s)
-cdp holdtime &lt;seconds&gt;          → change the holdtime (default 180 s — neighbor removed if no message received)
-[no] cdp advertise-v2           → enable/disable CDPv2 messages</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="lldp">LLDP — Link Layer Discovery Protocol</h3>
-<p class="body-line">LLDP must be manually enabled on Cisco devices. Unlike CDP which is controlled as a single on/off per interface, LLDP transmit and receive are configured independently on each interface.</p>
-<pre class="command-line"><code>[no] lldp run                    → enable/disable LLDP globally
-[no] lldp transmit               → enable/disable LLDP transmission on a specific interface
-[no] lldp receive                → enable/disable LLDP reception on a specific interface
-lldp timer &lt;seconds&gt;            → change the LLDP message interval (default 30 s)
-lldp holdtime &lt;seconds&gt;         → change the holdtime (default 120 s)
-lldp reinit &lt;seconds&gt;           → change the reinitialization delay (default 2 s)</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="cdp-lldp-show">CDP and LLDP Show Commands</h3>
-<pre class="command-line"><code>show cdp                         → global CDP configuration and status
-show cdp traffic                 → CDP packet send/receive statistics
-show cdp interface               → CDP status on each interface
-show cdp neighbors               → summary table of all CDP neighbors
-show cdp neighbors detail        → full details for all CDP neighbors (IP, platform, capabilities)
-show cdp entry &lt;name&gt;           → detailed info for one specific CDP neighbor
-
-show lldp                        → global LLDP configuration and status
-show lldp traffic                → LLDP packet send/receive statistics
-show lldp interface              → LLDP status on each interface
-show lldp neighbors              → summary table of all LLDP neighbors
-show lldp neighbors detail       → full details for all LLDP neighbors
-show lldp entry &lt;name&gt;          → detailed info for one specific LLDP neighbor</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
 <h2 class="major-heading" id="ntp">NTP — Network Time Protocol</h2>
