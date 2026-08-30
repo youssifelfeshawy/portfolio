@@ -27,39 +27,53 @@
 
   const links = [...document.querySelectorAll('.side-nav a[href^="#"]')];
   const targets = links
-    .map(link => document.querySelector(link.getAttribute('href')))
+    .map(link => {
+      const id = decodeURIComponent(link.getAttribute('href').slice(1));
+      return document.getElementById(id);
+    })
     .filter(Boolean);
 
   links.forEach(link => {
-    link.addEventListener('click', () => {
-      links.forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = decodeURIComponent(link.getAttribute('href').slice(1));
+      const target = document.getElementById(id);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        links.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        if (history.pushState) {
+          history.pushState(null, null, `#${id}`);
+        }
+      }
     });
   });
 
-  if ('IntersectionObserver' in window) {
+  if ('IntersectionObserver' in window && targets.length > 0) {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
+        const currentId = entry.target.id;
         links.forEach(link => {
-          link.classList.toggle(
-            'active',
-            link.getAttribute('href') === `#${entry.target.id}`
-          );
+          const linkId = decodeURIComponent(link.getAttribute('href').slice(1));
+          link.classList.toggle('active', linkId === currentId);
         });
       });
-    }, { rootMargin: '-5% 0px -65% 0px' });
+    }, { rootMargin: '-10% 0px -70% 0px' });
 
     targets.forEach(target => observer.observe(target));
   }
 
   document.querySelectorAll('.osi-click-layer').forEach(layer => {
-    layer.addEventListener('click', () => {
+    layer.addEventListener('click', (e) => {
       const href = layer.getAttribute('href');
-      const target = document.querySelector(href);
-      if (target) {
-        setTimeout(() => target.classList.add('anchor-highlight'), 250);
-        setTimeout(() => target.classList.remove('anchor-highlight'), 1500);
+      if (href && href.startsWith('#')) {
+        const id = href.slice(1);
+        const target = document.getElementById(id);
+        if (target) {
+          setTimeout(() => target.classList.add('anchor-highlight'), 250);
+          setTimeout(() => target.classList.remove('anchor-highlight'), 1500);
+        }
       }
     });
   });
