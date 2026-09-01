@@ -734,6 +734,60 @@ show lldp neighbors detail       → view detailed information about all neighbo
 show lldp entry <i>name</i>             → view detailed information about one neighbor
 show lldp traffic                → view LLDP packet statistics</code></pre>
 <aside class="callout"><strong>Note:</strong><p>CDP and LLDP are separate protocols and can operate at the same time on the same Cisco device and interfaces.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="subheading" id="port-security">Port Security</h3>
+<p class="body-line">Port Security is a security feature on Cisco switches that secures access to switchports by controlling which devices are allowed to transmit frames. By limiting and restricting the MAC addresses permitted on an interface, it prevents unauthorized devices from accessing the network and helps protect the switch from malicious attacks.</p>
+<p class="body-line">To enable Port Security, the interface must first be explicitly configured in a static mode (such as access or trunk) rather than a dynamic mode (dynamic desirable or dynamic auto):</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  switchport mode access
+  switchport port-security</code></pre>
+<p class="body-line">The port security feature will dynamically secure the first MAC address it learns upon connection, or an allowed MAC address can be statically specified:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  switchport port-security mac-address <i>mac-address</i></code></pre>
+<p class="body-line">By default, Port Security allows only <code>1</code> MAC address per interface. The maximum number of allowed MAC addresses on an interface can be configured using:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  switchport port-security maximum <i>number</i></code></pre>
+<p class="body-line">However, simply setting a maximum number is not practical on its own; an action must be defined for when an unauthorized device connects. A security violation occurs when a device with an unauthorized MAC address attempts to send traffic through the port, or when the number of learned MAC addresses exceeds the configured maximum. Port Security supports three violation modes:</p>
+<ul class="doc-list">
+  <li><strong>Shutdown (default):</strong> Immediately disables the port and places it into the <code>err-disabled</code> state. It generates a log message and increments the violation counter by 1 (since the port shuts down and cannot receive further packets).</li>
+  <li><strong>Restrict:</strong> Drops frames from unauthorized MAC addresses while allowing legitimate traffic to continue passing. It generates a log message and continuously increments the violation counter for every unauthorized packet received.</li>
+  <li><strong>Protect:</strong> Drops frames from unauthorized MAC addresses while allowing legitimate traffic to pass. Unlike Restrict mode, it drops unauthorized frames silently without generating log messages and without incrementing the violation counter.</li>
+</ul>
+<p class="body-line">To configure the security violation mode on an interface:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  switchport port-security violation {shutdown | restrict | protect}</code></pre>
+<p class="body-line">When the default Shutdown mode is triggered, the switch shuts down the interface and places it in the <code>err-disabled</code> state. The port stops forwarding all traffic until it is recovered.</p>
+<p class="body-line">There are two ways to recover an interface from the <code>err-disabled</code> state:</p>
+<ul class="doc-list">
+  <li><strong>Manual Recovery:</strong> Fix the issue, then issue <code>shutdown</code> followed by <code>no shutdown</code> on the interface.</li>
+  <li><strong>Automatic Recovery:</strong> Configure the switch to automatically re-enable the port after a recovery timer expires.</li>
+</ul>
+<p class="body-line">To configure and verify automatic recovery for port security violations:</p>
+<pre class="command-line"><code>errdisable recovery cause psecure-violation          → enable automatic recovery
+errdisable recovery interval <i>seconds</i>                 → set the recovery timer
+show errdisable recovery                             → verify the configurations</code></pre>
+<p class="body-line">After enabling Port Security, if anyone connects a new device to the port, it will be blocked because by default learned MAC addresses never age out and remain in memory permanently. If the port needs to support different devices over time without manual intervention, a timer can be configured so the switch automatically ages out old addresses and relearns new ones:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  switchport port-security aging time <i>minutes                → default 0 minutes</i></code></pre>
+<p class="body-line">Even with the aging timer configured, manually assigned static MAC addresses do not age out by default. To allow static MAC addresses to also age out on the port:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  switchport port-security aging static</code></pre>
+<p class="body-line">Port Security provides two different aging types to control when the timer clears addresses:</p>
+<ul class="doc-list">
+  <li><strong>Absolute:</strong> Learned MAC addresses are removed once the countdown timer expires, regardless of whether the device is currently active. However, if the device is still connected, it will not be blocked; the system will simply relearn the MAC and reset the timer.</li>
+  <li><strong>Inactivity:</strong> Learned MAC addresses are removed only if no traffic has been received from that device for the specified duration. The timer resets whenever the device transmits.</li>
+</ul>
+<p class="body-line">To configure the aging type on an interface:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  switchport port-security aging type {absolute | inactivity}</code></pre>
+<p class="body-line">While static MAC addresses require manual entry and dynamic MAC addresses are lost upon switch reboot, Sticky MAC addresses combine the advantages of both. When enabled, the switch dynamically learns the connected device's MAC address and automatically converts it into a permanent static configuration saved in the running configuration:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  switchport port-security mac-address sticky</code></pre>
+<aside class="callout"><strong>Note:</strong><p>Sticky secure MAC addresses survive until the device restarts — they are in the running-config, not the startup-config. Run <code>write memory</code> (copy running-config startup-config) to make them permanent across reboots. In the MAC address table: sticky and static entries show type STATIC; dynamically learned secure entries show type DYNAMIC.</p></aside>
+<p class="body-line">To verify Port Security settings, learned MAC addresses, and violation counts:</p>
+<pre class="command-line"><code>show port-security [interface <i>interface-id</i> | address]
+show mac address-table secure                 → list secured MAC address entries</code></pre>
 
 <h2 class="major-heading" id="layer-3">Layer 3: Network Layer</h2>
 <p class="body-line">While Layer 2 handles communication within a local network, Layer 3 allows data to travel between different networks. It provides the addressing and path-selection mechanisms needed to move packets from one network to another.</p>
@@ -1277,6 +1331,92 @@ show ipv6 route                       → view the IPv6 routing table</code></pr
 <tr><td>514</td><td>Syslog</td><td>UDP</td><td>Sends event log messages across the network to a central logging server.</td></tr>
 </tbody></table></div>
 
+<h3 class="subheading" id="acls">ACLs</h3>
+<p class="body-line">ACLs (Access Control Lists) are sequential lists of permit and deny statements, known as Access Control Entries (ACEs), used to filter network traffic. ACLs examine packets passing through an interface and determine whether to permit or drop them based on criteria like source IP, destination IP, protocol, and port numbers.</p>
+<ul class="doc-list">
+  <li><strong>Top-to-Bottom Processing:</strong> Packets are tested against each statement in order. As soon as a match is found, the router takes the specified action (permit or deny) and stops checking the rest of the list.</li>
+  <li><strong>Implicit Deny:</strong> Every ACL has an invisible, automatic deny rule at the very end. If a packet does not match any permit rule in the list, it is dropped.</li>
+  <li><strong>Direction:</strong> An ACL must be applied to an interface as either inbound (filtered before routing) or outbound (filtered after the routing decision is made). Only one ACL per direction can be applied to an interface (one inbound and one outbound).</li>
+</ul>
+<div class="table-wrap"><table><thead><tr><th>ACL Category</th><th>Matching Criteria</th><th>Numbered Range</th><th>Recommended Placement</th></tr></thead><tbody>
+<tr><td><strong>Standard ACL</strong></td><td>Source IP address only</td><td><code>1–99</code> and <code>1300–1999</code></td><td>Placed as close to the <strong>destination</strong> as possible (so it does not accidentally block traffic intended for other destinations).</td></tr>
+<tr><td><strong>Extended ACL</strong></td><td>Source IP, Destination IP, Protocol (TCP, UDP, ICMP), and Port numbers</td><td><code>100–199</code> and <code>2000–2699</code></td><td>Placed as close to the <strong>source</strong> as possible (to drop unwanted traffic early and save network bandwidth).</td></tr>
+</tbody></table></div>
+<p class="body-line">Standard ACLs filter traffic based solely on the source IP address. Originally, they were configured strictly using numbered syntax in global configuration mode:</p>
+<pre class="command-line"><code>access-list <i>acl-number</i> {permit|deny} <i>ip-address wildcard-mask</i>
+access-list <i>number</i> remark <i>description</i>             → add a description to the ACL</code></pre>
+<p class="body-line">Later, Cisco IOS introduced named ACL mode, which provides a dedicated configuration mode with sequence numbers. Modern IOS also allows numbered ACLs to be configured using this same named mode syntax:</p>
+<pre class="command-line"><code>ip access-list standard {<i>acl-name</i> | <i>acl-number</i>}
+  [<i>seq-number</i>] {permit|deny} <i>ip-address wildcard-mask</i></code></pre>
+<p class="body-line">Extended ACLs provide fine-grained traffic filtering by matching multiple parameters simultaneously, including source IP, destination IP, protocol, and port numbers. A packet must match all specified parameters in a statement; if even one parameter does not match, the router skips to the next ACE.</p>
+<p class="body-line">Like standard ACLs, extended ACLs were initially configured using traditional numbered syntax in global configuration mode:</p>
+<pre class="command-line"><code>access-list <i>acl-number</i> {permit|deny} <i>protocol src-ip wildcard dst-ip wildcard</i></code></pre>
+<p class="body-line">They can also be configured using the modern extended mode, which supports names or numbers and allows sequence number editing:</p>
+<pre class="command-line"><code>ip access-list extended {<i>acl-name</i> | <i>acl-number</i>}
+  [<i>seq-number</i>] {permit|deny} <i>protocol src-ip wildcard</i> [<i>operator port</i>] <i>dst-ip wildcard</i> [<i>operator port</i>]</code></pre>
+<p class="body-line">When the protocol is TCP or UDP, you can optionally specify source and/or destination ports after the IP addresses:</p>
+<div class="table-wrap"><table><thead><tr><th>Operator</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>eq <code><i>port</i></code></td><td>Equal to the specified port number</td></tr>
+<tr><td>gt <code><i>port</i></code></td><td>Greater than the specified port number</td></tr>
+<tr><td>lt <code><i>port</i></code></td><td>Less than the specified port number</td></tr>
+<tr><td>neq <code><i>port</i></code></td><td>Not equal to the specified port number</td></tr>
+<tr><td>range <code><i>port1</i></code> <code><i>port2</i></code></td><td>From port 1 to port 2 (inclusive)</td></tr>
+</tbody></table></div>
+<aside class="callout"><strong>Note:</strong><p>Configuring a numbered ACL using the named syntax (<code>ip access-list {standard | extended} <i>acl-number</i></code>) gives access to named ACL subcommands, allowing you to delete individual entries or insert rules by sequence number. In the running-config, the ACL will still display in the traditional numbered format.</p></aside>
+<p class="body-line">When creating rules, it is recommended to space sequence numbers by increments of 10 to leave empty space for inserting new rules later. Named mode syntax allows editing rules in the middle of a list:</p>
+<ul class="doc-list">
+  <li><strong>Delete individual entries:</strong> Use <code>no &lt;sequence-number&gt;</code> inside the ACL config mode. In global config mode, individual numbered entries cannot be deleted—only the entire ACL can be removed with <code>no access-list &lt;number&gt;</code>.</li>
+  <li><strong>Insert entries between existing ones:</strong> Specify a sequence number between two existing entries to place a new rule at that exact position.</li>
+</ul><p class="body-line">To resequence rule numbers and restore clean spacing between entries:</p>
+<pre class="command-line"><code>ip access-list resequence {<i>acl-name</i> | <i>acl-number</i>} <i>starting-seq-num increment</i></code></pre>
+<p class="body-line">Creating an ACL only defines the filtering rules. For the ACL to actively filter traffic, it must be applied to an interface in either the inbound or outbound direction:</p>
+<pre class="command-line"><code>interface <i>interface-id</i>
+  ip access-group {<i>acl-name</i> | <i>acl-number</i>} {in | out}</code></pre>
+<p class="body-line">To view all configured ACLs and their entries:</p>
+<pre class="command-line"><code>show access-lists</code></pre>
+<aside class="callout"><strong>Note:</strong><p>Use the <code>ip</code> protocol keyword to match all IP traffic. For addressing, use <code>any</code> in place of an IP address and wildcard mask to match all addresses, or use <code>host</code> before a specific IP address to match a single device.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="subheading" id="nat">NAT</h3>
+<p class="body-line">NAT (Network Address Translation) is a short-term solution to IPv4 address exhaustion, alongside VLSM and private IPv4 addressing.</p>
+<p class="body-line">RFC 1918 defines the following private IPv4 ranges, which are intended for internal use and are not routable on the internet:</p>
+<div class="table-wrap"><table><thead><tr><th>Range</th><th>CIDR Block</th><th>Address Space</th></tr></thead><tbody>
+<tr><td>Class A private</td><td>10.0.0.0/8</td><td>10.0.0.0 – 10.255.255.255</td></tr>
+<tr><td>Class B private</td><td>172.16.0.0/12</td><td>172.16.0.0 – 172.31.255.255</td></tr>
+<tr><td>Class C private</td><td>192.168.0.0/16</td><td>192.168.0.0 – 192.168.255.255</td></tr></tbody></table></div>
+<p class="body-line">NAT modifies the source and/or destination IP address of packets as they pass through a router. Most commonly, it translates private inside addresses into public addresses so internal hosts can communicate with external networks. NAT can use a permanent mapping, a dynamically assigned public address, or port numbers to allow multiple hosts to share a public address.</p>
+<p class="body-line">Before configuring NAT, the router interfaces must be identified as inside or outside, and the four NAT address terms describe how each address is viewed from the inside and outside networks:</p>
+<div class="table-wrap"><table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody>
+<tr><td>Inside Local</td><td>The address of an inside host as seen from the internal network. Usually the private address configured on the host.</td></tr>
+<tr><td>Inside Global</td><td>The address of an inside host as seen from the external network. Usually the public address assigned by NAT.</td></tr>
+<tr><td>Outside Local</td><td>The address of an outside host as seen from the host's internal network.</td></tr>
+<tr><td>Outside Global</td><td>The address of an outside host as seen from the external network.</td></tr></tbody></table></div>
+<p class="body-line">These terms are used to identify how NAT views each address, while the router interfaces must be configured as either inside or outside:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  ip nat {inside | outside}</code></pre>
+<aside class="callout"><strong>Note:</strong><p>Unless destination NAT is used, Outside Local and Outside Global will be the same address. The Inside/Outside portion refers to the location of the host. The Local/Global portion refers to the perspective from which the address is seen.</p></aside>
+<p class="body-line">With these terms and interfaces defined, the router needs a rule to follow. In upcoming configurations, the <code>inside source</code> parameter is used to translate the source IP of traffic leaving the inside network. It also reverses the process for returning traffic: the destination IP address is translated from the inside global address back to the original inside local address. NAT can be configured using three main methods:</p>
+<h4 class="subheading" id="static-nat">1. Static NAT</h4>
+<p class="body-line">Static NAT creates a permanent one-to-one mapping between an inside local address and an inside global address. Each internal host requires a dedicated public IP, so static NAT does not conserve public addresses. However, the permanent mapping allows external hosts to initiate connections to the internal host using its inside global address.</p>
+<pre class="command-line"><code>ip nat inside source static <i>inside-local-ip inside-global-ip</i></code></pre>
+<h4 class="subheading" id="dynamic-nat">2. Dynamic NAT</h4>
+<p class="body-line">Dynamic NAT creates temporary one-to-one mappings by assigning inside local addresses a public address from a configured pool. An ACL determines which source addresses are eligible for translation. Traffic permitted by the ACL is translated, while denied traffic is not translated by NAT.</p>
+<pre class="command-line"><code>access-list <i>acl-number</i> permit <i>ip-address wildcard-mask</i>
+ip nat pool <i>pool-name first-ip last-ip</i> {prefix-length <i>prefix</i> | netmask <i>netmask</i>}
+ip nat inside source list <i>acl-number</i> pool <i>pool-name</i></code></pre>
+<p class="body-line">If all addresses in the pool are in use, new connections requiring NAT cannot be translated. This is called NAT pool exhaustion. The host cannot access outside networks until an address becomes available. Dynamic NAT entries time out when they are no longer in use and can also be cleared manually.</p>
+<h4 class="subheading" id="pat">3. PAT</h4>
+<p class="body-line">PAT (Port Address Translation), also known as NAT Overload, extends NAT by translating the source IP address and port number. Because each communication flow can be identified by a unique port number, many internal hosts can share the same public IP address simultaneously. PAT is the most common form of NAT and is widely used by home and enterprise routers.</p>
+<p class="body-line">PAT can use a pool of public IP addresses while allowing multiple internal hosts to share each address through port translation:</p>
+<pre class="command-line"><code>ip nat pool <i>pool-name first-ip last-ip</i> {prefix-length <i>prefix</i> | netmask <i>netmask</i>}
+ip nat inside source list <i>acl-number</i> pool <i>pool-name</i> overload</code></pre>
+<p class="body-line">Instead of a public IP pool, PAT can use the IP address configured on the router's outside interface. All internal hosts then share that single public IP, with port numbers distinguishing their individual connections.</p>
+<pre class="command-line"><code>ip nat inside source list <i>acl-number</i> interface <i>outside-interface</i> overload</code></pre>
+<p class="body-line">The following commands can be used to verify and manage the NAT translations:</p>
+<pre class="command-line"><code>show ip nat translations                 → view current NAT translation entries
+show ip nat statistics                   → view NAT configuration and statistics
+clear ip nat translation *               → clear all dynamic NAT translations</code></pre>
+
 
 
     </section>
@@ -1292,14 +1432,3 @@ show ipv6 route                       → view the IPv6 routing table</code></pr
   <script src="network.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-

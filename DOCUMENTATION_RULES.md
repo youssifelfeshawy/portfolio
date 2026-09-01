@@ -8,6 +8,7 @@ This document defines the core pedagogical philosophy, formatting rules, structu
 
 * **Introduce terms only when needed**: Every new concept or term must appear only when the reader actually needs it to understand the current step.
 * **Complete explanations immediately**: Once a term is introduced, explain it fully on the spot. Never postpone definitions to later sections, and never forward-reference terms that have not yet been taught (e.g., do *not* mention "ephemeral range" in the definition of Source Port before the port ranges section has been introduced).
+* **Layer-Appropriate Terminology**: Do not mention higher-layer protocols in early layers before they are formally introduced (e.g., say "generates a log message" instead of "Syslog alert" in Layer 2 Port Security, since Syslog is taught in Layer 7).
 * **No premature examples**: Avoid cluttering basic definitions with examples if a dedicated reference table or in-depth subsection follows immediately below. Prioritize deep, thorough mechanical explanation over adding arbitrary examples.
 * **No definition redundancy**: Do not provide parenthetical definitions for terms that were already established earlier in the document (e.g., do *not* write `hosts (computers and servers)` because "host" is already known).
 
@@ -39,6 +40,14 @@ This document defines the core pedagogical philosophy, formatting rules, structu
   3. **3-Way Handshake**: Explain how the session opens (`SYN` → `SYN-ACK` → `ACK`).
   4. **4-Way Handshake**: Explain how the session terminates (`FIN` → `ACK` → `FIN` → `ACK`).
   5. **Flow Control & Window Size Callout**: A concise callout note at the end of the section explaining sliding window dynamics (sending multiple segments before waiting for ACK, throttling down to 0 on buffer full).
+* **Port Security Narrative Flow**:
+  1. Intro (protecting switch without naming attacks) → Prerequisite switchport mode (`access` or `trunk`) and enable command.
+  2. Maximum MACs (default 1) and configuration command.
+  3. Violation modes in bullet points (Shutdown vs. Restrict vs. Protect), highlighting differences in traffic dropping, log generation, and violation counter incrementing (Shutdown increments by 1 on disable; Restrict increments continuously per packet; Protect does not increment).
+  4. `err-disabled` state and recovery (manual vs. automatic timer).
+  5. MAC Aging progression: explain why aging is needed (default never ages out, blocking new devices), `aging time`, `aging static`, and aging types (`absolute` vs. `inactivity`).
+  6. Sticky MAC learning.
+  7. Verification show commands.
 * **No standalone duplicate comparison tables**: Integrate comparisons smoothly into the narrative and tables without creating separate, redundant comparison tables that just repeat previously stated facts.
 
 ---
