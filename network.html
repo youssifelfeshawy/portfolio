@@ -257,10 +257,10 @@ write memory</code></pre>
     </div>
     
 <div class="doc-spacer" aria-hidden="true"></div>
-<article class="osi-text-card" id="layer-7"><span>7</span><p>Layer 7 — Application: provides the interfaces and protocols needed by the user&#x27;s software, enabling applications on different end-systems to communicate. Examples: HTTP (Hypertext Transfer Protocol), DNS (Domain Name System), FTP (File Transfer Protocol), SMTP (Simple Mail Transfer Protocol).</p></article>
-<article class="osi-text-card" id="layer-6"><span>6</span><p>Layer 6 — Presentation: translates data between the application&#x27;s format and a standard network format. Also handles encryption, decryption, compression, and decompression. Examples: SSL/TLS (Secure Sockets Layer / Transport Layer Security), JPEG, ASCII.</p></article>
-<article class="osi-text-card" id="layer-5"><span>5</span><p>Layer 5 — Session: establishes, maintains, and terminates communication sessions between two applications. Examples: NetBIOS, RPC (Remote Procedure Call).</p></article>
-<article class="osi-text-card" id="layer-4"><span>4</span><p>Layer 4 — Transport: provides end-to-end delivery of data between applications. Handles segmentation, error recovery, and flow control. Adds a header containing source and destination port numbers. Examples: TCP (Transmission Control Protocol), UDP (User Datagram Protocol).</p></article>
+<article class="osi-text-card osi-summary-card" id="layer-7-summary"><span>7</span><p>Layer 7 — Application: provides the interfaces and protocols needed by the user&#x27;s software, enabling applications on different end-systems to communicate. Examples: HTTP (Hypertext Transfer Protocol), DNS (Domain Name System), FTP (File Transfer Protocol), SMTP (Simple Mail Transfer Protocol).</p></article>
+<article class="osi-text-card osi-summary-card" id="layer-6-summary"><span>6</span><p>Layer 6 — Presentation: translates data between the application&#x27;s format and a standard network format. Also handles encryption, decryption, compression, and decompression. Examples: SSL/TLS (Secure Sockets Layer / Transport Layer Security), JPEG, ASCII.</p></article>
+<article class="osi-text-card osi-summary-card" id="layer-5-summary"><span>5</span><p>Layer 5 — Session: establishes, maintains, and terminates communication sessions between two applications. Examples: NetBIOS, RPC (Remote Procedure Call).</p></article>
+<article class="osi-text-card osi-summary-card" id="layer-4-summary"><span>4</span><p>Layer 4 — Transport: provides end-to-end delivery of data between applications. Handles segmentation, error recovery, and flow control. Adds a header containing source and destination port numbers. Examples: TCP (Transmission Control Protocol), UDP (User Datagram Protocol).</p></article>
 <article class="osi-text-card osi-summary-card" id="layer-3-summary"><span>3</span><p>Layer 3 — Network: handles logical addressing and routing of packets across different networks through intermediate routers. Adds a header containing source and destination IP (Internet Protocol) addresses. Examples: IPv4 (Internet Protocol version 4), IPv6, OSPF (Open Shortest Path First).</p></article>
 <article class="osi-text-card osi-summary-card" id="layer-2-summary"><span>2</span><p>Layer 2 — Data Link: handles communication between two directly connected devices on the same local network. Creates frames by adding a header (source and destination MAC (Media Access Control) addresses) and a trailer (FCS (Frame Check Sequence) for error detection). Examples: Ethernet, Wi-Fi (802.11).</p></article>
 <article class="osi-text-card osi-summary-card" id="layer-1-summary"><span>1</span><p>Layer 1 — Physical: converts frames into raw bits and transmits them over the physical medium — electrical signals in copper cable, light pulses in fiber optic cable, or electromagnetic waves in wireless.</p></article>
@@ -812,7 +812,13 @@ show mac address-table secure                 → list secured MAC address entri
 </ul>
 <p class="body-line">The subnet mask contains 1s for the network portion followed by 0s for the host portion. The same information is expressed using a prefix length, which represents the number of network bits and is written in slash notation.</p>
 <div class="table-wrap"><table><thead><tr><th>Class</th><th>Default Subnet Mask</th><th>Default Prefix</th><th>Binary Subnet Mask</th><th>Network Bits</th><th>Host Bits</th></tr></thead><tbody><tr><td>Class A</td><td>255.0.0.0</td><td>/8</td><td>11111111.00000000.00000000.00000000</td><td>8</td><td>24</td></tr><tr><td>Class B</td><td>255.255.0.0</td><td>/16</td><td>11111111.11111111.00000000.00000000</td><td>16</td><td>16</td></tr><tr><td>Class C</td><td>255.255.255.0</td><td>/24</td><td>11111111.11111111.11111111.00000000</td><td>24</td><td>8</td></tr></tbody></table></div>
-<p class="body-line">The fixed classful masks were inefficient because organizations were forced to use one of only a few network sizes. A network that needed more than 254 hosts could no longer use a Class C network and might have to receive a much larger Class B network, wasting thousands of addresses.</p>
+<p class="body-line">The fixed classful masks were inefficient because organizations were forced to use one of only a few network sizes. A network that needed more than 254 hosts could no longer use a Class C network and might have to receive a much larger Class B network, wasting thousands of addresses. As the number of internet-connected devices continued to grow, IPv4 address exhaustion became an increasing problem, leading to several short-term solutions.</p>
+<p class="body-line">One of these solutions was the use of private IPv4 addresses. Private addresses are not routable on the internet and can be used internally by organizations without requiring each address to be globally registered or unique. The same private address ranges can therefore be reused by different organizations, significantly reducing the need for globally unique public IPv4 addresses. The following IPv4 ranges are reserved for private networks:</p>
+<div class="table-wrap"><table><thead><tr><th>Range</th><th>CIDR Block</th><th>Address Space</th></tr></thead><tbody>
+<tr><td>Class A private</td><td>10.0.0.0/8</td><td>10.0.0.0 – 10.255.255.255</td></tr>
+<tr><td>Class B private</td><td>172.16.0.0/12</td><td>172.16.0.0 – 172.31.255.255</td></tr>
+<tr><td>Class C private</td><td>192.168.0.0/16</td><td>192.168.0.0 – 192.168.255.255</td></tr></tbody></table></div>
+<p class="body-line">However, private addressing alone did not eliminate the inefficient use of IPv4 addresses. Organizations could still be forced to allocate more addresses than they actually needed because the classful system provided only fixed network sizes. CIDR is another short-term solution that was introduced to use the available IPv4 address space more efficiently.</p>
 <p class="body-line">CIDR (Classless Inter-Domain Routing) replaced this fixed classful system by allowing the network portion to use any suitable prefix length. A larger prefix creates a smaller subnet, while a smaller prefix creates a larger subnet.</p>
 <p class="body-line">CIDR allows networks to be divided using two subnetting methods:</p>
 <ul class="doc-list">
@@ -1270,7 +1276,7 @@ show ipv6 route                       → view the IPv6 routing table</code></pr
 <tr><td>1024 – 49151</td><td>Registered Ports</td><td>Assigned or registered by software vendors for specific third-party applications and services.</td></tr>
 <tr><td>49152 – 65535</td><td>Dynamic / Ephemeral Ports</td><td>Allocated automatically by client operating systems as temporary source ports for outbound connections.</td></tr>
 </tbody></table></div>
-<h3 class="subheading" id="tcp">1. TCP</h3>
+<h4 class="subheading" id="tcp">1. TCP</h4>
 <p class="body-line">TCP (Transmission Control Protocol) is a connection-oriented, reliable transport protocol designed to deliver data accurately between applications. It establishes and maintains a verified connection between endpoints throughout the session. To guarantee reliability, TCP tracks sent data using sequence numbers and requires the receiver to acknowledge every received segment; if an acknowledgment is not received within a timeout period, the sender automatically retransmits the missing segment.</p>
 <p class="body-line">Data in TCP is encapsulated into segments. The TCP header contains various control fields to manage this transmission:</p>
 <figure class="overview-figure-block figure-with-image"><img src="assets/new images/tcp_segment_header.png" alt="TCP Segment Header 32-Bit Field Layout"></figure>
@@ -1301,7 +1307,7 @@ show ipv6 route                       → view the IPv6 routing table</code></pr
   <li><strong>ACK:</strong> The sender acknowledges the receiver's FIN, and the connection is closed.</li>
 </ol>
 <aside class="callout"><strong>Note:</strong><p>Window Size field is used to regulate transmission speed and prevent receiver buffer overflow. The sender can transmit multiple segments up to the advertised window size before requiring an acknowledgment. If the receiver's buffer fills, it reduces this window size—even down to zero—to throttle or pause the sender.</p></aside>
-<h3 class="subheading" id="udp">2. UDP</h3>
+<h4 class="subheading" id="udp">2. UDP</h4>
 <p class="body-line">UDP (User Datagram Protocol) is a connectionless, lightweight transport protocol. It does not establish a connection, send handshakes, track sequence numbers, or require acknowledgments. Instead, it sends datagrams immediately with minimal latency and a small, fixed 8-byte header.</p>
 <figure class="overview-figure-block figure-with-image"><img src="assets/new images/udp_datagram_header.png" alt="UDP Datagram Header 64-Bit Field Layout"></figure>
 <div class="doc-spacer" aria-hidden="true"></div>
@@ -1313,7 +1319,7 @@ show ipv6 route                       → view the IPv6 routing table</code></pr
 </tbody></table></div>
 <p class="body-line">Because of its speed and low overhead, UDP is ideal for real-time applications—such as voice calls, live video streaming, and online gaming—where low latency is critical and delayed or retransmitted packets are useless. It is also well-suited for simple query-and-response protocols where the entire exchange fits within a single packet, making connection handshakes an unnecessary overhead.</p>
 <aside class="callout"><strong>Note:</strong><p>Some applications use UDP but implement their own reliability mechanisms at the application layer. Some applications use both TCP and UDP depending on the situation.</p></aside>
-<h3 class="subheading" id="well-known-ports">Common Well-Known Ports</h3>
+<h4 class="subheading" id="well-known-ports">Common Well-Known Ports</h4>
 <div class="table-wrap"><table><thead><tr><th>Port</th><th>Protocol</th><th>Transport</th><th>Description</th></tr></thead><tbody>
 <tr><td>20 / 21</td><td>FTP (File Transfer Protocol)</td><td>TCP</td><td>Transfers files between client and server (Port 20 for data, Port 21 for control commands).</td></tr>
 <tr><td>22</td><td>SSH (Secure Shell)</td><td>TCP</td><td>Encrypted remote command-line administration.</td></tr>
@@ -1378,13 +1384,7 @@ access-list <i>number</i> remark <i>description</i>             → add a descri
 <div class="doc-spacer" aria-hidden="true"></div>
 
 <h3 class="subheading" id="nat">NAT</h3>
-<p class="body-line">NAT (Network Address Translation) is a short-term solution to IPv4 address exhaustion, alongside VLSM and private IPv4 addressing.</p>
-<p class="body-line">RFC 1918 defines the following private IPv4 ranges, which are intended for internal use and are not routable on the internet:</p>
-<div class="table-wrap"><table><thead><tr><th>Range</th><th>CIDR Block</th><th>Address Space</th></tr></thead><tbody>
-<tr><td>Class A private</td><td>10.0.0.0/8</td><td>10.0.0.0 – 10.255.255.255</td></tr>
-<tr><td>Class B private</td><td>172.16.0.0/12</td><td>172.16.0.0 – 172.31.255.255</td></tr>
-<tr><td>Class C private</td><td>192.168.0.0/16</td><td>192.168.0.0 – 192.168.255.255</td></tr></tbody></table></div>
-<p class="body-line">NAT modifies the source and/or destination IP address of packets as they pass through a router. Most commonly, it translates private inside addresses into public addresses so internal hosts can communicate with external networks. NAT can use a permanent mapping, a dynamically assigned public address, or port numbers to allow multiple hosts to share a public address.</p>
+<p class="body-line">NAT (Network Address Translation) is a short-term solution to IPv4 address exhaustion, alongside VLSM and private IPv4 addressing. NAT modifies the source and/or destination IP address of packets as they pass through a router. Most commonly, it translates private inside addresses into public addresses so internal hosts can communicate with external networks. NAT can use a permanent mapping, a dynamically assigned public address, or port numbers to allow multiple hosts to share a public address.</p>
 <p class="body-line">Before configuring NAT, the router interfaces must be identified as inside or outside, and the four NAT address terms describe how each address is viewed from the inside and outside networks:</p>
 <div class="table-wrap"><table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody>
 <tr><td>Inside Local</td><td>The address of an inside host as seen from the internal network. Usually the private address configured on the host.</td></tr>
