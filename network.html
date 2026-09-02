@@ -1408,15 +1408,108 @@ ip nat inside source list <i>acl-number</i> pool <i>pool-name</i></code></pre>
 <h4 class="subheading" id="pat">3. PAT</h4>
 <p class="body-line">PAT (Port Address Translation), also known as NAT Overload, extends NAT by translating the source IP address and port number. Because each communication flow can be identified by a unique port number, many internal hosts can share the same public IP address simultaneously. PAT is the most common form of NAT and is widely used by home and enterprise routers.</p>
 <p class="body-line">PAT can use a pool of public IP addresses while allowing multiple internal hosts to share each address through port translation:</p>
-<pre class="command-line"><code>ip nat pool <i>pool-name first-ip last-ip</i> {prefix-length <i>prefix</i> | netmask <i>netmask</i>}
+<pre class="command-line"><code>access-list <i>acl-number</i> permit <i>ip-address wildcard-mask</i>
+ip nat pool <i>pool-name first-ip last-ip</i> {prefix-length <i>prefix</i> | netmask <i>netmask</i>}
 ip nat inside source list <i>acl-number</i> pool <i>pool-name</i> overload</code></pre>
 <p class="body-line">Instead of a public IP pool, PAT can use the IP address configured on the router's outside interface. All internal hosts then share that single public IP, with port numbers distinguishing their individual connections.</p>
-<pre class="command-line"><code>ip nat inside source list <i>acl-number</i> interface <i>outside-interface</i> overload</code></pre>
+<pre class="command-line"><code>access-list <i>acl-number</i> permit <i>ip-address wildcard-mask</i>
+ip nat inside source list <i>acl-number</i> interface <i>outside-interface</i> overload</code></pre>
 <p class="body-line">The following commands can be used to verify and manage the NAT translations:</p>
 <pre class="command-line"><code>show ip nat translations                 → view current NAT translation entries
 show ip nat statistics                   → view NAT configuration and statistics
 clear ip nat translation *               → clear all dynamic NAT translations</code></pre>
 
+<h3 class="subheading" id="qos">QoS</h3>
+<p class="body-line">Modern networks carry voice, video, and data traffic over the same cable. Because these traffic types have different requirements, they cannot always be treated equally during congestion. QoS (Quality of Service) is a set of tools that allows network devices to classify, mark, queue, and schedule traffic differently so that delay-sensitive traffic such as voice and video receives appropriate treatment. QoS manages several important traffic characteristics, including:</p>
+<ul class="doc-list">
+  <li><strong>Bandwidth:</strong> The total capacity of a link in bits per second. QoS can reserve or allocate bandwidth for different traffic classes.</li>
+  <li><strong>Delay:</strong> The time required for traffic to travel from the source to the destination. One-way delay measures the time in one direction, while two-way delay measures the round-trip time.</li>
+  <li><strong>Jitter:</strong> The variation in delay between packets from the same application. Network devices may use a jitter buffer to smooth out variable delays.</li>
+  <li><strong>Loss:</strong> The percentage of packets that do not reach their destination.</li>
+</ul>
+<aside class="callout"><strong>Note:</strong><p>Audio quality will noticeably degrade if the network exceeds a one-way delay of 150 milliseconds, a jitter level of 30 milliseconds, or a packet loss rate of 1%.</p></aside>
+<p class="body-line">QoS relies on traffic classification to identify the type of data and determine how it should be treated. Traffic can be classified using an ACL, which identifies traffic based on information such as source and destination IP addresses and protocols, or NBAR (Network Based Application Recognition), which performs deep packet inspection up to Layer 7 to identify specific applications or protocols.</p>
+<p class="body-line">At Layer 2, QoS can use PCP to mark the priority of Ethernet traffic. PCP uses a 3-bit field in an 802.1Q tag, providing eight possible priority values from 0 to 7:</p>
+<div class="table-wrap"><table><thead><tr><th>PCP Value</th><th>Priority</th><th>Typical Use</th></tr></thead><tbody>
+<tr><td>0</td><td>Best Effort</td><td>Regular traffic</td></tr>
+<tr><td>1</td><td>Background</td><td>Background traffic</td></tr>
+<tr><td>2</td><td>Excellent Effort</td><td>Better-than-best-effort traffic</td></tr>
+<tr><td>3</td><td>Critical Applications</td><td>Critical application traffic</td></tr>
+<tr><td>4</td><td>Video</td><td>Video traffic</td></tr>
+<tr><td>5</td><td>Voice</td><td>Voice traffic</td></tr>
+<tr><td>6</td><td>Internetwork Control</td><td>Internetwork control traffic</td></tr>
+<tr><td>7</td><td>Network Control</td><td>Network control traffic</td></tr>
+</tbody></table></div>
+<aside class="callout"><strong>Note:</strong><p>Although tagging is generally found only on trunk links and not on standard access ports, it is also used when an access port is configured with a voice VLAN.</p></aside>
+<p class="body-line">While PCP just operates a Layer 2, DSCP is therefore used at Layer 3. DSCP uses 6 bits in the IP header, providing 64 possible values and allowing QoS markings to be carried across routed networks. The main DSCP marking standards are Default Forwarding (DF), Expedited Forwarding (EF), Assured Forwarding (AF), and Class Selector (CS).</p>
+<p class="body-line">DF uses all six DSCP bits as zero: <code>000000</code>, giving a decimal value of 0. It represents normal best-effort traffic. EF uses the DSCP value 46 <code>101110</code>. It is designed for traffic requiring low loss, low latency, and low jitter, and is typically used for voice traffic.</p>
+<p class="body-line">AF divides the six DSCP bits into three parts: 3 bits for the class, 2 bits for drop precedence, and 1 bit that is always zero</strong>. AF markings are written as <code>AFxy</code>, where <code>x</code> represents the class from 1 to 4 and <code>y</code> represents the drop precedence from 1 to 3.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/assured_forwarding.png" alt="Assured Forwarding Class and Drop Precedence Matrix"></figure>
+<p class="body-line">For example, <strong>AF11</strong> means class 1 and drop precedence 1. The three class bits for class 1 are <code>001</code>, the two drop-precedence bits for level 1 are <code>01</code>, and the final bit is always <code>0</code>:</p>
+<pre class="command-line"><code>AF11 → 001 01 0 → 001010</code></pre>
+<p class="body-line">The binary value <code>001010</code> equals <strong>10</strong> in decimal. A convenient formula for converting an AF marking to its DSCP decimal value is:</p>
+<pre class="command-line"><code>DSCP = 8x + 2y</code></pre>
+<p class="body-line">For AF11, <code>x = 1</code> and <code>y = 1</code>:</p>
+<pre class="command-line"><code>DSCP = (8 × 1) + (2 × 1) = 10</code></pre>
+<p class="body-line">Lastly CS markings provide backward compatibility with the older IP Precedence (IPP) field. IPP used only 3 bits, giving values from 0 to 7. CS uses those same three bits as the first three bits of the six-bit DSCP field and sets the remaining three bits to zero.</p>
+<div class="table-wrap"><table><thead><tr><th>IPP</th><th>CS</th><th>DSCP Value</th><th>Binary</th></tr></thead><tbody>
+<tr><td>0</td><td>CS0</td><td>0</td><td>000000</td></tr>
+<tr><td>1</td><td>CS1</td><td>8</td><td>001000</td></tr>
+<tr><td>2</td><td>CS2</td><td>16</td><td>010000</td></tr>
+<tr><td>3</td><td>CS3</td><td>24</td><td>011000</td></tr>
+<tr><td>4</td><td>CS4</td><td>32</td><td>100000</td></tr>
+<tr><td>5</td><td>CS5</td><td>40</td><td>101000</td></tr>
+<tr><td>6</td><td>CS6</td><td>48</td><td>110000</td></tr>
+<tr><td>7</td><td>CS7</td><td>56</td><td>111000</td></tr>
+</tbody></table></div>
+<p class="body-line">Because the three IPP bits become the first three DSCP bits, the DSCP value can be calculated by multiplying the IPP value by 8:</p>
+<pre class="command-line"><code>DSCP = IPP × 8</code></pre>
+<aside class="callout"><strong>Note:</strong><p>CS0 and DSCP 0 are the same marking as DF (Default Forwarding). Therefore, although CS provides eight possible values from CS0 to CS7, only seven represent distinct markings beyond the separate DF name.</p></aside>
+<p class="body-line">A common example of QoS marking is an IP phone connected to a switch. An IP phone is an IP endpoint for its voice traffic and contains an internal 3-port switch, allowing both the phone and a connected PC to use a single switch port:</p>
+<ul class="doc-list">
+  <li>Port 1 — uplink to the external switch.</li>
+  <li>Port 2 — downlink to the connected PC.</li>
+  <li>Port 3 — internal connection to the phone itself.</li>
+</ul>
+<figure class="overview-figure-block figure-with-image"><img src="assets/ip-phone_structure.png" alt="IP phone Structure"></figure>
+<p class="body-line">This arrangement allows the same Ethernet connection to provide power to the IP phone through PoE (Power over Ethernet). The switch acts as the PSE (Power Sourcing Equipment), supplying DC power over the Ethernet cable to the phone, which acts as the PD (Powered Device). This eliminates the need for a separate power supply for the phone.</p>
+<p class="body-line">When a device is connected to a PoE-enabled port, the switch sends low-power signals and monitors the response to determine whether the device needs power and how much. If power is needed, the switch supplies it and continues monitoring to ensure the PD does not draw more than its allocated amount.</p>
+<p class="body-line">To monitor and control this power draw, PoE policing can be configured on the interface:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  power inline police                           → enable power policing
+  power inline police action log                → change the default behavior
+</code></pre>
+<p class="body-line">By default, enabling power inline police will err-disable the port and send alerts if the PD draws too much power. Adding the <code>action log</code> modifier changes this behavior, forcing the interface to restart and log the event instead of going into a permanent err-disabled state.</p>
+<p class="body-line">To view PoE policing configuration on an interface:</p>
+<pre class="command-line"><code>show power inline police <i>interface-id</i></code></pre>
+<p class="body-line">Additionally because of this shared connection, the PC's data traffic passes through the phone to the switch, while the phone generates its own voice traffic. The switch separates these traffic types using a data VLAN and a voice VLAN. Data traffic from the PC is sent untagged, while voice traffic from the phone is tagged with the voice VLAN ID:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  switchport mode access
+  switchport access vlan <i>data-vlan-number</i>
+  switchport voice vlan <i>voice-vlan-number</i></code></pre>
+<p class="body-line">Verify the access and voice VLAN configuration:</p>
+<pre class="command-line"><code>show interfaces <i>interface-id</i> switchport</code></pre>
+<p class="body-line">These configurations are written directly on the switch. The switch then uses CDP to send the voice VLAN details to the connected IP phone. Receiving this information allows the IP phone to tag its own frames and mark its voice traffic with QoS information—using PCP in the 802.1Q tag at Layer 2, or DSCP in the IP header at Layer 3—so downstream network devices can give the traffic appropriate priority.</p>
+<aside class="callout"><strong>Note:</strong><p>IP phones typically mark call signaling traffic, which is used to establish and manage calls, as PCP 3. The actual voice traffic carrying the audio is marked as PCP 5.</p></aside>
+<p class="body-line">Because an attached PC can potentially generate its own QoS markings, the network must define where those markings can be trusted. This location is called the trust boundary.</p>
+<p class="body-line">For an IP phone connection, the trust boundary is normally placed at the IP phone. The switch trusts the QoS markings generated by the phone, but does not trust priority markings coming from the attached PC. The phone therefore acts as the boundary between trusted voice traffic and untrusted user data, allowing the switch to re-mark the PC's traffic according to the network's QoS policy.</p>
+<p class="body-line">After traffic has been classified and marked, network devices place it into queues when receiving this traffic. When packets arrive faster than a device can forward them, they wait in a queue until they can be transmitted. By default, queues use FIFO (First In, First Out), meaning packets are forwarded in the order they arrive.</p>
+<p class="body-line">If a queue becomes full, newly arriving packets are discarded. This is called tail drop. Tail drop can cause TCP global synchronization, which occurs when many TCP senders detect packet loss at approximately the same time, reduce their sending rates together. Because this sudden reduction in traffic empties the queues, the senders then gradually increase their rates again, creating repeated cycles of congestion and underutilization.</p>
+<p class="body-line">RED (Random Early Detection) helps avoid this behavior by beginning to randomly drop packets from selected TCP flows before the queue becomes completely full. This causes different TCP flows to reduce their sending rates at different times instead of synchronizing their slowdowns. WRED (Weighted Random Early Detection) extends RED by allowing different drop probabilities for different traffic classes.</p>
+<p class="body-line">Once traffic is placed into queues, a scheduler determines which queue is serviced next and how much bandwidth each queue receives. Scheduling can be applied to traffic as it enters or leaves a device, commonly referred to as ingress and egress traffic. Common scheduling methods:</p>
+<ul class="doc-list">
+  <li><strong>Weighted Round-Robin:</strong> services queues in turn, but gives higher-weight queues more transmission opportunities.</li>
+  <li><strong>CBWFQ (Class-Based Weighted Fair Queuing):</strong> assigns traffic to classes and guarantees each class a minimum percentage of the available bandwidth during congestion. However, voice traffic may still have to wait for other queues to be serviced.</li>
+  <li><strong>LLQ (Low Latency Queuing):</strong> adds a strict priority queue that is always serviced before other queues when it contains traffic. This makes LLQ well suited for delay- and jitter-sensitive traffic such as voice and video.</li>
+</ul>
+<p class="body-line">However, LLQ has the downside of potentially starving other queues if there is always traffic in the designated strict priority queue. Policing can control the amount of traffic allowed in the strict priority queue so that it cannot consume all of the link's bandwidth.</p>
+<p class="body-line">Traffic policing and traffic shaping both control the rate at which traffic is transmitted, but they handle excess traffic differently:</p>
+<ul class="doc-list">
+  <li><strong>Policing:</strong> drops excess traffic or optionally re-marks it when the configured rate is exceeded. It can be applied to ingress or egress traffic.</li>
+  <li><strong>Shaping:</strong> buffers excess traffic in a queue and delays it until it can be transmitted within the configured rate. Shaping is normally applied to egress traffic.</li>
+</ul>
+<p class="body-line">Both mechanisms can also allow short bursts above the configured rate, which is useful for applications that naturally generate traffic in bursts.</p>
+<aside class="callout"><strong>Practical example:</strong><p>When an ISP enforces the subscription's bandwidth limit by dropping excess traffic using policing, a router can use shaping to prevent packet loss. Shaping buffers the excess data and transmits it smoothly at the allowed rate, working alongside the ISP's policing to ensure no traffic is dropped.</p></aside>
 
 
     </section>
