@@ -1576,6 +1576,37 @@ ip domain lookup                          → enable DNS lookups</code></pre>
 <p class="body-line">On Windows, the following commands can be used to manage a DHCP-assigned IP address:</p>
 <pre class="command-line"><code>ipconfig /release                → release the current DHCP-assigned address
 ipconfig /renew                  → request a new address from the DHCP server</code></pre>
+
+<h3 class="subheading" id="snmp">SNMP</h3>
+<p class="body-line">SNMP (Simple Network Management Protocol) is used to monitor the status of network devices and make configuration changes remotely. An SNMP-managed network relies on two main roles.</p>
+<p class="body-line">First is the Network Management Station (NMS), the server-side system that manages the network. It utilizes two main components:</p>
+<ul class="doc-list">
+  <li><strong>SNMP Manager:</strong> software running on the NMS that sends requests to devices, receives notifications, and pushes configuration changes.</li>
+  <li><strong>SNMP Application:</strong> the user interface (UI) used by network administrators to view alerts, statistics, and charts, and to interact with the SNMP Manager.</li>
+</ul>
+<p class="body-line">Second is the Managed Device, which is the actual network device being monitored. It relies on two internal components to communicate with the NMS:</p>
+<ul class="doc-list">
+  <li><strong>SNMP Agent:</strong> software running on the device that responds to requests from the SNMP Manager and sends notifications to the NMS.</li>
+  <li><strong>Management Information Base (MIB):</strong> a structured database describing the variables that SNMP can monitor or modify on the device. Each variable is identified by a unique Object ID (OID), organized in a hierarchical structure (e.g., interface status, traffic throughput, CPU usage, and temperature).</li>
+</ul>
+<p class="body-line">SNMP communication uses several operation types depending on the direction and purpose of the message:</p>
+<div class="table-wrap"><table><thead><tr><th>Operation Type</th><th>Direction</th><th>Description</th></tr></thead><tbody>
+<tr><td>Read (Get)</td><td>NMS → Managed Device</td><td>The NMS requests information from the managed device, such as its current CPU usage.</td></tr>
+<tr><td>Write (Set)</td><td>NMS → Managed Device</td><td>The NMS changes a value on the managed device, such as modifying an interface configuration.</td></tr>
+<tr><td>Notification (Trap/Inform)</td><td>Managed Device → NMS</td><td>The managed device notifies the NMS about an event, such as an interface going down.</td></tr>
+<tr><td>Response</td><td>Managed Device → NMS</td><td>The managed device sends a response to a previous Get or Set request.</td></tr>
+</tbody></table></div>
+<aside class="callout"><strong>Note:</strong><p>SNMP uses UDP for communication. The SNMP Agent listens for requests on UDP port 161, while the NMS listens for notifications from managed devices on UDP port 162.</p></aside>
+<p class="body-line">SNMP has several versions, with later versions improving efficiency and security:</p>
+<div class="table-wrap"><table><thead><tr><th>Version</th><th>Description</th></tr></thead><tbody>
+<tr><td>SNMPv1</td><td>The original version of the protocol. It offers very limited security because it relies on unencrypted, plaintext community strings for authentication, making it highly vulnerable to interception.</td></tr>
+<tr><td>SNMPv2c</td><td>Improves efficiency and supports GetBulk for retrieving large amounts of information in a single request. The <code>c</code> refers to community strings, which were removed from SNMPv2 but added back in v2c for backward compatibility.</td></tr>
+<tr><td>SNMPv3</td><td>Provides stronger security through authentication and encryption. SNMPv3 should be preferred when supported.</td></tr>
+</tbody></table></div>
+
+
+
+
     </section>
   </main>
 

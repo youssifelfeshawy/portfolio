@@ -121,77 +121,7 @@ ntp server &lt;ip-address&gt; key &lt;key-number&gt;              → specify wh
 <div class="doc-spacer" aria-hidden="true"></div>
 
 
-<h2 class="major-heading" id="dhcp">DHCP — Dynamic Host Configuration Protocol</h2>
-<p class="body-line">DHCP (Dynamic Host Configuration Protocol) allows hosts to automatically obtain their full network configuration — IP address, subnet mask, default gateway, DNS server, and more — without any manual setup. DHCP servers lease IP addresses to clients for a configurable duration.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="dhcp-process">DHCP Message Process — DORA</h3>
-<div class="table-wrap"><table><thead><tr><th>Message</th><th>Direction</th><th>Type</th><th>Description</th></tr></thead><tbody>
-<tr><td><strong>Discover</strong></td><td>Client → Server</td><td>Broadcast</td><td>"Are there any DHCP servers? I need an IP address." Source IP is 0.0.0.0 — client has no address yet.</td></tr>
-<tr><td><strong>Offer</strong></td><td>Server → Client</td><td>Broadcast or Unicast</td><td>"How about this IP address?" — offers a specific lease. Broadcast used because some clients can't accept unicast before having an IP.</td></tr>
-<tr><td><strong>Request</strong></td><td>Client → Server</td><td>Broadcast</td><td>"I want to use the IP address you offered." Broadcast so all DHCP servers know which offer was accepted. Source IP still 0.0.0.0.</td></tr>
-<tr><td><strong>Ack</strong></td><td>Server → Client</td><td>Broadcast or Unicast</td><td>"OK, the address is yours." Confirms the lease is granted.</td></tr>
-</tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="dhcp-server-config">Configuring a Cisco Router as a DHCP Server</h3>
-<pre class="command-line"><code>ip dhcp excluded-address &lt;start-ip&gt; &lt;end-ip&gt;   → exclude a range from being assigned (routers, servers, printers)
-ip dhcp pool &lt;pool-name&gt;                        → create a DHCP pool and enter pool config mode
-  network &lt;network-address&gt; &lt;subnet-mask&gt;       → the subnet to assign addresses from (excluding excluded addresses)
-  default-router &lt;ip-address&gt;                   → default gateway for clients
-  dns-server &lt;ip-address&gt;                       → DNS server for clients
-  domain-name &lt;domain-name&gt;                     → domain name for clients
-  lease &lt;days&gt; &lt;hours&gt; &lt;minutes&gt;               → lease duration (or 'lease infinite')
-show ip dhcp binding                            → view all active DHCP leases (client IP, MAC address, expiry)</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="dhcp-relay">DHCP Relay Agent</h3>
-<p class="body-line">DHCP Discover messages are broadcasts and cannot cross router boundaries. When the DHCP server is on a different subnet than the clients, a DHCP relay agent configured on the router in the client's subnet forwards client broadcasts to the server as unicast messages.</p>
-<pre class="command-line"><code>int &lt;interface&gt;                              → select the interface facing the client subnet
-ip helper-address &lt;dhcp-server-ip&gt;          → forward DHCP broadcasts from clients to this server
-show ip interface &lt;interface&gt;               → verify the helper address configured on the interface</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="dhcp-client-cmd">DHCP Client Commands</h3>
-<pre class="command-line"><code>int &lt;interface&gt;
-ip address dhcp                              → configure a router interface to get its IP via DHCP
 
-ipconfig /release                            → (Windows host) release the current DHCP-assigned IP address
-ipconfig /renew                              → (Windows host) request a new IP address from the DHCP server</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-
-<h2 class="major-heading" id="snmp">SNMP — Simple Network Management Protocol</h2>
-<p class="body-line">SNMP (Simple Network Management Protocol) is used to monitor the status of network devices and make configuration changes remotely. It has two main device roles:</p>
-<ul class="doc-list">
-  <li><strong>Managed Devices:</strong> the network devices being monitored and managed — routers, switches, firewalls, etc.</li>
-  <li><strong>Network Management Station (NMS):</strong> the server-side device that manages the managed devices. Runs the SNMP Manager software.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="snmp-components">SNMP Components</h3>
-<ul class="doc-list">
-  <li><strong>SNMP Manager:</strong> software on the NMS that interacts with managed devices — sends requests for information, receives notifications, and sends configuration changes.</li>
-  <li><strong>SNMP Application:</strong> the interface on the NMS for network administrators. Displays alerts, statistics, charts, and allows interaction with the SNMP Manager.</li>
-  <li><strong>SNMP Agent:</strong> software running on each managed device. Sends notifications to the NMS and responds to requests from the SNMP Manager.</li>
-  <li><strong>Management Information Base (MIB):</strong> the structured database on each managed device containing all the variables that SNMP can monitor or modify. Each variable has a unique Object ID (OID). Example variables: interface status, traffic throughput, CPU usage, temperature. OIDs are organized in a hierarchical structure.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="snmp-operations">SNMP Operations</h3>
-<div class="table-wrap"><table><thead><tr><th>Operation Type</th><th>Direction</th><th>Description</th></tr></thead><tbody>
-<tr><td>Read (Get)</td><td>NMS → Managed Device</td><td>NMS requests information from the device. Example: "What is your current CPU usage?"</td></tr>
-<tr><td>Write (Set)</td><td>NMS → Managed Device</td><td>NMS changes a value on the device. Example: "Change this interface's IP address."</td></tr>
-<tr><td>Notification (Trap/Inform)</td><td>Managed Device → NMS</td><td>Device alerts the NMS about an event. Example: "An interface just went down."</td></tr>
-<tr><td>Response</td><td>Managed Device → NMS</td><td>Sent in response to a previous Read or Write request.</td></tr>
-</tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<ul class="doc-list">
-  <li>SNMP Agent listens on <strong>UDP port 161</strong>.</li>
-  <li>SNMP Manager (NMS) listens for notifications on <strong>UDP port 162</strong>.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="snmp-versions">SNMP Versions</h3>
-<div class="table-wrap"><table><thead><tr><th>Version</th><th>Description</th></tr></thead><tbody>
-<tr><td>SNMPv1</td><td>The original version. Uses community strings as passwords. Limited security.</td></tr>
-<tr><td>SNMPv2c</td><td>More efficient — the NMS can retrieve large amounts of information in a single request (GetBulk). The 'c' refers to community strings, which were removed from SNMPv2 but added back in v2c for backward compatibility.</td></tr>
-<tr><td>SNMPv3</td><td>Significantly more secure — supports strong authentication and encryption. Whenever possible, SNMPv3 should be used.</td></tr>
-</tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
 
 <h2 class="major-heading" id="syslog">Syslog</h2>
 <p class="body-line">Syslog is an industry-standard protocol for message logging on network devices. It records events such as interface status changes, OSPF neighbor state changes, system restarts, and more. Logs are essential for troubleshooting, incident analysis, and auditing. Syslog uses UDP port 514.</p>
