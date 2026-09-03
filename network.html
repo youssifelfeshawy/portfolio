@@ -1511,7 +1511,71 @@ clear ip nat translation *               → clear all dynamic NAT translations<
 <p class="body-line">Both mechanisms can also allow short bursts above the configured rate, which is useful for applications that naturally generate traffic in bursts.</p>
 <aside class="callout"><strong>Practical example:</strong><p>When an ISP enforces the subscription's bandwidth limit by dropping excess traffic using policing, a router can use shaping to prevent packet loss. Shaping buffers the excess data and transmits it smoothly at the allowed rate, working alongside the ISP's policing to ensure no traffic is dropped.</p></aside>
 
+<h2 class="major-heading" id="layer-7">Layer 7: Application Layer</h2>
+<p class="body-line">The Application Layer is the layer closest to the end user. It directly provides network services to software applications (like web browsers, email clients, and management tools). It defines the protocols used to browse websites, resolve domain names, lease IP addresses, log events, synchronize clocks, and manage network devices.</p>
 
+<h3 class="subheading" id="dns">DNS</h3>
+<p class="body-line">DNS (Domain Name System) translates human-readable hostnames, such as <code>google.com</code>, into IP addresses that devices can use to communicate. When a user enters a domain name in a browser, the device queries a DNS server to obtain the corresponding IP address before establishing the connection.</p>
+<p class="body-line">DNS stores this information using different types of DNS records, with each record serving a specific purpose:</p>
+<div class="table-wrap"><table><thead><tr><th>Record</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>A</td><td>Maps a hostname to an IPv4 address.</td></tr>
+<tr><td>AAAA</td><td>Maps a hostname to an IPv6 address.</td></tr>
+<tr><td>CNAME</td><td>Aliases one domain or subdomain to another domain name, allowing multiple names to resolve to the same destination.</td></tr>
+<tr><td>MX</td><td>Specifies the mail server responsible for receiving email for a domain.</td></tr>
+<tr><td>TXT</td><td>Stores text information associated with a domain, commonly used for verification and other domain-related information.</td></tr>
+</tbody></table></div>
+<p class="body-line">To improve performance, devices cache DNS responses locally. When the same hostname is requested again, the device can use the cached result instead of querying the DNS server again.</p>
+<p class="body-line">On Windows, the following commands can be used to view the device's DNS configuration, query DNS, and manage the local DNS cache:</p>
+<pre class="command-line"><code>ipconfig /all                    → view IP and DNS servers configuration
+ipconfig /displaydns             → view the local DNS cache
+ipconfig /flushdns               → clear the local DNS cache
+nslookup <i>domain-name</i>             → query DNS and display the resolved IP address</code></pre>
+<p class="body-line">A Cisco router normally forwards DNS packets like any other traffic. However, it can also be configured to resolve names itself, act as a DNS server for local clients, or use an external DNS server when resolving unknown names.</p>
+<p class="body-line">To configure the router to act as a simple DNS server and create local hostname mappings, use:</p>
+<pre class="command-line"><code>ip dns server
+ip host <i>hostname ip-address</i></code></pre>
+<p class="body-line">The router can also be configured as a DNS client by specifying an external DNS server. When the router needs to resolve a hostname that is not in its local host table, it can query the configured DNS server:</p>
+<pre class="command-line"><code>ip name-server <i>ip-address</i>                 → configure the external DNS server
+ip domain lookup                          → enable DNS lookups</code></pre>
+<p class="body-line">The router can use a default domain name for unqualified hostnames. This allows the router to append the configured domain automatically when a hostname does not include one:</p>
+<pre class="command-line"><code>ip domain name <i>domain-name</i></code></pre>
+<p class="body-line">The following command displays the hostname information available on the router, including locally configured host entries and cached DNS information:</p>
+<pre class="command-line"><code>show hosts</code></pre>
+
+<h3 class="subheading" id="dhcp">DHCP</h3>
+<p class="body-line">DHCP (Dynamic Host Configuration Protocol) allows hosts to automatically obtain their network configuration, including an IP address, subnet mask, default gateway, DNS server, and other parameters, without manual configuration. DHCP servers lease IP addresses to clients for a configurable duration.</p>
+<p class="body-line">When a client needs an IP address, it uses the DORA process:</p>
+<div class="table-wrap"><table><thead><tr><th>Message</th><th>Direction</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td>Discover</td><td>Client → Server</td><td>Broadcast</td><td>The client searches for available DHCP servers. The source IP is <code>0.0.0.0</code> because the client does not have an IP address yet.</td></tr>
+<tr><td>Offer</td><td>Server → Client</td><td>Broadcast or Unicast</td><td>The DHCP server offers the client an available IP address and lease information. Broadcast may be used because some clients can't accept unicast before having an IP.</td></tr>
+<tr><td>Request</td><td>Client → Server</td><td>Broadcast</td><td>The client requests the offered IP address. The broadcast also informs other DHCP servers that their offers were not selected. The source IP remains <code>0.0.0.0</code>.</td></tr>
+<tr><td>Acknowledgment (ACK)</td><td>Server → Client</td><td>Broadcast or Unicast</td><td>The server confirms the lease and provides the client with its network configuration.</td></tr>
+</tbody></table></div>
+<p class="body-line">A Cisco router can provide DHCP services by defining addresses that should not be assigned and then creating a DHCP pool containing the network and client configuration parameters.</p>
+<p class="body-line">First, exclude addresses that should be reserved for devices such as routers, servers, and printers:</p>
+<pre class="command-line"><code>ip dhcp excluded-address <i>start-ip end-ip</i></code></pre>
+<p class="body-line">Next, create a DHCP pool and define the network and configuration parameters that will be provided to clients:</p>
+<pre class="command-line"><code>ip dhcp pool <i>pool-name</i>                        → Create and enter DHCP pool
+  network <i>network-address subnet-mask</i>         → Define subnet to assign IPs from
+  default-router <i>ip-address</i>                   → Set default gateway for clients
+  dns-server <i>ip-address</i>                       → Set DNS server for clients
+  domain-name <i>domain-name</i>                     → Set domain name for clients
+  lease {<i>days</i> [<i>hours</i> [<i>minutes</i>]] | infinite}   → Set lease duration</code></pre>
+<p class="body-line">The lease duration determines how long a client can use its assigned IP address before it must renew the lease. If configured as infinite, the lease will never expire.</p>
+<p class="body-line">To view the IP addresses currently assigned by the router and their associated client information, use:</p>
+<pre class="command-line"><code>show ip dhcp binding</code></pre>
+<p class="body-line">DHCP Discover messages are broadcasts and normally cannot cross a router. When the DHCP server is located on a different subnet, a DHCP relay agent on the client's subnet is needed to forward the DHCP request to the remote DHCP server.</p>
+<p class="body-line">On a router, the relay agent is configured on the interface facing the client subnet:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  ip helper-address <i>dhcp-server-ip</i></code></pre>
+<p class="body-line">To verify the helper address configured on an interface, use:</p>
+<pre class="command-line"><code>show ip interface <i>interface-id</i></code></pre>
+<p class="body-line">A router interface can also act as a DHCP client and obtain its IP address from a DHCP server:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  ip address dhcp</code></pre>
+<p class="body-line">On Windows, the following commands can be used to manage a DHCP-assigned IP address:</p>
+<pre class="command-line"><code>ipconfig /release                → release the current DHCP-assigned address
+ipconfig /renew                  → request a new address from the DHCP server</code></pre>
     </section>
   </main>
 

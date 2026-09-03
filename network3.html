@@ -56,7 +56,7 @@
 
       <article class="doc-document">
 
-<h2 class="major-heading" id="layer-4">Layer 4: Transport Layer</h2>
+<h2 class="major-heading" id="layer-4">Layer 7: Application Layer</h2>
 
 
 <!-- <h3 class="topic-heading" id="wireshark">Wireshark</h3>
@@ -120,34 +120,9 @@ ntp trusted-key &lt;key-number&gt;                          → mark a key as tr
 ntp server &lt;ip-address&gt; key &lt;key-number&gt;              → specify which key to use for a server (configured on the client only)</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h2 class="major-heading" id="dns">DNS — Domain Name System</h2>
-<p class="body-line">DNS (Domain Name System) resolves human-readable hostnames (like google.com) to IP addresses that machines can use. When you type a URL into a browser, your device queries a DNS server to get the IP address before connecting. DNS servers can be manually configured or learned via DHCP. DNS uses port 53 — UDP for queries under 512 bytes, TCP for larger messages.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="dns-records">DNS Record Types</h3>
-<ul class="doc-list">
-  <li><strong>A record:</strong> maps a hostname to an IPv4 address.</li>
-  <li><strong>AAAA record:</strong> maps a hostname to an IPv6 address.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="dns-cache">DNS Caching and Host Commands</h3>
-<p class="body-line">Devices cache DNS responses locally to avoid re-querying the server for every request to the same destination.</p>
-<pre class="command-line"><code>ipconfig /all                               → (Windows) view IP settings including DNS server
-nslookup &lt;domain-name&gt;                     → query DNS and view the resolved IP address
-ipconfig /displaydns                        → (Windows) view the local DNS cache
-ipconfig /flushdns                          → (Windows) clear the local DNS cache</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="dns-cisco">Cisco Router as DNS Server / Client</h3>
-<p class="body-line">Routers forward DNS packets like any other traffic without special configuration. Optionally, a Cisco router can act as a DNS server or client.</p>
-<pre class="command-line"><code>ip dns server                               → configure this device to act as a DNS server
-ip host &lt;hostname&gt; &lt;ip-address&gt;            → add a static hostname-to-IP mapping to the local host table
-ip name-server &lt;ip-address&gt;                → configure an external DNS server to query for unknown records
-ip domain lookup                            → enable DNS queries (on by default; old syntax: ip domain-lookup)
-ip domain name &lt;domain-name&gt;               → set a default domain appended to unqualified hostnames (old syntax: ip domain-name)
-show hosts                                  → view static host entries and cached DNS records</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
 
 <h2 class="major-heading" id="dhcp">DHCP — Dynamic Host Configuration Protocol</h2>
-<p class="body-line">DHCP (Dynamic Host Configuration Protocol) allows hosts to automatically obtain their full network configuration — IP address, subnet mask, default gateway, DNS server, and more — without any manual setup. DHCP servers lease IP addresses to clients for a configurable duration. DHCP servers use UDP port 67; clients use UDP port 68.</p>
+<p class="body-line">DHCP (Dynamic Host Configuration Protocol) allows hosts to automatically obtain their full network configuration — IP address, subnet mask, default gateway, DNS server, and more — without any manual setup. DHCP servers lease IP addresses to clients for a configurable duration.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="topic-heading" id="dhcp-process">DHCP Message Process — DORA</h3>
 <div class="table-wrap"><table><thead><tr><th>Message</th><th>Direction</th><th>Type</th><th>Description</th></tr></thead><tbody>
@@ -181,7 +156,6 @@ ipconfig /release                            → (Windows host) release the curr
 ipconfig /renew                              → (Windows host) request a new IP address from the DHCP server</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<div class="doc-spacer" aria-hidden="true"></div>
 
 <h2 class="major-heading" id="snmp">SNMP — Simple Network Management Protocol</h2>
 <p class="body-line">SNMP (Simple Network Management Protocol) is used to monitor the status of network devices and make configuration changes remotely. It has two main device roles:</p>
