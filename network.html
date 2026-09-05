@@ -1576,6 +1576,37 @@ ip domain lookup                          → enable DNS lookups</code></pre>
 <p class="body-line">On Windows, the following commands can be used to manage a DHCP-assigned IP address:</p>
 <pre class="command-line"><code>ipconfig /release                → release the current DHCP-assigned address
 ipconfig /renew                  → request a new address from the DHCP server</code></pre>
+<p class="body-line">DHCP can be targeted by attacks that disrupt address assignment or redirect client traffic. Two common attacks:</p>
+<ul class="doc-list">
+  <li><strong>DHCP Starvation:</strong> an attacker sends a large number of DHCP requests using spoofed client identifiers, causing the DHCP server to assign addresses to fake clients until the available address pool is exhausted.</li>
+  <li><strong>DHCP Poisoning:</strong> a rogue DHCP server responds to clients and provides incorrect network settings, such as using the attacker's device as the default gateway. This can allow the attacker to intercept or modify client traffic.</li>
+</ul>
+<p class="body-line">To protect against these attacks, switches can use DHCP snooping. DHCP snooping examines DHCP messages and separates switch ports into trusted and untrusted ports.</p>
+<ul class="doc-list">
+  <li><strong>Trusted ports:</strong> normally used for the uplink ports which are links toward the legitimate DHCP server or another trusted network device. DHCP messages are allowed through these ports without the same server-message restrictions applied to untrusted ports.</li>
+  <li><strong>Untrusted ports:</strong> normally used for the downlink ports whihc are links toward clients. DHCP server messages received on these ports are discarded, preventing a rogue DHCP server from responding to clients.</li>
+</ul>
+<p class="body-line">First, enable DHCP snooping globally or enable it for the VLANs that should be protected:</p>
+<pre class="command-line"><code>ip dhcp snooping [vlan <i>vlan-id</i>]</code></pre>
+<p class="body-line">When DHCP snooping is enabled, the switch can insert DHCP Option 82 information into client DHCP messages. Option 82 identifies information about the switch or relay path through which the client message was received. When this behavior is not required and causes DHCP messages with Option 82 to be dropped, it can be disabled:</p>
+<pre class="command-line"><code>no ip dhcp snooping information option</code></pre>
+<p class="body-line">Next, configure the interface toward the legitimate DHCP server as trusted. Client-facing interfaces remain untrusted by default:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  ip dhcp snooping trust</code></pre>
+<p class="body-line">When a client successfully obtains a DHCP lease, the switch records the client information in the DHCP Snooping Binding Table. The table can contain the client's MAC address, assigned IP address, VLAN, interface, and lease information. To view the DHCP Snooping Binding Table, use:</p>
+<pre class="command-line"><code>show ip dhcp snooping binding</code></pre>
+<div class="table-wrap"><table><thead><tr><th>Port Type</th><th>DHCP Message</th><th>Action</th></tr></thead><tbody>
+<tr><td>Trusted</td><td>Any DHCP message</td><td>Forward normally.</td></tr>
+<tr><td>Untrusted</td><td>OFFER / ACK / NAK</td><td>Discard, because a server message arriving from a client-facing port may indicate a rogue DHCP server.</td></tr>
+<tr><td>Untrusted</td><td>DISCOVER / REQUEST</td><td>Verify that the frame's source MAC address matches the CHADDR field in the DHCP message. If they match, forward the message; if they do not match, discard it.</td></tr>
+<tr><td>Untrusted</td><td>RELEASE / DECLINE</td><td>Verify that the packet's source IP address and incoming interface match the corresponding entry in the DHCP Snooping Binding Table. If they match, forward the message; otherwise, discard it.</td></tr>
+</tbody></table></div>
+<aside class="callout"><strong>Note:</strong><p>The CHADDR (Client Hardware Address) field is part of the DHCP message and contains the client's MAC address. DHCP snooping can compare this value with the source MAC address of the Ethernet frame to detect mismatches that may indicate MAC spoofing.</p></aside>
+<p class="body-line">DHCP snooping can also limit the rate of DHCP messages received on an interface. This helps protect against DHCP starvation by preventing a client-facing interface from sending an excessive number of DHCP messages. To configure DHCP message rate limiting:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  ip dhcp snooping limit rate <i>packets-per-second</i></code></pre>
+<p class="body-line">If the configured rate is exceeded, the interface can be placed into the err-disabled state. To enable it:</p>
+<pre class="command-line"><code>errdisable recovery cause dhcp-rate-limit</code></pre>
 
 <h3 class="subheading" id="snmp">SNMP</h3>
 <p class="body-line">SNMP (Simple Network Management Protocol) is used to monitor the status of network devices and make configuration changes remotely. An SNMP-managed network relies on two main roles.</p>
@@ -1660,6 +1691,52 @@ logging trap <i>severity-level</i>         → set the minimum severity level to
 <tr><td>Use cases</td><td>Troubleshooting, incident analysis, audit trails, and system management</td><td>Network monitoring dashboards, automated alerting, and remote configuration</td></tr>
 </tbody></table></div>
 
+<h3 class="subheading" id="ntp">NTP</h3>
+<p class="body-line">Every network device has an internal clock. Accurate time is important for troubleshooting, log correlation, security analysis, and other network operations. When devices have different times, it becomes difficult to determine the correct order of events and correlate logs from multiple devices.</p>
+<p class="body-line">Cisco IOS devices maintain two separate clocks: the software clock, which is used during normal operation, and the hardware calendar, which is stored in hardware and persists across reboots. These clocks can be configured independently and may drift apart over time.</p>
+<ul class="doc-list">
+  <li><strong>Hardware calendar:</strong> used as the initial time source when the device boots. To configure it and verify the hardware calendar:</li>
+  <pre class="command-line"><code>calender set <i>hh:mm:ss day month year</i>
+show calendar</code></pre>
+  <li><strong>Software clock:</strong> used during normal operation. To configure it and verify the current time:</li>
+  <pre class="command-line"><code>clock set <i>hh:mm:ss day month year</i>
+show clock [detail]</code></pre>
+</ul>
+<aside class="callout"><strong>Note:</strong><p>An asterisk (<code>*</code>) before the time in <code>show clock detail</code> indicates that the software clock is not considered authoritative.</p></aside>
+<p class="body-line">The hardware calendar and software clock can also be synchronized in either direction:</p>
+<pre class="command-line"><code>clock update-calendar               → update the calendar using the clock
+clock read-calendar                 → update the clock using the calendar</code></pre>
+<p class="body-line">The device time zone and Daylight Saving Time settings can be configured separately:</p>
+<pre class="command-line"><code>clock timezone <i>zone-name hours-offset</i> [<i>minutes-offset</i>]
+clock summer-time <i>name</i> recurring <i>start-time end-time</i></code></pre>
+<p class="body-line">Manually setting the clock does not prevent it from drifting over time. NTP allows devices to automatically synchronize their software clocks with a reliable time source across the network. NTP uses UDP port 123.</p>
+<p class="body-line">A device can act as an NTP client, an NTP server, or both. An NTP client can also use multiple NTP servers as time sources and select the most appropriate source.</p>
+<p class="body-line">NTP uses a stratum hierarchy to indicate the distance from the original reference clock. Lower stratum values generally represent a closer and preferred time source.</p>
+<div class="table-wrap"><table><thead><tr><th>Stratum</th><th>Description</th></tr></thead><tbody>
+<tr><td>0</td><td>Reference clocks such as atomic or GPS clocks. They provide time to stratum 1 servers but do not participate in NTP directly.</td></tr>
+<tr><td>1</td><td>Primary NTP servers directly connected to a stratum 0 reference clock.</td></tr>
+<tr><td>2–15</td><td>Secondary NTP servers that obtain time from a higher-level source and can provide time to lower-stratum devices.</td></tr>
+<tr><td>16</td><td>Unsynchronized. The device is not considered a valid NTP time source.</td></tr>
+</tbody></table></div>
+
+<p class="body-line">A router can synchronize its clock with an external NTP server. Once synchronized, it automatically acts as an NTP server itself, operating at one stratum level higher than its source. If you have multiple NTP servers configured, you can append the <code>prefer</code> keyword to designate a specific server as the preferred time source. To synchronize the router with an external NTP server, use the following command:</p>
+<pre class="command-line"><code>ntp server <i>ip-address</i> [prefer]</code></pre>
+<p class="body-line">In environments where an external time source is unavailable, the router can act as an authoritative NTP master, providing its own time to other network devices. You can optionally define its stratum number; if omitted, the default stratum value is 8:</p>
+<pre class="command-line"><code>ntp master [<i>stratum-number</i>]</code></pre>
+<p class="body-line">To improve accuracy and provide redundancy, a router can establish a peer relationship with another NTP device operating at the same stratum level. This relationship is known as symmetric active mode:</p>
+<pre class="command-line"><code>ntp peer <i>ip-address</i></code></pre>
+<p class="body-line">To ensure the router's hardware calendar is updated to match the software-based NTP time:</p>
+<pre class="command-line"><code>ntp update-calendar</code></pre>
+<p class="body-line">By default, an NTP packet uses the IP address of the outgoing interface as its source. This can cause reachability issues or authentication failures if the route changes. To ensure consistency, you can force the router to use a specific, stable interface (such as a Loopback interface) as the source IP address for all NTP packets it generates:</p>
+<pre class="command-line"><code>ntp source <i>interface</i></code></pre>
+<p class="body-line">To verify NTP operation and synchronization:</p>
+<pre class="command-line"><code>show ntp associations
+show ntp status</code></pre>
+<p class="body-line">NTP authentication can be enabled so that a client only accepts time from trusted NTP sources. This is optional, but it is recommended when NTP security is important.</p>
+<pre class="command-line"><code>ntp authenticate                              → enable NTP authentication
+ntp authentication-key <i>key-number</i> md5 <i>key</i>     → create an MD5 authentication key
+ntp trusted-key <i>key-number</i>                    → mark the key as trusted
+ntp server <i>ip-address</i> key <i>key-number</i>          → assign the key to the NTP server</code></pre>
 
 
     </section>
