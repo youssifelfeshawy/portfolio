@@ -1611,6 +1611,71 @@ ipconfig /renew                  → request a new address from the DHCP server<
 <pre class="command-line"><code>errdisable recovery cause dhcp-rate-limit</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
+<h3 class="subheading" id="remote-access">Remote Access</h3>
+<p class="body-line">Network devices can be accessed directly through the console port or remotely through the network. Remote access allows an administrator to manage a device's CLI from another network using protocols such as Telnet or SSH. The device must have a reachable IP address, and the required remote-access configuration must be enabled.</p>
+<p class="body-line">By default, access through the console port does not require a password. Cisco IOS provides a single console line, always identified as line 0, so only one console connection can be active at a time.</p>
+<p class="body-line">A password can be configured for the console line and required before allowing access to the CLI:</p>
+<pre class="command-line"><code>line console 0
+  password <i>password</i>                      → set a password
+  login                                  → apply it to the CLI</code></pre>
+<p class="body-line">Instead of using a separate password configured directly on the console line, the console can require a locally configured username and password. First, create the local user account:</p>
+<pre class="command-line"><code>username <i>username</i> secret <i>password</i></code></pre>
+<p class="body-line">Then configure the console line to use the local user database for authentication:</p>
+<pre class="command-line"><code>line console 0
+  login local</code></pre>
+<p class="body-line">The console line can also be configured to automatically log out an inactive session after a specified period:</p>
+<pre class="command-line"><code>line console 0
+  exec-timeout <i>minutes seconds</i></code></pre>
+<h4 class="subheading" id="telnet">Telnet</h4>
+<p class="body-line">Telnet (Teletype Network) is a protocol for remotely accessing CLI over the network and uses TCP port 23.</p>
+<p class="body-line">A privileged EXEC password must be configured because Telnet access cannot enter privileged EXEC mode without an enable password or secret:</p>
+<pre class="command-line"><code>enable {password | secret} <i>password</i></code></pre>
+<p class="body-line">A local user account can be configured for authenticating remote users:</p>
+<pre class="command-line"><code>username <i>username</i> secret <i>password</i></code></pre>
+<p class="body-line">An ACL can optionally be used to restrict which IP addresses are allowed to establish remote connections:</p>
+<pre class="command-line"><code>access-list <i>acl-number</i> permit host <i>ip-address</i></code></pre>
+<p class="body-line">Remote sessions are handled through VTY lines. A configuration of <code>line vty 0 15</code> provides 16 VTY lines, allowing up to 16 simultaneous remote sessions on platforms that provide those lines. The VTY lines must then be configured for authentication, automatic logout, the allowed remote-access protocol, and any optional ACL.</p>
+<pre class="command-line"><code>line vty 0 15
+  login local
+  exec-timeout <i>minutes seconds</i>
+  transport input {telnet | ssh | all |none}            → Specify the protocol
+  access-class <i>acl-number</i> in</code></pre>
+<h4 class="subheading" id="ssh">SSH</h4>
+<p class="body-line">SSH (Secure Shell) provides the same type of remote CLI access as Telnet but adds encryption and stronger security. SSH uses TCP port 22 and should be preferred for remote management. Before SSH can be configured, the device needs a hostname. The hostname is used together with the domain name to form the device's fully qualified domain name (FQDN), which is required when generating RSA keys:</p>
+<pre class="command-line"><code>hostname <i>hostname</i>
+ip domain name <i>domain-name</i></code></pre>
+<p class="body-line">Then, generate an RSA key pair for SSH:</p>
+<pre class="command-line"><code>crypto key generate rsa modulus <i>length</i>              → <i>length</i>: 2048 recommended</code></pre>
+<p class="body-line">SSH version 2 can be enabled to use the newer SSH protocol version:</p>
+<pre class="command-line"><code>ip ssh version 2</code></pre>
+<p class="body-line">SSH authentication requires a privileged EXEC password and a local username and password:</p>
+<pre class="command-line"><code>enable {password | secret} <i>password</i>
+username <i>username</i> secret <i>password</i></code></pre>
+<p class="body-line">An ACL can optionally be used to restrict which hosts are allowed to establish SSH sessions:</p>
+<pre class="command-line"><code>access-list <i>acl-number</i> permit host <i>ip-address</i></code></pre>
+<p class="body-line">Finally, configure the VTY lines to use the local user database, automatically log out inactive sessions, allow SSH connections, and optionally apply the ACL:</p>
+<pre class="command-line"><code>line vty 0 15
+  login local
+  exec-timeout &lt;minutes&gt; &lt;seconds&gt;
+  transport input {telnet | ssh | all |none}
+  access-class <i>acl-number</i> in</code></pre>
+<p class="body-line">The following commands can be used to verify the SSH configuration and confirm that the device supports SSH:</p>
+<pre class="command-line"><code>show ip ssh            → view the SSH version and current SSH configuration
+show version           → view the IOS image and software information</code></pre>
+<p class="body-line">The IOS image must support cryptographic features for SSH. On many Cisco IOS images, the image name contains <code>K9</code> when cryptographic features such as SSH are included.</p>
+<aside class="callout"><strong>Note:</strong><p>The number of simultaneous remote sessions depends on the available VTY lines. With <code>line vty 0 15</code>, there are 16 VTY lines and therefore up to 16 simultaneous remote sessions. The console is different because there is only one console line, so only one console session can be active at a time.</p></aside>
+<p class="body-line">Layer 2 switches can also be accessed remotely even though they do not perform IP routing. An IP address can be configured on an SVI to provide a management address for Telnet or SSH. Because the switch does not route between networks, a default gateway is also required when the managing host is in a different subnet.</p>
+<p class="body-line">First, configure an IP address on the SVI used for management:</p>
+<pre class="command-line"><code>interface vlan <i>vlan-id</i>
+  ip address <i>ip-address subnet-mask</i>
+  no shutdown</code></pre>
+<p class="body-line">Then configure the switch's default gateway so it can communicate with remote networks:</p>
+<pre class="command-line"><code>ip default-gateway <i>ip-address</i></code></pre>
+<p class="body-line">To connect remotely from another device, SSH can be used to connect to the remote device using either a separate username option or the username@address format:</p>
+<pre class="command-line"><code>ssh -l <i>username</i> <i>ip-address</i>
+ssh <i>username</i>@<i>ip-address</i></code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
+
 <h3 class="subheading" id="snmp">SNMP</h3>
 <p class="body-line">SNMP (Simple Network Management Protocol) is used to monitor the status of network devices and make configuration changes remotely. An SNMP-managed network relies on two main roles.</p>
 <p class="body-line">First is the Network Management Station (NMS), the server-side system that manages the network. It utilizes two main components:</p>
