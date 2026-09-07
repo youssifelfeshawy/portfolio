@@ -1808,6 +1808,54 @@ ntp trusted-key <i>key-number</i>                    → mark the key as trusted
 ntp server <i>ip-address</i> key <i>key-number</i>          → assign the key to the NTP server</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
+<h3 class="subheading" id="ftp-tftp">FTP and TFTP</h3>
+<p class="body-line">FTP (File Transfer Protocol) and TFTP (Trivial File Transfer Protocol) are file transfer protocols that use a client-server model.</p>
+<div class="table-wrap"><table><thead><tr><th>Feature</th><th>TFTP</th><th>FTP</th></tr></thead><tbody>
+<tr><td>Authentication</td><td>None</td><td>Username and password</td></tr>
+<tr><td>Encryption</td><td>None</td><td>None in standard FTP. Use FTPS (FTP over SSL/TLS) or SFTP for security.</td></tr>
+<tr><td>Functionality</td><td>Simple file transfers to and from the server</td><td>File transfer with additional file and directory management capabilities</td></tr>
+<tr><td>Complexity</td><td>Simple and lightweight</td><td>More complex and full-featured</td></tr>
+<tr><td>Transport</td><td>Connectionless UDP with acknowledgments and retransmissions</td><td>Connection-oriented TCP using two connections: control and data connections</td></tr>
+</tbody></table></div>
+<p class="body-line">TFTP uses a lock-step communication process in which the sender transmits a message and waits for a response before continuing. Data messages are acknowledged, and if an expected response is not received within the timeout period, the sender retransmits the message.</p>
+<p class="body-line">A TFTP transfer can be viewed as three stages:</p>
+<ul class="doc-list">
+  <li><strong>Connection:</strong> the client sends a request and the server responds to establish the transfer.</li>
+  <li><strong>Data Transfer:</strong> the sender transmits data and waits for an acknowledgment before sending the next data block.</li>
+  <li><strong>Termination:</strong> after the final data block is received, the receiver sends the final acknowledgment and the transfer ends.</li>
+</ul>
+<p class="body-line">However, FTP uses two separate TCP connections. The control connection uses TCP port 21 and remains open to carry commands and responses. The data connection is used to transfer the actual files.</p>
+<p class="body-line">FTP can operate in: </p>
+<ul class="doc-list">
+  <li><strong>Active mode (default):</strong> the server initiates the data connection to the client. The server uses TCP port 20 for data.</li>
+  <li><strong>Passive mode:</strong> the client initiates the data connection. Used when the client is behind a firewall that blocks incoming connections from external devices.</li>
+</ul>
+<p class="body-line">In network administration, FTP or TFTP can be used to transfer files such as Cisco IOS images and configuration files between a network device and a server. Cisco IOS provides different file system types for storing and accessing files:</p>
+<ul class="doc-list">
+  <li><strong>Disk:</strong> storage such as flash memory, where files such as IOS images can be stored. To view the files stored in flash memory: <code>show flash</code></li>
+  <li><strong>NVRAM (Non-Volatile RAM):</strong> where the startup configuration is stored.</li>
+  <li><strong>Opaque:</strong> represents internal logical file systems rather than physical storage.</li>
+  <li><strong>Network:</strong> represents external file systems accessed through network protocols such as TFTP or FTP.</li>
+</ul>
+<p class="body-line">To view the available file systems on the device:</p>
+<pre class="command-line"><code>show file systems</code></pre>
+<p class="body-line">To copy an IOS image from a TFTP/FTP server to the device's flash memory, use:</p>
+<pre class="command-line"><code>copy {tftp | ftp} flash</code></pre>
+<p class="body-line">The router will prompt for the TFTP/FTP server address, the source filename, and the destination filename. The destination filename can normally be left unchanged by pressing Enter.</p>
+<p class="body-line">However, To copy an IOS image from an FTP server, first configure the FTP credentials that the router will use:</p>
+<pre class="command-line"><code>ip ftp username <i>username</i>                → configure the FTP username
+ip ftp password <i>password</i>                → configure the FTP password</code></pre>
+<p class="body-line">After copying the new IOS image, verify that it exists in flash before configuring the router to boot from it:</p>
+<pre class="command-line"><code>show flash</code></pre>
+<p class="body-line">The <code>boot system</code> command specifies which IOS image the router should use when it starts next time:</p>
+<pre class="command-line"><code>boot system <i>filepath</i></code></pre>
+<p class="body-line">The boot command should then be saved so that it remains in the startup configuration after a reload. Then reload the router to boot using the configured IOS image:</p>
+<pre class="command-line"><code>write memory
+reload</code></pre>
+<p class="body-line">After the router starts again, verify that the correct IOS image is running:</p>
+<pre class="command-line"><code>show version</code></pre>
+<p class="body-line">Once the new IOS image has been tested and confirmed to work correctly, the old image can be removed to free flash memory:</p>
+<pre class="command-line"><code>delete <i>filepath</i></code></pre>
 
 
     </section>
