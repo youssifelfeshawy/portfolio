@@ -1611,6 +1611,39 @@ ipconfig /renew                  → request a new address from the DHCP server<
 <pre class="command-line"><code>errdisable recovery cause dhcp-rate-limit</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
+<h3 class="subheading" id="dai">DAI</h3>
+<p class="body-line">DAI (Dynamic ARP Inspection) is a switch security feature that examines ARP messages received on untrusted ports to protect against ARP poisoning. In an ARP poisoning attack, an attacker sends false ARP information, often using Gratuitous ARP (GARP), to associate the attacker's MAC address with another device's IP address. This can cause traffic to be redirected through the attacker, enabling a Man-in-the-Middle attack.</p>
+<p class="body-line">DAI uses trusted and untrusted ports to determine how ARP messages are handled. Ports are untrusted by default. Ports connected toward other trusted network devices, such as switches or routers, should be configured as trusted, while ports connected to end hosts normally remain untrusted.</p>
+<p class="body-line">DAI must first be enabled on the VLANs that should be protected:</p>
+<pre class="command-line"><code>ip arp inspection vlan <i>vlan-id</i></code></pre>
+<aside class="callout"><strong>Note:</strong><p>DAI is configured on a per-VLAN basis. Unlike DHCP snooping, there is no global command required to enable the feature.</p></aside>
+<p class="body-line">A trusted port forwards ARP messages without DAI inspection. The interface toward a trusted network device should therefore be configured as trusted:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  ip arp inspection trust</code></pre>
+<p class="body-line">ARP messages received on untrusted ports are inspected. DAI normally compares the sender MAC address and sender IP address in the ARP message with the information in the DHCP Snooping Binding Table. If the information matches a valid binding, the ARP message is forwarded. If it does not match, the message is discarded.</p>
+<p class="body-line">DAI can also perform additional validation checks on the ARP and Ethernet headers.</p>
+<div class="table-wrap"><table><thead><tr><th>Check</th><th>What it validates</th></tr></thead><tbody>
+<tr><td>dst-mac</td><td>Checks that the destination MAC address in the Ethernet header matches the target MAC address in the ARP payload for ARP replies.</td></tr>
+<tr><td>src-mac</td><td>Checks that the source MAC address in the Ethernet header matches the sender MAC address in the ARP payload for ARP requests and replies.</td></tr>
+<tr><td>ip</td><td>Checks that the sender and target IP addresses in the ARP message are valid and are not invalid addresses such as 0.0.0.0, 255.255.255.255, or multicast addresses.</td></tr>
+</tbody></table></div>
+<p class="body-line">These checks are optional and can be enabled as needed:</p>
+<pre class="command-line"><code>ip arp inspection validate dst-mac ip src-mac</code></pre>
+<aside class="callout"><strong>Note:</strong><p>All desired validation checks must be entered in a single command, in any order, because configuring them separately will overwrite the previous settings.</p></aside>
+<p class="body-line">DAI can also limit the rate of ARP messages received on an interface. This provides additional protection against excessive ARP traffic. On an untrusted interface, if the configured rate is exceeded, the interface can be placed into the err-disabled state. The <code>burst interval</code> is 1 second by default.</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  ip arp inspection limit rate <i>number-of-packets</i> [burst interval <i>seconds</i>]</code></pre>
+<p class="body-line">Automatic recovery can be enabled for interfaces placed into the err-disabled state because of DAI rate limiting:</p>
+<pre class="command-line"><code>errdisable recovery cause arp-inspection        → enable the automatic recovery</code></pre>
+<p class="body-line">Hosts using static IP addresses normally do not have entries in the DHCP Snooping Binding Table. Their ARP messages would therefore fail the normal DAI binding check. An ARP ACL can be used to manually define the valid IP-to-MAC mappings for these hosts:</p>
+<pre class="command-line"><code>arp access-list <i>acl-name</i>
+  permit ip host <i>ip-address</i> mac host <i>mac-address</i>
+ip arp inspection filter <i>acl-name</i> vlan <i>vlan-id</i>       → Apply ACL to the DAI VLAN</code></pre>
+<p class="body-line">To verify DAI operation and configuration:</p>
+<pre class="command-line"><code>show ip arp inspection                  → View DAI status and ARP statistics
+show ip arp inspection interfaces       → View interfaces config and rate limits</code></pre>
+<aside class="callout"><strong>Note:</strong><p>DAI uses the DHCP Snooping Binding Table in a similar way to how DHCP Snooping learns valid client information. For this reason, DHCP Snooping is commonly enabled when DAI is used for dynamically addressed hosts.</p></aside>
+
 <h3 class="subheading" id="remote-access">Remote Access</h3>
 <p class="body-line">Network devices can be accessed directly through the console port or remotely through the network. Remote access allows an administrator to manage a device's CLI from another network using protocols such as Telnet or SSH. The device must have a reachable IP address, and the required remote-access configuration must be enabled.</p>
 <p class="body-line">By default, access through the console port does not require a password. Cisco IOS provides a single console line, always identified as line 0, so only one console connection can be active at a time.</p>
