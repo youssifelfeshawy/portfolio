@@ -62,12 +62,67 @@
 </figure>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="topic-heading" id="network-types">Network Types</h3>
+<h3 class="topic-heading" id="network-devices">Network Devices</h3>
+<p class="body-line">Every device in a network is called a node. Nodes include routers, switches, firewalls, servers, and clients. Servers and clients are specifically called end hosts or endpoints.</p>
 <ul class="doc-list">
-  <li><strong>LAN (Local Area Network):</strong> a network within a small area — a single building, office, or home. Provides high-speed connectivity over short distances. Most LANs use Ethernet (wired) or Wi-Fi (wireless).</li>
-  <li><strong>MAN (Metropolitan Area Network):</strong> spans a city or large campus. Connects multiple LANs within a geographic region, often managed by a single organization or service provider.</li>
-  <li><strong>WAN (Wide Area Network):</strong> spans large geographic areas — cities, countries, or the entire globe. The internet is the largest WAN. Connects remote LANs together over long distances.</li>
+  <li><strong>Client:</strong> a device that accesses a service made available by a server. Examples: a laptop browsing a website, a phone checking email.</li>
+  <li><strong>Server:</strong> a device that provides functions or services for clients. Examples: a web server, an email server, a file server.</li>
+  <li><strong>Switch:</strong> has many network interfaces/ports (usually 24+) for end hosts to connect to. Provides connectivity to hosts within the same LAN (Local Area Network). Does not provide connectivity between different LANs or over the internet.</li>
+  <li><strong>Router:</strong> has fewer network interfaces than a switch. Used to provide connectivity between LANs and to send data over the internet.</li>
+  <li><strong>Firewall:</strong> monitors and control network traffic based on configured security rules. Can be placed inside or outside the network perimeter. Known as a Next-Generation Firewall (NGFW) when it includes more modern and advanced filtering capabilities.</li>
 </ul>
+<div class="table-wrap"><table><thead><tr><th style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">Firewall Types</th><th style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">Description</th></tr></thead><tbody>
+<tr><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;"><strong>Network Firewall</strong></td><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">A hardware device that filters traffic between networks. Sits at the boundary between a private network and the internet (or between internal network segments).</td></tr>
+<tr><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;"><strong>Host-Based Firewall</strong></td><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">A software application that filters traffic entering and exiting a single host machine, such as a PC. Even with a network firewall in place, each host should have its own firewall as an extra line of defense.</td></tr>
+</tbody></table></div>
+<aside class="callout"><strong>Note:</strong><p>The same device can be a client in some situations and a server in others — for example, a PC that hosts a local file share is acting as a server for that service while also being a client when it browses the internet.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="topic-heading" id="network-types">Network Types</h3>
+<p class="body-line">Networks can be classified by their geographic scope or by the environment in which they are used:</p>
+<ul class="doc-list">
+  <li><strong>LAN (Local Area Network):</strong> covers a small geographic area, such as a home, office, or single building. It provides high-speed connectivity over short distances, typically using Ethernet or Wi-Fi.</li>
+  <li><strong>MAN (Metropolitan Area Network):</strong> covers a larger geographic area, such as a city or large campus. It connects multiple LANs within the same region, often under the control of one organization or service provider.</li>
+  <li><strong>WAN (Wide Area Network):</strong> covers large geographic areas, such as multiple cities, countries, or even the entire globe. It connects networks over long distances; the Internet is the largest example of a WAN.</li>
+  <li><strong>SOHO (Small Office/Home Office):</strong> describes a small office or home networking environment rather than a geographic network type. SOHO networks typically have a small number of devices and often use a single multifunction router that combines routing, switching, firewall, wireless access point, and modem functions.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="subheading" id="network-design">Network Topologies</h3>
+<p class="body-line">Network topology describes how devices are connected to each other, either physically or logically. The way a network is designed depends on factors such as the number of devices, the size of the network, the required performance, and the level of redundancy needed.</p>
+<ul class="doc-list">
+  <li><strong>Star:</strong> multiple devices connect to one central device. It is the most common arrangement in local networks.</li>
+  <li><strong>Full Mesh:</strong> every device has a direct connection to every other device, providing high redundancy but requiring many connections.</li>
+  <li><strong>Partial Mesh:</strong> some devices have direct connections to each other, providing a balance between cost and redundancy.</li>
+  <li><strong>Hub-and-Spoke:</strong> multiple remote sites connect to one central site, commonly used to connect branch locations to a main location.</li>
+</ul>
+<p class="body-line">As a local network grows, devices can be arranged in layers to make the network easier to manage and expand:</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/three-layers_design.png" alt="Three-layers Design"></figure>
+<ul class="doc-list">
+  <li><strong>Access Layer:</strong> connects end devices such as computers, phones, printers, cameras, and wireless access points.</li>
+  <li><strong>Distribution Layer:</strong> connects groups of access devices and provides connectivity to other parts of the network.</li>
+  <li><strong>Core Layer:</strong> While standard networks only require two layers (access and distribution), this third layer is added to larger environments to provide a high-speed central path that maintains connectivity during device or link failures.</li>
+</ul>
+<p class="body-line">Data centers may use a different design called a spine-leaf architecture:</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/spine-leaf_architecture.jpg" alt="Spine-leaf Architecture"></figure>
+<p class="body-line">In this design, servers connect to leaf switches, and every leaf switch connects to every spine switch. Leaf switches do not connect directly to other leaf switches, and spine switches do not connect directly to other spine switches. This creates multiple paths between servers and provides predictable traffic flow and latency.</p>
+
+<p class="body-line">When an organization needs to connect different sites, such as branch offices in different cities, it needs a WAN connection between those locations. One option is a leased line, which provides a dedicated connection between two sites and gives the organization a direct and private communication link.</p>
+<p class="body-line">Instead of building and maintaining these connections itself, an organization can obtain WAN connectivity from an ISP (Internet Service Provider). An ISP is a company that provides network connectivity and other communication services to customers and operates the infrastructure needed to connect their sites to other networks.</p>
+<p class="body-line">ISPs can use MPLS (Multi-Protocol Label Switching) to connect customer sites across their networks. MPLS allows the ISP to create private connections between customer locations using labels to identify and forward traffic through the provider network. From the customer's perspective, the ISP network can provide connectivity between sites without requiring the customer to manage the provider's internal network.</p>
+<p class="body-line">ISPs provided internet access using technologies such as:</p>
+<ul class="doc-list">
+  <li><strong>Digital Subscriber Line (DSL):</strong> provides internet access over existing telephone lines and uses a DSL modem to communicate over the line.</li>
+  <li><strong>Cable Internet (CATV):</strong> provides internet access over the same cable infrastructure used for television services and requires a cable modem to connect the customer's network to the ISP.</li>
+  <li><strong>Fiber Ethernet:</strong> is a modern high-speed access technology that uses fiber-optic cables to provide fast, reliable connectivity over longer distances and is widely used for both business and residential internet access.</li>
+</ul>
+<p class="body-line">Because internet connectivity can be a critical part of a network, organizations may use more than one connection to improve availability. The amount of redundancy depends on the number of connections and Internet Service Providers (ISPs)—the companies that supply the actual internet access—that are used:</p>
+<div class="table-wrap"><table><thead><tr><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td>Single Homed</td><td>One connection to one ISP, providing no connection redundancy.</td></tr>
+<tr><td>Dual Homed</td><td>Two connections to one ISP, providing link redundancy, but the ISP remains a single point of failure.</td></tr>
+<tr><td>Multihomed</td><td>One connection to each of two ISPs, providing ISP redundancy.</td></tr>
+<tr><td>Dual Multihomed</td><td>Two connections to each of two ISPs, providing both link and ISP redundancy.</td></tr>
+</tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 
 <h3 class="topic-heading" id="communication-types">Communication Types</h3>
@@ -81,24 +136,6 @@
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="topic-heading" id="network-devices">Network Devices</h3>
-<p class="body-line">Every device in a network is called a node. Nodes include routers, switches, firewalls, servers, and clients. Servers and clients are specifically called end hosts or endpoints.</p>
-<ul class="doc-list">
-  <li><strong>Client:</strong> a device that accesses a service made available by a server. Examples: a laptop browsing a website, a phone checking email.</li>
-  <li><strong>Server:</strong> a device that provides functions or services for clients. Examples: a web server, an email server, a file server.</li>
-  <li><strong>Switch:</strong> has many network interfaces/ports (usually 24+) for end hosts to connect to. Provides connectivity to hosts within the same LAN (Local Area Network). Does not provide connectivity between different LANs or over the internet.</li>
-  <li><strong>Router:</strong> has fewer network interfaces than a switch. Used to provide connectivity between LANs and to send data over the internet.</li>
-  <li><strong>Firewall:</strong> monitors and control network traffic based on configured security rules. Can be placed inside or outside the network perimeter. Known as a Next-Generation Firewall (NGFW) when it includes more modern and advanced filtering capabilities.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<div class="table-wrap"><table><thead><tr><th style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">Firewall Types</th><th style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">Description</th></tr></thead><tbody>
-<tr><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;"><strong>Network Firewall</strong></td><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">A hardware device that filters traffic between networks. Sits at the boundary between a private network and the internet (or between internal network segments).</td></tr>
-<tr><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;"><strong>Host-Based Firewall</strong></td><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">A software application that filters traffic entering and exiting a single host machine, such as a PC. Even with a network firewall in place, each host should have its own firewall as an extra line of defense.</td></tr>
-</tbody></table></div>
-
-<div class="doc-spacer" aria-hidden="true"></div>
-<aside class="callout"><strong>Note:</strong><p>The same device can be a client in some situations and a server in others — for example, a PC that hosts a local file share is acting as a server for that service while also being a client when it browses the internet.</p></aside>
 <h3 class="topic-heading" id="bits-bytes-and-speed">Bits & Bytes</h3>
 <ul class="doc-list">
   <li>8 bits = 1 byte. Data sizes (file sizes) are typically measured in bytes while network speeds are measured in bits per second — not bytes per second.</li>

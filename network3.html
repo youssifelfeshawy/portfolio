@@ -65,67 +65,6 @@
 
 
 
-<h2 class="major-heading" id="network-design">Network Design and Topologies</h2>
-<p class="body-line">Network topology describes how devices are physically or logically connected to each other.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="topology-types">Topology Types</h3>
-<ul class="doc-list">
-  <li><strong>Star:</strong> multiple devices all connect to one central device. The most common LAN topology.</li>
-  <li><strong>Full Mesh:</strong> every device is directly connected to every other device. Maximum redundancy but high cost.</li>
-  <li><strong>Partial Mesh:</strong> some devices are directly connected to each other, but not all. A balance between cost and redundancy.</li>
-  <li><strong>Hub-and-Spoke:</strong> like a star topology but used in WAN contexts — multiple spoke sites connect to a central hub site.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="two-tier-lan">Two-Tier LAN Design (Collapsed Core)</h3>
-<p class="body-line">The two-tier design uses two hierarchical layers — Access and Distribution — and omits the Core layer found in three-tier designs. Sometimes called a "Collapsed Core" design because the Distribution layer also functions as the core.</p>
-<div class="table-wrap"><table><thead><tr><th>Layer</th><th>Role</th><th>Characteristics</th></tr></thead><tbody>
-<tr><td>Access Layer</td><td>End hosts connect here (PCs, printers, cameras, phones, APs)</td><td>Many ports for end hosts. QoS marking done here. Security (port security, DAI) applied here. PoE for wireless APs and IP phones.</td></tr>
-<tr><td>Distribution Layer</td><td>Aggregates access switches; border between Layer 2 and Layer 3</td><td>Connects to internet, WAN. Connections between Distribution switches are Layer 3. Routing protocols (e.g. OSPF) share routes between Distribution switches. Sometimes called the Core-Distribution Layer or Aggregation Layer.</td></tr>
-</tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="three-tier-lan">Three-Tier LAN Design</h3>
-<p class="body-line">For large networks with many Distribution switches (recommended when more than three Distribution layers exist in a single location), a Core layer is added.</p>
-<div class="table-wrap"><table><thead><tr><th>Layer</th><th>Role</th><th>Characteristics</th></tr></thead><tbody>
-<tr><td>Access Layer</td><td>End hosts connect here</td><td>Same as two-tier.</td></tr>
-<tr><td>Distribution Layer</td><td>Aggregates access switches</td><td>Same as two-tier.</td></tr>
-<tr><td>Core Layer</td><td>Connects Distribution layers together</td><td>Focuses on speed ("fast transport"). No CPU-intensive tasks (no QoS marking, no security). All connections are Layer 3 — no Spanning Tree. Must maintain connectivity even if devices fail.</td></tr>
-</tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="spine-leaf">Spine-Leaf Architecture (Data Centers)</h3>
-<p class="body-line">Traditional data centers used three-tier architecture, designed when most traffic was North-South (client to server via internet). With virtualization, traffic became predominantly East-West (server to server within the data center), causing bottlenecks and variable latency in the traditional design. Spine-Leaf (also called Clos) architecture was developed to solve this.</p>
-<ul class="doc-list">
-  <li>Every Leaf switch connects to every Spine switch.</li>
-  <li>Every Spine switch connects to every Leaf switch.</li>
-  <li>Leaf switches do not connect to other Leaf switches. Spine switches do not connect to other Spine switches.</li>
-  <li>End hosts (servers) only connect to Leaf switches.</li>
-  <li>Traffic between servers is load-balanced randomly across Spine switches. Every server is separated by the same number of hops (except servers on the same Leaf), providing consistent and predictable East-West latency.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="soho">SOHO Networks</h3>
-<p class="body-line">SOHO (Small Office/Home Office) networks serve small companies or home offices with few devices. All networking functions are typically provided by a single device — the home router or wireless router — which combines a router, switch, firewall, wireless access point, and modem into one unit.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h2 class="major-heading" id="wan">WAN — Wide Area Networks</h2>
-<p class="body-line">A WAN (Wide Area Network) is a network that extends over a large geographic area, connecting geographically separate LANs — such as a company's offices, data centers, and remote sites. The Internet itself is a WAN, but the term typically refers to an enterprise's private connections between sites.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="wan-technologies">WAN Technologies</h3>
-<ul class="doc-list">
-  <li><strong>Leased Line:</strong> a dedicated physical connection between two sites. Uses serial connections with PPP or HDLC encapsulation. More expensive and slower to provision than Ethernet WAN options — becoming less common.</li>
-  <li><strong>MPLS (Multi-Protocol Label Switching):</strong> shared service provider infrastructure that creates private VPNs using labels rather than destination IPs for forwarding decisions. CE (Customer Edge), PE (Provider Edge), and P (Provider core) routers are the key components. Layer 3 MPLS VPN: CE and PE routers peer via routing protocols (e.g. OSPF) to share routes. Layer 2 MPLS VPN: the provider network is transparent — CE routers appear directly connected to each other and form routing adjacencies between themselves.</li>
-  <li><strong>DSL (Digital Subscriber Line):</strong> internet access over existing phone lines. Requires a DSL modem to convert data to a phone-line-compatible format.</li>
-  <li><strong>Cable Internet (CATV):</strong> internet access over cable TV lines. Requires a cable modem.</li>
-  <li><strong>Fiber Ethernet:</strong> growing in popularity for both enterprise and consumer access due to high speeds over long distances.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="internet-connectivity">Internet Connectivity Redundancy</h3>
-<div class="table-wrap"><table><thead><tr><th>Type</th><th>Description</th></tr></thead><tbody>
-<tr><td>Single Homed</td><td>1 connection to 1 ISP — no redundancy</td></tr>
-<tr><td>Dual Homed</td><td>2 connections to 1 ISP — link redundancy, but single ISP is still a single point of failure</td></tr>
-<tr><td>Multihomed</td><td>1 connection to each of 2 ISPs — ISP redundancy</td></tr>
-<tr><td>Dual Multihomed</td><td>2 connections to each of 2 ISPs — maximum redundancy</td></tr>
-</tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-
 <h2 class="major-heading" id="vpn">VPNs — Virtual Private Networks</h2>
 <p class="body-line">Private WAN services (leased lines, MPLS) provide built-in security through dedicated connections or labels. When using the Internet as a WAN, VPNs (Virtual Private Networks) are used to provide secure, encrypted communications over the public network.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
