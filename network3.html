@@ -63,58 +63,6 @@
 <p class="body-line">Wireshark is a network packet capture and analysis tool. It captures all network traffic visible on an interface and lets you inspect every layer of every packet — from the physical frame up through the application layer. It supports filtering by protocol, IP address, port, and many other criteria, making it an essential tool for network troubleshooting, learning, and security analysis.</p>
 <div class="doc-spacer" aria-hidden="true"></div> -->
 
-
-
-<h2 class="major-heading" id="vpn">VPNs — Virtual Private Networks</h2>
-<p class="body-line">Private WAN services (leased lines, MPLS) provide built-in security through dedicated connections or labels. When using the Internet as a WAN, VPNs (Virtual Private Networks) are used to provide secure, encrypted communications over the public network.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="site-to-site-vpn">Site-to-Site VPN (IPsec)</h3>
-<p class="body-line">A site-to-site VPN creates an encrypted tunnel between two routers (one at each site), allowing all devices at both sites to communicate securely over the Internet. The tunnel endpoints handle encryption and decryption — other devices at each site send unencrypted traffic to their local router as normal.</p>
-<ul class="doc-list">
-  <li>The original packet is encrypted using a session key, then encapsulated with a VPN header and a new IP header, and sent through the tunnel.</li>
-  <li>The receiving router decrypts the packet and forwards the original to its destination.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="ipsec-limitations">IPsec Limitations and Solutions</h4>
-<ul class="doc-list">
-  <li><strong>No broadcast/multicast support:</strong> IPsec only supports unicast — routing protocols like OSPF (which use multicast) cannot run over IPsec tunnels directly. Solution: <strong>GRE over IPsec</strong> — GRE encapsulates the packet (supporting broadcast/multicast and multiple Layer 3 protocols), then IPsec encrypts the GRE packet.</li>
-  <li><strong>Complex full-mesh configuration:</strong> manually configuring tunnels between many sites is labor-intensive. Solution: <strong>DMVPN (Dynamic Multipoint VPN)</strong> — a Cisco solution where routers only configure a tunnel to a hub; the hub provides each spoke with information to dynamically form direct spoke-to-spoke tunnels. Combines the simplicity of hub-and-spoke configuration with the efficiency of direct spoke-to-spoke communication.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="remote-access-vpn">Remote-Access VPN (TLS)</h3>
-<p class="body-line">Remote-access VPNs allow individual end devices (laptops, phones) to securely access company internal resources over the Internet — without being physically on the company network. VPN client software (e.g. Cisco AnyConnect) is installed on the device and forms an encrypted TLS tunnel to the company's router or firewall acting as a TLS server.</p>
-<p class="body-line">TLS (Transport Layer Security) is the protocol that also secures HTTPS. It was formerly known as SSL (Secure Sockets Layer), developed by Netscape, and renamed when standardized by the IETF.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="vpn-comparison">Site-to-Site vs Remote-Access VPN</h3>
-<div class="table-wrap"><table><thead><tr><th>Feature</th><th>Site-to-Site VPN</th><th>Remote-Access VPN</th></tr></thead><tbody>
-<tr><td>Protocol</td><td>IPsec</td><td>TLS</td></tr>
-<tr><td>Scope</td><td>Protects traffic for all devices at both connected sites</td><td>Protects traffic for one individual end device</td></tr>
-<tr><td>Setup</td><td>Configured on routers/firewalls at each site</td><td>VPN client software installed on the end device</td></tr>
-<tr><td>Use case</td><td>Permanently connecting two or more offices over the Internet</td><td>On-demand secure access for remote workers on untrusted networks</td></tr>
-</tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h2 class="major-heading" id="vrf">VRF — Virtual Routing and Forwarding</h2>
-<p class="body-line">VRF (Virtual Routing and Forwarding) divides a single router into multiple virtual routers, each with its own independent routing table — similar to how VLANs divide a single switch into multiple virtual switches. Traffic in one VRF cannot be forwarded out of an interface in another VRF unless VRF Leaking is configured. The type discussed here is VRF-lite — VRF without MPLS.</p>
-<ul class="doc-list">
-  <li>Layer 3 interfaces, SVIs, and routed ports on multilayer switches can all be assigned to a VRF.</li>
-  <li>Without VRF, two interfaces on the same router cannot be in the same subnet. VRF removes this limitation by isolating each VRF's routing table.</li>
-  <li><strong>Common use:</strong> service providers use VRF so one device can carry traffic from multiple customers with each customer's traffic fully isolated. Customer IP address ranges can overlap without conflict.</li>
-  <li>When an interface is assigned to a VRF, any existing IP address on that interface is removed — re-configure the IP address after assigning the VRF.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="vrf-config">VRF Configuration</h3>
-<pre class="command-line"><code>ip vrf &lt;vrf-name&gt;                              → create a VRF instance
-
-int &lt;interface&gt;
-  ip vrf forwarding &lt;vrf-name&gt;                 → assign interface to the VRF (removes any existing IP address)
-  ip address &lt;ip&gt; &lt;mask&gt;                       → re-configure the IP address after VRF assignment
-
-show ip vrf                                    → view all VRF instances and their assigned interfaces
-show ip route vrf &lt;vrf-name&gt;                   → view the routing table for a specific VRF
-ping vrf &lt;vrf-name&gt; &lt;ip-address&gt;              → ping using a specific VRF's routing table</code></pre>
-<div class="doc-spacer" aria-hidden="true"></div>
-
 <h2 class="major-heading" id="wireless">Wireless Networks — IEEE 802.11 / Wi-Fi</h2>
 <p class="body-line">Wireless LAN standards are defined by IEEE 802.11. Wi-Fi is a trademark of the Wi-Fi Alliance — an organization that tests and certifies equipment for 802.11 compliance and interoperability. The term Wi-Fi has become synonymous with 802.11 wireless networks.</p>
 <div class="doc-spacer" aria-hidden="true"></div>

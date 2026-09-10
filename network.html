@@ -1158,6 +1158,24 @@ show ip ospf interface                → view OSPF settings on interfaces</code
   no shutdown</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
+<h3 class="subheading" id="vrf">VRF</h3>
+<p class="body-line">VRF (Virtual Routing and Forwarding) allows a single router or multilayer switch to maintain multiple independent routing tables. Each VRF acts like a separate virtual router, similar to how VLANs divide a switch into separate Layer 2 networks. Traffic belonging to one VRF is isolated from other VRFs unless VRF leaking is specifically configured.</p>
+<p class="body-line">Layer 3 interfaces, SVIs, and routed ports on multilayer switches can be assigned to a VRF. Because each VRF has its own independent routing table, the same IP subnet can be used in different VRFs without creating a conflict.</p>
+<p class="body-line">A common use of VRF is service-provider networks, where a single device can carry traffic for multiple customers while keeping their routing information and traffic isolated. This also allows different customers to use overlapping IP address ranges without conflict.</p>
+<p class="body-line">First, create the VRF instance:</p>
+<pre class="command-line"><code>ip vrf <i>vrf-name</i></code></pre>
+<p class="body-line">Then assign the required Layer 3 interface to the VRF:</p>
+<pre class="command-line"><code>int <i>interface-id</i>
+  ip vrf forwarding <i>vrf-name</i></code></pre>
+<p class="body-line">Because assigning the interface to the VRF removes its existing IP address, configure the interface address again:</p>
+<pre class="command-line"><code>  ip address <i>ip-address subnet-mask</i></code></pre>
+<p class="body-line">To view the VRF instances configured on the device and the interfaces assigned to them, use:</p>
+<pre class="command-line"><code>show ip vrf</code></pre>
+<p class="body-line">Each VRF maintains its own routing table. To view the routing table for a specific VRF:</p>
+<pre class="command-line"><code>show ip route vrf <i>vrf-name</i></code></pre>
+<p class="body-line">When testing connectivity, the VRF must be specified so the device uses the correct routing table:</p>
+<pre class="command-line"><code>ping vrf <i>vrf-name ip-address</i></code></pre>
+
 <h3 class="topic-heading" id="fhrp">FHRP</h3>
 <p class="body-line">Hosts normally depend on one default gateway to reach other networks. If that gateway fails, the hosts lose connectivity even if another router is available. FHRPs (First Hop Redundancy Protocols) solve this problem by allowing multiple routers to provide one redundant default gateway.</p>
 <p class="body-line">The routers share a Virtual IP address and a Virtual MAC address. Hosts use the Virtual IP as their default gateway instead of the physical IP address of a specific router. One router forwards the traffic while another remains ready to take over if the forwarding router fails.</p>
@@ -1927,6 +1945,30 @@ reload</code></pre>
 <p class="body-line">Once the new IOS image has been tested and confirmed to work correctly, the old image can be removed to free flash memory:</p>
 <pre class="command-line"><code>delete <i>filepath</i></code></pre>
 
+<h3 class="subheading" id="vpn">VPNs</h3>
+<p class="body-line">When organizations use private WAN services such as leased lines or MPLS, the communication path is provided through dedicated or provider-controlled infrastructure. When the Internet is used as the WAN, the traffic travels across a public network, so additional security is needed. VPNs (Virtual Private Networks) provide this security by creating encrypted communication paths over the Internet.</p>
+<p class="body-line">VPNs can be used to securely connect entire networks or to securely connect individual users to a private network. The two common approaches are site-to-site VPNs and remote-access VPNs.</p>
+<p class="body-line">A site-to-site VPN is commonly implemented using IPsec and creates an encrypted tunnel between two routers or firewalls, one at each site. The tunnel endpoints handle the encryption and decryption, so the end devices inside the sites do not need to perform these operations themselves.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/site_to_site_vpn.png" alt="Site-to-Site VPN"></figure>
+<p class="body-line">For example, when a host at one site sends a packet to a host at another site, the local VPN device takes the original packet, encrypts it, and adds the information required to transport it across the Internet:</p>
+<ul class="doc-list">
+  <li>The original packet is encrypted using a session key and encapsulated with VPN-related information and a new outer IP header.</li>
+  <li>The packet travels across the Internet between the two VPN endpoints as protected traffic.</li>
+  <li>The receiving VPN device removes the outer information, decrypts the original packet, and forwards it to the destination host.</li>
+</ul>
+<p class="body-line">Although IPsec provides encryption and secure transport, it has some limitations when it is used by itself. IPsec normally carries unicast IP traffic, so protocols that depend on broadcast or multicast traffic, such as OSPF, cannot run directly across a basic IPsec tunnel. GRE (Generic Routing Encapsulation) can be used with IPsec to solve this problem, which is known as GRE over IPsec. GRE encapsulates the original traffic and supports multicast, broadcast, and multiple Layer 3 protocols, while IPsec provides encryption for the GRE packet.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/gre_over_ipsec.png" alt="GRE over IPsec"></figure>
+<p class="body-line">Another challenge appears when many sites need to communicate with each other. Building a separate tunnel between every pair of sites creates a complex full-mesh configuration. DMVPN (Dynamic Multipoint VPN) can reduce this complexity by allowing spoke routers to initially connect to a hub and then dynamically establish direct spoke-to-spoke tunnels when needed.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/dynamic_multipoint_vpn.png" alt="Dynamic Multipoint VPN"></figure>
+<p class="body-line">A different approach is required when the VPN connection is for an individual user rather than an entire site. Remote-access VPNs allow a laptop, phone, or other end device to securely access internal company resources over the Internet. The user runs VPN client software, which establishes an encrypted tunnel to a VPN gateway such as a router or firewall.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/remote_access_vpn.jpg" alt="Remote-Access VPN"></figure>
+<p class="body-line">Remote-access VPNs commonly use TLS (Transport Layer Security), the same security protocol used by HTTPS. TLS creates an encrypted connection between the user's device and the VPN gateway, protecting the traffic while it crosses an untrusted network such as the public Internet. TLS was originally associated with SSL (Secure Sockets Layer), but TLS became the standardized successor.</p>
+<div class="table-wrap"><table><thead><tr><th>Feature</th><th>Site-to-Site VPN</th><th>Remote-Access VPN</th></tr></thead><tbody>
+<tr><td>Common protocol</td><td>IPsec</td><td>TLS</td></tr>
+<tr><td>Scope</td><td>Connects and protects traffic between entire networks</td><td>Connects and protects traffic from an individual end device</td></tr>
+<tr><td>Endpoints</td><td>Routers or firewalls at the connected sites</td><td>VPN client on the end device and a VPN gateway</td></tr>
+<tr><td>Use case</td><td>Permanently connecting branch offices or other sites over the Internet</td><td>Providing secure access for remote users over untrusted networks</td></tr>
+</tbody></table></div>
 
     </section>
   </main>
