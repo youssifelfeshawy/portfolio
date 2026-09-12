@@ -1944,6 +1944,7 @@ reload</code></pre>
 <pre class="command-line"><code>show version</code></pre>
 <p class="body-line">Once the new IOS image has been tested and confirmed to work correctly, the old image can be removed to free flash memory:</p>
 <pre class="command-line"><code>delete <i>filepath</i></code></pre>
+<div class="doc-spacer" aria-hidden="true"></div>
 
 <h3 class="subheading" id="vpn">VPNs</h3>
 <p class="body-line">When organizations use private WAN services such as leased lines or MPLS, the communication path is provided through dedicated or provider-controlled infrastructure. When the Internet is used as the WAN, the traffic travels across a public network, so additional security is needed. VPNs (Virtual Private Networks) provide this security by creating encrypted communication paths over the Internet.</p>
@@ -1969,6 +1970,150 @@ reload</code></pre>
 <tr><td>Endpoints</td><td>Routers or firewalls at the connected sites</td><td>VPN client on the end device and a VPN gateway</td></tr>
 <tr><td>Use case</td><td>Permanently connecting branch offices or other sites over the Internet</td><td>Providing secure access for remote users over untrusted networks</td></tr>
 </tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="subheading" id="wireless">Wireless Networks</h3>
+<p class="body-line">Wireless LANs are based on the IEEE 802.11 standards. Wi-Fi is the name used by the Wi-Fi Alliance for products that are tested and certified for interoperability with 802.11 standards. An Access Point (AP) is a network device that provides wireless connectivity to client devices and connects them to the wired network. Unlike a switched Ethernet network, wireless devices share the same radio medium, which introduces several challenges:</p>
+<ul class="doc-list">
+  <li><strong>Shared medium:</strong> devices within radio range can receive transmitted frames but this makes wireless networks more exposed to interception and privacy concerns than switched wired networks.</li>
+  <li><strong>Half-duplex:</strong> devices use CSMA/CA (Carrier Sense Multiple Access with Collision Avoidance) to reduce the chance of collisions by waiting for the medium to become available before transmitting.</li>
+  <li><strong>Signal interference:</strong> wireless signals can be affected by interference from other devices and neighboring networks, as well as by physical effects such as:</li>
+</ul>
+<div class="table-wrap"><table><thead><tr><th>Signal Effect</th><th>Description</th></tr></thead><tbody>
+<tr><td>Absorption</td><td>Signal passes through a material and loses energy, which weakens the signal. Walls, floors, and human bodies can absorb Wi-Fi signals.</td></tr>
+<tr><td>Reflection</td><td>Signal bounces off a material such as metal. Metal surfaces, such as elevator walls, can reflect signals and prevent them from penetrating the area.</td></tr>
+<tr><td>Refraction</td><td>Signal changes direction when entering a material where it travels at a different speed, such as glass or water.</td></tr>
+<tr><td>Diffraction</td><td>Signal bends around an obstacle, which can create weak-signal or blind areas behind the obstacle.</td></tr>
+<tr><td>Scattering</td><td>Signal spreads in multiple directions when it encounters irregular surfaces or particles such as dust, smog, or rough surfaces.</td></tr>
+</tbody></table></div>
+<aside class="callout"><strong>Note:</strong><p>Unlike wired CSMA/CD which detects collisions after they happen, CSMA/CA avoids them by having devices wait until the medium is idle before transmitting.</p></aside>
+<p class="body-line">Wireless networks operate within specific frequency bands. The main Wi-Fi bands are 2.4 GHz and 5 GHz, with the 6 GHz band introduced with Wi-Fi 6E:</p>
+<div class="table-wrap"><table><thead><tr><th>Band</th><th>Advantages</th><th>Disadvantages</th></tr></thead><tbody>
+<tr><td>2.4 GHz</td><td>Longer range and better penetration through walls and other obstacles.</td><td>More interference because many devices use this band, and adjacent channels overlap.</td></tr>
+<tr><td>5 GHz</td><td>Less interference and more non-overlapping channels, making channel planning easier.</td><td>Shorter range and weaker penetration through obstacles than 2.4 GHz.</td></tr>
+<tr><td>6 GHz</td><td>Provides additional spectrum and less congestion.</td><td>Shorter range than 5 GHz.</td></tr>
+</tbody></table></div>
+<p class="body-line">Because wireless frequencies and transmission power are subject to varying regional regulations, careful channel planning is essential. In the 2.4 GHz band, where adjacent channels overlap, access points are typically arranged using non-overlapping channels 1, 6, and 11 to provide seamless coverage while minimizing co-channel interference.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/2.4ghz_channels.png" alt="2.4 GHz Channels"></figure>
+<p class="body-line">802.11 also defines different service sets, which describe how wireless devices are organized. Devices belonging to the same service set use the same SSID (Service Set Identifier), which is the human-readable name of the wireless network:</p>
+<div class="table-wrap"><table><thead><tr><th>Service Set</th><th>Full Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>IBSS</td><td>Independent Basic Service Set</td><td>Ad hoc network in which devices communicate directly without an access point. Suitable only for small, simple deployments.</td></tr>
+<tr><td>BSS</td><td>Basic Service Set</td><td>Infrastructure network in which wireless clients connect through an access point. The AP radio is identified by a BSSID, which is its MAC address, and the coverage area is the BSA.</td></tr>
+<tr><td>ESS</td><td>Extended Service Set</td><td>Multiple BSSs connected through the wired distribution system and using the same SSID. Different BSSIDs and channels allow clients to roam between APs without reconnecting.</td></tr>
+<tr><td>MBSS</td><td>Mesh Basic Service Set</td><td>APs use two separate radios: one for the clients and the other for a private "backhaul" channel used for AP-to-AP communication. All APs connect back to a main Root Access Point (RAP) that is physically wired to the network.</td></tr>
+</tbody></table></div>
+<p class="body-line">The wired network connecting wireless access points is called the Distribution System (DS). Each wireless LAN can be associated with a VLAN in the wired network. An AP can provide multiple SSIDs simultaneously, with each SSID mapped to a different VLAN. In an autonomous AP deployment, the wired connection normally uses a trunk so the AP can carry traffic for multiple VLANs.</p>
+<p class="body-line">Access points can also operate in different modes depending on how the wireless network is designed:</p>
+<div class="table-wrap"><table><thead><tr><th>Mode</th><th>Description</th></tr></thead><tbody>
+<tr><td>Standard AP (BSS)</td><td>Normal access-point operation in which wireless clients connect to the AP.</td></tr>
+<tr><td>Repeater</td><td>Extends wireless coverage by receiving and retransmitting traffic. A single-radio repeater uses the same channel for both directions and can reduce throughput, while a dual-radio repeater can use separate channels.</td></tr>
+<tr><td>Workgroup Bridge (WGB)</td><td>Acts as a wireless client while providing wireless connectivity to wired devices. Universal WGB can connect one wired device, while Cisco WGB can connect multiple devices.</td></tr>
+<tr><td>Outdoor Bridge</td><td>Provides a wireless connection between separate networks over longer distances using directional antennas. It can operate in point-to-point or point-to-multipoint configurations.</td></tr>
+</tbody></table></div>
+<p class="body-line">The 802.11 standards have evolved over time:</p>
+<div class="table-wrap"><table><thead><tr><th>Standard</th><th>Wi-Fi Generation</th><th>Frequency</th><th>Maximum Speed</th></tr></thead><tbody>
+<tr><td>802.11</td><td>—</td><td>2.4 GHz</td><td>2 Mbps</td></tr>
+<tr><td>802.11b</td><td>—</td><td>2.4 GHz</td><td>11 Mbps</td></tr>
+<tr><td>802.11a</td><td>—</td><td>5 GHz</td><td>54 Mbps</td></tr>
+<tr><td>802.11g</td><td>—</td><td>2.4 GHz</td><td>54 Mbps</td></tr>
+<tr><td>802.11n</td><td>Wi-Fi 4</td><td>2.4 / 5 GHz</td><td>600 Mbps</td></tr>
+<tr><td>802.11ac</td><td>Wi-Fi 5</td><td>5 GHz</td><td>6.93 Gbps</td></tr>
+<tr><td>802.11ax</td><td>Wi-Fi 6 / 6E</td><td>2.4 / 5 / 6 GHz</td><td>9.6 Gbps</td></tr>
+</tbody></table></div>
+<p class="body-line">Wireless security and integrity mechanisms have evolved. It offers two primary methods: Personal and Enterprise authentication. While Personal mode uses a simple pre-shared key (PSK) for home or small networks, Enterprise mode requires each user to authenticate individually via a central server using the EAP (Extensible Authentication Protocol).</p>
+<div class="table-wrap"><table><thead><tr><th>Standard</th><th>Encryption</th><th>Authentication</th><th>Integrity</th><th>Notes</th></tr></thead><tbody>
+<tr><td>WEP (Wired Equivalent Privacy)</td><td>RC4</td><td>Open or Shared Key</td><td>None</td><td>Original 802.11 security mechanism. Easily cracked and should not be used.</td></tr>
+<tr><td>WPA (Wi-Fi Protected Access)</td><td>TKIP (RC4-based)</td><td>PSK or 802.1X/EAP</td><td>MIC (Message Integrity Check)</td><td>Temporary solution to address weaknesses in WEP. Vulnerable and should be avoided.</td></tr>
+<tr><td>WPA2</td><td>CCMP/AES</td><td>PSK or 802.1X/EAP</td><td>CBC-MAC</td><td>Provides stronger security. Personal mode uses a PSK, while Enterprise mode uses 802.1X.</td></tr>
+<tr><td>WPA3</td><td>GCMP/AES</td><td>SAE (Simultaneous Authentication of Equals) or 802.1X/EAP</td><td>GMAC</td><td>Newer security standard. SAE replaces the WPA2 PSK authentication process and provides protection against offline dictionary attacks.</td></tr>
+</tbody></table></div>
+<p class="body-line">EAP provides the authentication framework used with 802.1X. It involves three main entities: the supplicant, which is the client device; the authenticator, which is the AP or switch; and the authentication server, typically a RADIUS server:</p>
+<div class="table-wrap"><table><thead><tr><th>EAP Method</th><th>Certificate Required</th><th>Description</th></tr></thead><tbody>
+<tr><td>LEAP</td><td>None</td><td>Cisco proprietary method using username and password authentication. It is vulnerable and should not be used.</td></tr>
+<tr><td>EAP-FAST</td><td>None, uses PAC</td><td>Cisco proprietary method that establishes a protected tunnel using PAC before authenticating the client.</td></tr>
+<tr><td>PEAP</td><td>Server only</td><td>Uses the server certificate to establish a TLS tunnel, then authenticates the client inside the tunnel.</td></tr>
+<tr><td>EAP-TLS</td><td>Server and client</td><td>Uses certificates on both sides for mutual authentication and provides strong security. No need authentication inside the tunnel. TLS tunnel is used for key exchange.</td></tr>
+</tbody></table></div>
+<p class="body-line">Before a wireless station (client) can send normal traffic through an AP, it must first discover the wireless network, authenticate, and become associated with the AP. The station passes through three states:</p>
+<ul class="doc-list">
+  <li>Not authenticated and not associated.</li>
+  <li>Authenticated but not associated.</li>
+  <li>Authenticated and associated. Only in this state can the station send traffic through the AP.</li>
+</ul>
+<p class="body-line">A station can discover available wireless networks using:</p>
+<ul class="doc-list">
+  <li><strong>Active Scanning:</strong> the station sends Probe Requests and listens for Probe Responses from APs.</li>
+  <li><strong>Passive Scanning:</strong> the station listens for Beacon messages periodically broadcast by APs to advertise the BSS.</li>
+</ul>
+<p class="body-line">Once communication begins, 802.11 uses three main frame categories:</p>
+<div class="table-wrap"><table><thead><tr><th>Type</th><th>Purpose</th><th>Examples</th></tr></thead><tbody>
+<tr><td>Management</td><td>Establishes and maintains wireless connections and manages the BSS.</td><td>Beacon, Probe Request, Probe Response, Authentication, Association Request, Association Response</td></tr>
+<tr><td>Control</td><td>Controls access to the wireless medium and assists with reliable frame delivery.</td><td>RTS, CTS, ACK</td></tr>
+<tr><td>Data</td><td>Carries the actual user data between stations and the AP.</td><td>Data frames</td></tr>
+</tbody></table></div>
+<p class="body-line">An 802.11 frame contains several fields. Depending on the frame type and the wireless standard being used, some fields may not be present:</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/wireless_frame_structure.png" alt="Wireless Frame Structure"></figure>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody>
+<tr><td>Frame Control</td><td>Identifies the frame type and subtype and provides control information.</td></tr>
+<tr><td>Duration / ID</td><td>Indicates how long the wireless medium may be reserved for transmission or provides an association identifier, depending on the frame type.</td></tr>
+<tr><td>Addresses</td><td>May contain up to four addresses. Their presence and order depend on the frame type. They can represent the final destination (Destination Address - DA), original source (Source Address - SA), immediate receiver (Receiver Address - RA), and immediate transmitter (Transmitter Address - TA).</td></tr>
+<tr><td>Sequence Control</td><td>Used for fragment reassembly and duplicate frame detection.</td></tr>
+<tr><td>QoS Control</td><td>Provides information used for wireless QoS and traffic prioritization.</td></tr>
+<tr><td>HT Control</td><td>Provides additional control information for High Throughput operations and was introduced with 802.11n.</td></tr>
+<tr><td>FCS</td><td>Used to detect errors in the received frame, similar to the FCS field in Ethernet.</td></tr>
+</tbody></table></div>
+
+<h4 class="subheading" id="wlc-deployment">Centralized Wireless Architecture</h4>
+<p class="body-line">In large enterprise environments, configuring each access point independently is impractical. To solve this, networks deploy lightweight APs managed by a centralized WLC (Wireless LAN Controller) that takes over all management, configuration, authentication, and security decisions, while the APs handle the radio transmission.</p>
+<p class="body-line">Communication between the lightweight AP and WLC uses CAPWAP (Control And Provisioning of Wireless Access Points). CAPWAP uses two UDP tunnels: encrypted UDP 5246 for control traffic and unencrypted UDP 5247 for client data but can be protected using DTLS (Datagram Transport Layer Security). Because CAPWAP runs over IP, the AP and WLC do not need to be on the same subnet as long as IP connectivity exists between them.</p>
+<ul class="doc-list">
+  <li><strong>VLAN Handling:</strong> AP normally connects to the switch through an access port because client VLAN traffic is carried inside the CAPWAP tunnel directly to the WLC. Consequently, it is the WLC that connects to the switch via a trunk port to distribute that traffic into the appropriate separate VLANs.</li>
+  <li><strong>Split-MAC architecture:</strong> WLC handles management-related functions such as authentication and association decisions, while the AP continues to handle real-time radio transmission and reception.</li>
+  <li><strong>Device Authentication:</strong> WLC and lightweight APs authenticate each other using digital certificates (X.509 standard) installed on each device, ensuring only authorized APs can join the network.</li>
+</ul>
+<p class="body-line">Another option is cloud-based AP management, such as Cisco Meraki. In this architecture, the cloud platform manages and configures the APs, while client traffic is switched locally rather than being tunneled through an on-premises WLC.</p>
+<aside class="callout"><strong>Note:</strong><p>In a centralized WLC deployment, client data must traverse the CAPWAP tunnel to the controller. In cloud-based management, the controller only handles management traffic—client data never goes to the cloud.</p></aside>
+<p class="body-line">A WLC provides several physical ports for management, network connectivity, console access, and high availability:</p>
+<div class="table-wrap"><table><thead><tr><th>Port</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Service Port</td><td>Out-of-band management which means isolating management traffic from normal user traffic by using a dedicated physical port that does not carry any client data.</td></tr>
+<tr><td>Distribution System Port</td><td>Main connection between the WLC and the network normally through a trunk connection. It can use a LAG for redundancy and increased bandwidth.</td></tr>
+<tr><td>Redundancy Port</td><td>Used for WLC-to-WLC heartbeat to support High Availability.</td></tr>
+</tbody></table></div>
+<p class="body-line">The WLC also provides logical interfaces that serve different purposes:</p>
+<div class="table-wrap"><table><thead><tr><th>WLC Interface</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Management Interface</td><td>Handles management traffic such as SSH, HTTPS, RADIUS, and NTP and is associated with a VLAN.</td></tr>
+<tr><td>Redundancy Management Interface</td><td>Used for communication between WLCs in a high-availability pair.</td></tr>
+<tr><td>Virtual Interface</td><td>Used for functions such as relaying DHCP requests and web authentication. Similar to a loopback interface.</td></tr>
+<tr><td>Service-Port Interface</td><td>Corresponds to the physical Service Port and provides out-of-band management.</td></tr>
+<tr><td>Dynamic Interface</td><td>Maps a wireless LAN or SSID to a VLAN in the wired network.</td></tr>
+</tbody></table></div>
+<p class="body-line">Lightweight APs can operate in different WLC-controlled modes depending on the role they need to perform:</p>
+<div class="table-wrap"><table><thead><tr><th>AP Mode</th><th>Description</th></tr></thead><tbody>
+<tr><td>Local</td><td>Default mode. Provides normal client access while also performing periodic scanning for rogue APs and interference.</td></tr>
+<tr><td>FlexConnect</td><td>Allows an AP to locally switch client traffic, including when the CAPWAP connection to the WLC is unavailable. This is commonly used at branch offices.</td></tr>
+<tr><td>Sniffer</td><td>Captures 802.11 frames on a selected channel and forwards them to a device running Wireshark for analysis.</td></tr>
+<tr><td>Monitor</td><td>Scans wireless channels to detect rogue APs, interference, and security threats.</td></tr>
+<tr><td>Rogue Detector</td><td>Monitors wired traffic to detect unauthorized APs connected to the wired network.</td></tr>
+<tr><td>Bridge / Mesh</td><td>Used for point-to-point or point-to-multipoint wireless bridging and mesh AP deployments.</td></tr>
+<tr><td>Flex+Bridge</td><td>Combines FlexConnect functionality with bridge or mesh capabilities.</td></tr>
+<tr><td>SE-Connect</td><td>Used for spectrum analysis and integration with Cisco CleanAir for RF interference monitoring.</td></tr>
+</tbody></table></div>
+<p class="body-line">WLC deployments can use different implementation models depending on the size and architecture of the network:</p>
+<div class="table-wrap"><table><thead><tr><th>Model</th><th>Description</th><th>Maximum APs Supported</th></tr></thead><tbody>
+<tr><td>Unified</td><td>Dedicated hardware WLC appliance deployed in a central location.</td><td>~6,000 APs</td></tr>
+<tr><td>Cloud-Based WLC</td><td>WLC software running as a virtual machine in a private cloud or data center.</td><td>~3,000 APs</td></tr>
+<tr><td>Embedded</td><td>WLC functionality embedded within a switch.</td><td>~200 APs</td></tr>
+<tr><td>Mobility Express</td><td>WLC functionality embedded within an AP.</td><td>~100 APs</td></tr>
+</tbody></table></div>
+<aside class="callout"><strong>Note:</strong><p>Cloud-based AP architecture is different from a cloud-based WLC. In cloud-based APs, only management/control traffic goes to the cloud — data traffic is switched locally on the AP. In a cloud-based WLC deployment, all client data is tunneled through CAPWAP to the WLC VM, just like any other split-MAC deployment.</p></aside>
+<p class="body-line">When APs and the WLC are separated by one or more networks, DHCP Option 43 can provide the AP with the WLC's IP address so the AP can discover its controller. When the AP and WLC are on the same subnet, this is not required because the WLC can receive the AP's local CAPWAP discovery messages.</p>
+<pre class="command-line"><code>option 43 ip <i>wlc-ip</i></code></pre>
+<p class="body-line">WLCs can use web page intercepts to authenticate users before granting full network access:</p>
+<ul class="doc-list">
+  <li><strong>Web Authentication:</strong> Once a client gets an IP address and tries to browse, they must enter credentials on a splash page to authenticate.</li>
+  <li><strong>Web Passthrough:</strong> A similar process that requires no credentials; users simply click to accept the network's terms and conditions.</li>
+</ul><div class="doc-spacer" aria-hidden="true"></div>
+
 
     </section>
   </main>
