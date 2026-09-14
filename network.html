@@ -1972,6 +1972,55 @@ reload</code></pre>
 </tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 
+
+
+
+
+<h3 class="subheading" id="sdn">SDN</h3>
+<p class="body-line">Network devices perform three main types of functions:</p>
+<ul class="doc-list">
+  <li><strong>Data Plane:</strong> forwards user traffic at high speeds using specialized hardware called ASICs (Application-Specific Integrated Circuits) and a high-speed memory TCAM (Ternary Content-Addressable Memory). Tasks include routing and MAC lookups, VLAN tagging, NAT, and ACL processing.</li>
+  <li><strong>Control Plane:</strong> uses the CPU to build and maintain the tables the data plane relies on, handling overhead like routing protocols, STP forwarding states, and ARP IP-to-MAC mappings.</li>
+  <li><strong>Management Plane:</strong> uses the CPU to configure, monitor, and manage the device via protocols like SSH, Telnet, SNMP, Syslog, and NTP. It does not dictate how transit traffic is forwarded.</li>
+</ul>
+<p class="body-line">Software-Defined Networking (SDN) changes the traditional distributed control-plane model by centralizing network control in a software-based controller. Instead of configuring every device independently and allowing each device to make all of its own control-plane decisions, an SDN controller can maintain a broader view of the network and communicate programmatically with network devices. This separation between the control plane and forwarding devices makes network-wide automation, centralized policy, and programmable management easier.</p>
+<p class="body-line">SDN architecture can be viewed as three logical layers:</p>
+<ul class="doc-list">
+  <li><strong>Application Layer:</strong> defines what the network should do using applications, scripts, and automation tools to set desired behaviors and policies.</li>
+  <li><strong>Control Layer:</strong> acts as the centralized brain (the SDN controller) that maintains network-wide information and translates application requirements into specific device instructions.</li>
+  <li><strong>Infrastructure Layer:</strong> consists of the physical network devices that forward traffic according to the controller's commands.</li>
+</ul>
+<p class="body-line">Communication between these layers is provided through interfaces:</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/sbi_vs_nbi.png" alt="SBI vs. NBI"></figure>
+<ul class="doc-list">
+  <li><strong>Southbound Interface (SBI):</strong> connects the controller to the infrastructure devices. The controller uses the SBI to learn device information, configure devices, and influence forwarding behavior. Examples include OpenFlow, Cisco OpFlex, Cisco onePK, NETCONF, and RESTCONF.</li>
+  <li><strong>Northbound Interface (NBI):</strong> connects applications and automation tools to the controller. Applications use the NBI to request network-wide changes, retrieve information collected by the controller, and express higher-level policies. REST APIs are commonly used for this communication, with structured data formats such as JSON or XML.</li>
+</ul>
+<p class="body-line">The separation between applications, the controller, and network devices allows for Intent-Based Networking (IBN), which is when an administrator describes the desired network behavior and the controller automatically translates that intent into the required configurations across the network, eliminating the need to manually configure every individual device.</p>
+<p class="body-line">Cisco provides different controller-based solutions for different parts of the network:</p>
+<ul class="doc-list">
+  <li><strong>Cisco SD-Access:</strong> designed for LANs.</li>
+  <li><strong>Cisco ACI:</strong> designed for data center environments.</li>
+  <li><strong>Cisco SD-WAN:</strong> designed for WAN connectivity.</li>
+</ul>
+<p class="body-line">Cisco SD-Access uses Cisco DNA Center as its management and control platform. It separates the physical hardware from the logical rules:</p>
+<ul class="doc-list">
+  <li><strong>Underlay:</strong> the physical network that provides basic IP connectivity between the devices.</li>
+  <li><strong>Overlay:</strong> the logical network built on top of the underlay. SD-Access uses VXLAN (Virtual Extensible LAN) tunnels to carry traffic across the physical network while providing logical segmentation and mobility.</li>
+  <li><strong>Fabric:</strong> the combination of the physical underlay and logical overlay that forms the SD-Access network.</li>
+</ul>
+<p class="body-line">Different devices perform different roles within an SD-Access fabric:</p>
+<ul class="doc-list">
+  <li><strong>Edge Nodes:</strong> connect end-user devices to the SD-Access fabric.</li>
+  <li><strong>Border Nodes:</strong> connect the SD-Access fabric to networks outside the fabric, such as WAN routers or other enterprise networks.</li>
+  <li><strong>Control Nodes:</strong> provide fabric control-plane functions using LISP (Locator/ID Separation Protocol) to maintain mappings between endpoint identifiers and routing locators.</li>
+</ul>
+<p class="body-line">Cisco DNA Center runs as an application on Cisco UCS (Unified Computing System) server hardware and provides APIs and device-management protocols that allow it to communicate with network infrastructure. It can also centralize software and configuration management, including coordinated software updates across network devices.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+
+
+
 <h3 class="subheading" id="wireless">Wireless Networks</h3>
 <p class="body-line">Wireless LANs are based on the IEEE 802.11 standards. Wi-Fi is the name used by the Wi-Fi Alliance for products that are tested and certified for interoperability with 802.11 standards. An Access Point (AP) is a network device that provides wireless connectivity to client devices and connects them to the wired network. Unlike a switched Ethernet network, wireless devices share the same radio medium, which introduces several challenges:</p>
 <ul class="doc-list">
@@ -2081,7 +2130,7 @@ reload</code></pre>
 </tbody></table></div>
 <p class="body-line">The WLC also provides logical interfaces that serve different purposes:</p>
 <div class="table-wrap"><table><thead><tr><th>WLC Interface</th><th>Purpose</th></tr></thead><tbody>
-<tr><td>Management Interface</td><td>Handles management traffic such as SSH, HTTPS, RADIUS, and NTP and is associated with a VLAN.</td></tr>
+<tr><td>Management Interface</td><td>Handles management traffic such as SSH, RADIUS, and NTP and is associated with a VLAN.</td></tr>
 <tr><td>Redundancy Management Interface</td><td>Used for communication between WLCs in a high-availability pair.</td></tr>
 <tr><td>Virtual Interface</td><td>Used for functions such as relaying DHCP requests and web authentication. Similar to a loopback interface.</td></tr>
 <tr><td>Service-Port Interface</td><td>Corresponds to the physical Service Port and provides out-of-band management.</td></tr>
@@ -2112,7 +2161,8 @@ reload</code></pre>
 <ul class="doc-list">
   <li><strong>Web Authentication:</strong> Once a client gets an IP address and tries to browse, they must enter credentials on a splash page to authenticate.</li>
   <li><strong>Web Passthrough:</strong> A similar process that requires no credentials; users simply click to accept the network's terms and conditions.</li>
-</ul><div class="doc-spacer" aria-hidden="true"></div>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
 
 
     </section>
