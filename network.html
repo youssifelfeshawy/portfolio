@@ -1972,6 +1972,49 @@ reload</code></pre>
 </tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 
+<h3 class="subheading" id="http_and_APIs">HTTP and REST APIs</h3>
+<p class="body-line">HTTP (Hypertext Transfer Protocol) is an application-layer protocol used to exchange requests and responses between a client and a server. REST (Representational State Transfer) is not a protocol or a specific API; it is a set of architectural constraints used when designing APIs. An API (Application Programming Interface) provides the interface through which one application can communicate with another.</p>
+<p class="body-line">REST APIs commonly use HTTP methods to perform CRUD operations: Create, Read, Update, and Delete. Each operation is associated with an HTTP method:</p>
+<div class="table-wrap"><table><thead><tr><th>CRUD Operation</th><th>HTTP Method</th><th>Description</th></tr></thead><tbody>
+<tr><td>Create</td><td>POST</td><td>Create a new resource.</td></tr>
+<tr><td>Read</td><td>GET</td><td>Retrieve information about a resource.</td></tr>
+<tr><td>Update</td><td>PUT / PATCH</td><td>Modify an existing resource.</td></tr>
+<tr><td>Delete</td><td>DELETE</td><td>Remove a resource.</td></tr>
+</tbody></table></div>
+<p class="body-line">After processing an HTTP request, the server returns a status code that indicates the result of the request. Status codes are grouped into five ranges:</p>
+<div class="table-wrap"><table><thead><tr><th>Code Range</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>1xx</td><td>Informational — the request has been received and processing is continuing.</td></tr>
+<tr><td>2xx</td><td>Successful — the request was successfully received, understood, and processed.</td></tr>
+<tr><td>3xx</td><td>Redirection — additional action is required to complete the request.</td></tr>
+<tr><td>4xx</td><td>Client Error — bad syntax or request cannot be fulfilled.</td></tr>
+<tr><td>5xx</td><td>Server Error — the server failed to fulfill an otherwise valid request.</td></tr>
+</tbody></table></div>
+<p class="body-line">REST APIs follow several architectural constraints that define how clients and servers communicate:</p>
+<ul class="doc-list">
+  <li><strong>Uniform Interface:</strong> clients and servers communicate through a consistent and standardized interface.</li>
+  <li><strong>Client-Server:</strong> the client and server are separated, allowing each side to evolve independently as long as the interface remains compatible.</li>
+  <li><strong>Stateless:</strong> each request is independent and contains the information needed to process it. The server does not rely on stored information from previous API requests.</li>
+  <li><strong>Cacheable:</strong> responses indicate whether they can be cached, allowing clients or intermediaries to reuse data and reduce unnecessary requests.</li>
+  <li><strong>Layered System:</strong> the client does not need to know whether it is communicating directly with the server or through intermediary components.</li>
+  <li><strong>Code-on-Demand:</strong> the server can optionally send executable code to the client.</li>
+</ul>
+<aside class="callout"><strong>Note:</strong><p>TCP is stateful and maintains the state of the connection between endpoints. However, REST APIs that use HTTP are stateless at the application layer, meaning each request is treated independently and the server does not rely on information from previous requests.</p></aside>
+<p class="body-line">Because APIs can expose sensitive resources, the server must also determine whether the client is authorized to access them. Common API authentication methods include:</p>
+<div class="table-wrap"><table><thead><tr><th>Method</th><th>How It Works</th><th>Advantages</th><th>Disadvantages</th></tr></thead><tbody>
+<tr><td>Basic Authentication</td><td>A username and password are encoded using Base64 and sent in the HTTP Authorization header with each request.</td><td>Simple to implement.</td><td>Credentials are included in every request. HTTPS is required to protect them during transmission.</td></tr>
+<tr><td>Bearer Authentication</td><td>The client obtains a token and sends it in the Authorization header with subsequent requests.</td><td>Credentials do not need to be repeatedly transmitted and tokens can expire.</td><td>A stolen token can be used until it expires or is revoked.</td></tr>
+<tr><td>API Key</td><td>The API provider issues a key that the client includes with its requests, commonly in the Authorization header, URL, cookie.</td><td>Simple to implement and useful for identifying or tracking API clients.</td><td>A stolen key can provide access until it is revoked or replaced.</td></tr>
+<tr><td>OAuth 2.0</td><td>A delegation framework that allows an application to obtain limited access to resources without receiving the user's credentials.</td><td>Supports delegated and scoped access without sharing the user's password.</td><td>More complex to implement than basic authentication methods.</td></tr>
+</tbody></table></div>
+<p class="body-line">OAuth 2.0 can be viewed as a sequence in which an application obtains permission and then uses an access token to access the protected resource: the client requests authorization from the resource owner, the resource owner grants authorization, the client obtains an authorization grant, the authorization server issues an access token, the client sends the token to the resource server, and the resource server validates the token before returning the requested resource.</p>
+<p class="body-line">The information exchanged through a REST API must also be represented in a format that both applications understand. Data serialization converts structured data into a format that can be transmitted or stored and then reconstructed by another application:</p>
+<div class="table-wrap"><table><thead><tr><th>Format</th><th>Full Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>JSON</td><td>JavaScript Object Notation</td><td>Human-readable and widely used by REST APIs. Whitespace insignificant. It supports primitive values such as strings, numbers, booleans, and null, as well as objects using key-value pairs in curly braces <code>{}</code> and arrays containing ordered values in square brackets <code>[]</code>. Object keys are strings.</td></tr>
+<tr><td>XML</td><td>Extensible Markup Language</td><td>A markup-based serialization format that represents data using elements such as <code>&lt;key&gt;value&lt;/key&gt;</code>. It is Less human-readable than JSON. Whitespace insignificant.</td></tr>
+<tr><td>YAML</td><td>YAML Ain't Markup Language</td><td>A human-readable serialization format that whitespace and indentation are significant. Files start with <code>---</code>. Lists use <code>-</code> and key-value pairs use <code>key: value</code>.</td></tr>
+</tbody></table></div>
+<div class="doc-spacer" aria-hidden="true"></div>
+
 <h3 class="subheading" id="sdn">SDN</h3>
 <p class="body-line">Network devices perform three main types of functions:</p>
 <ul class="doc-list">

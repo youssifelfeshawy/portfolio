@@ -63,64 +63,8 @@
 <p class="body-line">Wireshark is a network packet capture and analysis tool. It captures all network traffic visible on an interface and lets you inspect every layer of every packet — from the physical frame up through the application layer. It supports filtering by protocol, IP address, port, and many other criteria, making it an essential tool for network troubleshooting, learning, and security analysis.</p>
 <div class="doc-spacer" aria-hidden="true"></div> -->
 
-
-<h2 class="major-heading" id="network-planes">Network Device Planes</h2>
-<p class="body-line">The various functions of network devices are logically organized into three planes:</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="data-plane">Data Plane (Forwarding Plane)</h3>
-<p class="body-line">All tasks involved in forwarding user traffic from one interface to another. Examples: routing table lookups, MAC address table lookups, de-encapsulating and re-encapsulating Layer 2 headers, adding/removing 802.1Q VLAN tags, NAT (modifying src/dst addresses before forwarding), applying ACLs and port security. Because forwarding speed is critical, the data plane is handled by a dedicated ASIC (Application-Specific Integrated Circuit) — not the CPU — for maximum performance. The MAC address table (CAM table) and routing table are stored in TCAM (Ternary Content-Addressable Memory) for extremely fast lookups.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="control-plane">Control Plane</h3>
-<p class="body-line">Functions that build and maintain the tables used by the data plane. Examples: OSPF (builds the routing table), STP (determines which interfaces should forward), ARP (builds the ARP table). The control plane performs overhead work that controls what the data plane does. Processed by the CPU. In traditional networking, the control plane is distributed — each device has its own. SDN centralizes the control plane into a controller.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="management-plane">Management Plane</h3>
-<p class="body-line">Protocols used to manage and monitor devices — SSH, Telnet, Syslog, SNMP, NTP. Like the control plane, it runs on the CPU. Unlike the control plane, it does not directly affect how data is forwarded. When a device receives control or management traffic destined for itself, the CPU processes it. When it receives data traffic to be forwarded, the ASIC handles it.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h2 class="major-heading" id="sdn">SDN — Software-Defined Networking</h2>
-<p class="body-line">SDN (Software-Defined Networking) — also called Software-Defined Architecture (SDA) or Controller-Based Networking — centralizes the control plane into an application called a controller. Traditional control planes are distributed: each router runs OSPF independently. An SDN controller centralizes these functions and interacts programmatically with network devices using APIs.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="sdn-layers">SDN Architecture Layers</h3>
-<ul class="doc-list">
-  <li><strong>Application Layer:</strong> scripts and applications that communicate the desired network behavior to the SDN controller.</li>
-  <li><strong>Control Layer:</strong> the SDN controller that receives instructions from the application layer and translates them into device configurations.</li>
-  <li><strong>Infrastructure Layer:</strong> the physical network devices that forward traffic based on instructions from the controller.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="sdn-interfaces">SBI and NBI</h3>
-<ul class="doc-list">
-  <li><strong>SBI (Southbound Interface):</strong> the communication protocol and API used between the controller and the managed network devices. The controller uses the SBI to gather device information, control data plane tables, and push configurations. Examples: OpenFlow, Cisco OpFlex, Cisco onePK, NETCONF.</li>
-  <li><strong>NBI (Northbound Interface):</strong> the interface that allows external applications and scripts to interact with the controller, access the data it has gathered, and make network-wide changes via the SBI. Typically a REST API. Data is exchanged in structured formats like JSON or XML.</li>
-</ul>
-<figure class="overview-figure-block figure-with-image"><img src="assets/sbi_vs_nbi.png" alt="SBI vs. NBI"></figure>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="topic-heading" id="cisco-sd-access">Cisco SD-Access and DNA Center</h3>
-<ul class="doc-list">
-  <li><strong>Cisco SD-Access:</strong> Cisco's SDN solution for campus LANs. Uses Cisco DNA (Digital Network Architecture) Center as its controller.</li>
-  <li><strong>Cisco ACI (Application Centric Infrastructure):</strong> Cisco's SDN solution for data center networks.</li>
-  <li><strong>Cisco SD-WAN:</strong> Cisco's SDN solution for WANs.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="sd-access-fabric">SD-Access Underlay, Overlay, and Fabric</h4>
-<ul class="doc-list">
-  <li><strong>Underlay:</strong> the physical network of switches and connections providing IP connectivity. In a greenfield SD-Access deployment configured by DNA Center: all switches are Layer 3, using IS-IS as their routing protocol, all inter-switch links are routed ports (no STP needed), and edge nodes act as the default gateway for end hosts (routed access layer).</li>
-  <li><strong>Overlay:</strong> the virtual network built on top of the underlay using VXLAN (Virtual Extensible LAN) tunnels.</li>
-  <li><strong>Fabric:</strong> the combination of the underlay and overlay — the physical and virtual network together.</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="sd-access-roles">SD-Access Node Roles</h4>
-<ul class="doc-list">
-  <li><strong>Edge Nodes:</strong> connect to end hosts.</li>
-  <li><strong>Border Nodes:</strong> connect to devices outside the SD-Access domain (e.g., WAN routers).</li>
-  <li><strong>Control Nodes:</strong> use LISP (Locator ID Separation Protocol) for control plane functions — maintaining mappings of EIDs (Endpoint Identifiers) to RLOCs (Routing Locators).</li>
-</ul>
-<div class="doc-spacer" aria-hidden="true"></div>
-<h4 class="subheading" id="dna-center">Cisco DNA Center</h4>
-<p class="body-line">DNA Center is an application installed on Cisco UCS server hardware. It has a REST API and supports protocols including NETCONF, RESTCONF, SSH, Telnet, and SNMP over its SBI. DNA Center enables Intent-Based Networking (IBN) — the engineer communicates their intended network behavior, and DNA Center handles the actual device configurations and policy implementation. Traditional security policies using ACLs can become thousands of entries with forgotten intent — DNA Center allows policy intent to be specified at a high level and automatically implements it across all devices. DNA Center also centrally manages software versions, automatically pushing updates.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-
 <h2 class="major-heading" id="rest-api">REST APIs and Data Formats</h2>
-<p class="body-line">An API (Application Programming Interface) is a software interface that allows two applications to communicate. In SDN, the NBI uses REST APIs; the SBI uses protocols like NETCONF and RESTCONF. REST (Representational State Transfer) is not a specific API — it describes a set of architectural constraints that APIs should follow.</p>
+<p class="body-line">An API (Application Programming Interface) is a software interface that allows two applications to communicate. some apps uses REST APIs. REST (Representational State Transfer) is not a specific API — it describes a set of architectural constraints that APIs should follow.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="topic-heading" id="rest-crud">CRUD Operations and HTTP Methods</h3>
 <p class="body-line">CRUD (Create, Read, Update, Delete) describes the operations performed using REST APIs. HTTP methods map to these operations:</p>
@@ -149,7 +93,6 @@
   <li><strong>Layered System:</strong> the client doesn't need to know whether it communicates directly with the server or through intermediaries.</li>
   <li><strong>Code-on-Demand (optional):</strong> the server can send executable code to the client.</li>
 </ul>
-<div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="topic-heading" id="api-auth">API Authentication Methods</h3>
 <div class="table-wrap"><table><thead><tr><th>Method</th><th>How it works</th><th>Pros</th><th>Cons</th></tr></thead><tbody>
 <tr><td>Basic Authentication</td><td>Username and password encoded in Base64 sent in every request's HTTP header. Base64 is encoding — not encryption. Always use HTTPS.</td><td>Simple to implement.</td><td>Credentials sent every request — high risk if connection is not properly secured.</td></tr>
@@ -157,17 +100,14 @@
 <tr><td>API Key Authentication</td><td>A static key issued by the API provider. Sent in the Authorization header (recommended), URL (not recommended — logged), or cookie.</td><td>Easy to implement. Good for usage tracking.</td><td>If stolen, grants access until manually revoked. No automatic expiry.</td></tr>
 <tr><td>OAuth 2.0</td><td>Access delegation framework. Third-party apps get limited access on behalf of the resource owner without sharing credentials. Access tokens expire; refresh tokens obtain new ones.</td><td>Secure — no credential sharing. Granular scope of access.</td><td>More complex to implement.</td></tr>
 </tbody></table></div>
-<div class="doc-spacer" aria-hidden="true"></div>
 <p class="body-line">OAuth 2.0 six-step process: (1) Client requests authorization from resource owner → (2) Resource owner grants authorization → (3) Client exchanges authorization grant for access token → (4) Auth server provides access token → (5) Client sends access token to resource server → (6) Resource server validates token and returns the resource.</p>
-<div class="doc-spacer" aria-hidden="true"></div>
-
 <h3 class="topic-heading" id="data-serialization">Data Serialization Formats</h3>
-<p class="body-line">Data serialization is converting data into a standardized format that can be stored or transmitted and reconstructed by another application. REST APIs and automation tools use these formats to exchange structured data.</p>
+<p class="body-line">Data serialization is converting data into a standardized format that can be stored or transmitted and reconstructed by another application. REST APIs use these formats to exchange structured data.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <div class="table-wrap"><table><thead><tr><th>Format</th><th>Full Name</th><th>Notes</th></tr></thead><tbody>
-<tr><td>JSON</td><td>JavaScript Object Notation</td><td>Open standard, human-readable. Used by REST APIs. Whitespace insignificant. Primitive types: string (double-quoted), number, boolean, null. Structured types: object (key-value pairs in curly braces <code>{}</code>), array (comma-separated values in square brackets <code>[]</code>). Keys are always strings; values can be any type.</td></tr>
-<tr><td>XML</td><td>Extensible Markup Language</td><td>Originally a markup language, now a general serialization format. Less human-readable than JSON. Whitespace insignificant. Syntax: <code>&lt;key&gt;value&lt;/key&gt;</code>. Often used by REST APIs and NETCONF.</td></tr>
-<tr><td>YAML</td><td>YAML Ain't Markup Language</td><td>Very human-readable. Whitespace and indentation are significant. Files start with <code>---</code>. Lists use <code>-</code>. Key-value pairs use <code>key: value</code>. Used by Ansible.</td></tr>
+<tr><td>JSON</td><td>JavaScript Object Notation</td><td>Open standard, human-readable. Whitespace insignificant. Primitive types: string (double-quoted), number, boolean, null. Structured types: object (key-value pairs in curly braces <code>{}</code>), array (comma-separated values in square brackets <code>[]</code>). Keys are always strings; values can be any type.</td></tr>
+<tr><td>XML</td><td>Extensible Markup Language</td><td>Originally a markup language, now a general serialization format. Less human-readable than JSON. Whitespace insignificant. Syntax: <code>&lt;key&gt;value&lt;/key&gt;</code>.</td></tr>
+<tr><td>YAML</td><td>YAML Ain't Markup Language</td><td>Very human-readable. Whitespace and indentation are significant. Files start with <code>---</code>. Lists use <code>-</code>. Key-value pairs use <code>key: value</code>.</td></tr>
 </tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 
