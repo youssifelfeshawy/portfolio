@@ -136,11 +136,15 @@
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="topic-heading" id="bits-bytes-and-speed">Bits & Bytes</h3>
+<h3 class="subheading" id="number-systems">Number Systems</h3>
+<p class="body-line">Networking uses three common number systems to represent digital information. Each system uses a different base and has a standard prefix:</p>
 <ul class="doc-list">
-  <li>8 bits = 1 byte. Data sizes (file sizes) are typically measured in bytes while network speeds are measured in bits per second — not bytes per second.</li>
+  <li><strong>Binary (Base 2, prefix <code>0b</code>):</strong> uses only the digits 0 and 1. Used internally by all digital systems. Used internally by all digital systems.</li>
+  <li><strong>Decimal (Base 10, prefix <code>0d</code>):</strong> uses the digits 0 through 9 and is the standard number system used by people.</li>
+  <li><strong>Hexadecimal (Base 16, prefix <code>0x</code>):</strong> uses the digits 0–9 and the letters A–F. It provides a compact way to represent binary values because one hexadecimal digit represents exactly four binary bits.</li>
 </ul>
-<div class="table-wrap"><table><thead><tr><th>Speed Units</th><th>Symbol</th><th>Value</th></tr></thead><tbody>
+<p class="body-line">Because digital information is represented in binary, it is important to distinguish between bits and bytes when working with data sizes and network speeds. Eight bits make up one byte. Data sizes are typically measured in bytes, while network speeds are measured in bits per second.</p>
+<div class="table-wrap"><table><thead><tr><th>Speed Unit</th><th>Symbol</th><th>Value</th></tr></thead><tbody>
 <tr><td>Kilobit</td><td>Kb</td><td>1,000 bits (10³)</td></tr>
 <tr><td>Megabit</td><td>Mb</td><td>1,000,000 bits (10⁶)</td></tr>
 <tr><td>Gigabit</td><td>Gb</td><td>1,000,000,000 bits (10⁹)</td></tr>
@@ -316,6 +320,7 @@ write memory</code></pre>
   <li>Bits: the L1PDU (Layer 1 Protocol Data Unit). The frame converted into raw electrical, light, or radio signals for physical transmission.</li>
 </ul><aside class="callout"><strong>Note:</strong><p>A payload at any layer means everything that layer is carrying, excluding its own header and trailer. For example, the payload of an Ethernet frame (L2PDU) is the IP packet (L3PDU) inside it.</p></aside>
 <p class="body-line">At the receiving device, the process reverses — each layer strips its own header and passes the data upward. This is called de-encapsulation.</p>
+
 <h2 class="major-heading" id="layer-1">Layer 1: Physical Layer</h2>
 <p class="body-line">The Physical Layer is the foundation of all networking. It defines the physical medium that carries raw bits — electrical signals on copper wire, light pulses through fiber optic cable, or radio waves through the air. Every higher layer depends on this layer to physically move data from one place to another.</p>
 <h3 class="subheading" id="transmission-media">Transmission Media</h3>
@@ -2200,6 +2205,57 @@ reload</code></pre>
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 
+<h3 class="subheading" id="network-automation">Network Automation</h3>
+<p class="body-line">In traditional networking, devices are configured individually through the CLI using methods such as SSH or the console. As the number of devices increases, this approach becomes slower, more difficult to maintain, and more prone to human error. Network automation uses software and machine-readable configurations to perform these tasks consistently across many devices, improving scalability, reducing errors, enforcing standard policies, and speeding up deployments and changes.</p>
+<p class="body-line">One problem automation helps address is configuration drift. Configuration drift occurs when devices that were originally configured according to the same standard gradually become different because of manual changes made over time. These changes may also be poorly documented, making it harder to understand why a device differs from the intended configuration and increasing troubleshooting difficulty.</p>
+<p class="body-line">Configuration provisioning is the process of applying configuration to devices, including configuring newly deployed devices. Instead of connecting to each device individually, automation tools can use templates and variables to generate and apply consistent configurations to many devices at once.</p>
+<p class="body-line">Automation tools can be classified according to what they manage and how they describe and apply the desired configuration:</p>
+<div class="table-wrap"><table><thead><tr><th>Concept</th><th>Description</th><th>Examples</th></tr></thead><tbody>
+<tr><td>Configuration Management</td><td>Manages and configures existing infrastructure, such as installing software, changing settings, and maintaining consistency.</td><td>Ansible, Puppet, Chef</td></tr>
+<tr><td>Infrastructure Provisioning</td><td>Creates, modifies, and deletes infrastructure resources and focuses mainly on building the initial setup environment.</td><td>Terraform</td></tr>
+<tr><td>Mutable Infrastructure</td><td>Existing infrastructure is modified in place after deployment.</td><td>Ansible, Puppet, Chef</td></tr>
+<tr><td>Immutable Infrastructure</td><td>Existing infrastructure is replaced with a new version instead of being modified in place.</td><td>Terraform</td></tr>
+<tr><td>Procedural (Imperative)</td><td>Defines the steps or actions that should be performed to reach the desired result.</td><td>Ansible, Chef</td></tr>
+<tr><td>Declarative</td><td>Defines the desired end state and allows the tool to determine how to achieve it.</td><td>Terraform, Puppet</td></tr>
+</tbody></table></div>
+<h4 class="subheading" id="ansible">Ansible</h4>
+<p class="body-line">Ansible is a configuration management and automation tool owned by Red Hat and written in Python. It is agentless, so managed devices do not normally require dedicated Ansible software. Ansible commonly uses SSH to connect to devices and follows a push model in which the automation system sends configuration changes to the managed devices.</p>
+<p class="body-line">Ansible uses several types of files to define the devices, variables, templates, and tasks involved in automation:</p>
+<div class="table-wrap"><table><thead><tr><th>File</th><th>Format</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Playbooks</td><td>YAML</td><td>Define the automation tasks and the logic Ansible should execute.</td></tr>
+<tr><td>Inventory</td><td>INI, YAML, or others</td><td>Lists the devices being managed and can organize them into groups and describe their characteristics.</td></tr>
+<tr><td>Templates</td><td>Jinja2</td><td>Configuration files containing placeholders that can be replaced with variable values.</td></tr>
+<tr><td>Variables</td><td>YAML</td><td>Define values that can be inserted into templates to generate device-specific configurations.</td></tr>
+</tbody></table></div>
+<h4 class="subheading" id="puppet">Puppet</h4>
+<p class="body-line">Puppet is a configuration management tool written in Ruby. It is typically agent-based, meaning managed devices normally require an agent, although agentless operation can be achieved through a proxy mechanism. Puppet commonly uses a pull model in which clients retrieve their configurations from the Puppet server, traditionally called the Puppet Master, using TCP port 8140.</p>
+<p class="body-line">Puppet uses manifests to define the desired configuration and templates to help generate those manifests:</p>
+<div class="table-wrap"><table><thead><tr><th>File</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Manifest</td><td>Defines the desired configuration state using Puppet's configuration language.</td></tr>
+<tr><td>Templates</td><td>Used to generate manifests dynamically.</td></tr>
+</tbody></table></div>
+<h4 class="subheading" id="chef">Chef</h4>
+<p class="body-line">Chef is a configuration management tool written in Ruby and uses a DSL (Domain-Specific Language) based on Ruby. It is typically agent-based and follows a pull model. Chef organizes configuration into reusable resources and recipes, which are grouped into cookbooks and executed according to a run-list.</p>
+<div class="table-wrap"><table><thead><tr><th>Component</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Resources</td><td>Describe individual configuration objects that Chef manages.</td></tr>
+<tr><td>Recipes</td><td>Define the logic and actions used to configure resources.</td></tr>
+<tr><td>Cookbooks</td><td>Group related recipes and supporting files together.</td></tr>
+<tr><td>Run-list</td><td>Defines the ordered list of recipes to execute.</td></tr>
+</tbody></table></div>
+<h4 class="subheading" id="terraform">Terraform</h4>
+<p class="body-line">Terraform is an Infrastructure as Code (IaC) tool used primarily for infrastructure provisioning. IaC represents infrastructure using machine-readable configuration files instead of relying entirely on manual CLI or GUI configuration. Terraform is agentless and uses a push model. Its configuration files are written in HCL (HashiCorp Configuration Language).</p>
+<p class="body-line">Terraform can provision infrastructure across cloud and on-premises platforms through providers. Its workflow consists of defining the desired state, previewing the required changes, and then applying them:</p>
+<div class="table-wrap"><table><thead><tr><th>Step</th><th>Action</th></tr></thead><tbody>
+<tr><td>Write</td><td>Define the desired infrastructure state in HCL configuration files.</td></tr>
+<tr><td>Plan</td><td>Preview the changes Terraform intends to make before applying them.</td></tr>
+<tr><td>Apply</td><td>Apply the planned changes to create or modify the infrastructure.</td></tr>
+</tbody></table></div>
+<aside class="callout"><strong>Note:</strong><p>Terraform and Ansible can be used together: Terraform provisions the infrastructure itself, such as networks, servers, and other resources, while Ansible configures and manages the systems and network devices after they have been created.</p></aside>
+<div class="doc-spacer" aria-hidden="true"></div>
+
+<h3 class="subheading" id="wireshark">Wireshark</h3>
+<p class="body-line">Wireshark is a network packet capture and analysis tool. It captures all network traffic visible on an interface and lets you inspect every layer of every packet — from the physical frame up through the application layer. It supports filtering by protocol, IP address, port, and many other criteria, making it an essential tool for network troubleshooting, learning, and security analysis.</p>
+<div class="doc-spacer" aria-hidden="true"></div>
 
     </section>
   </main>
