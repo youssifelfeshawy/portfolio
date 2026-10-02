@@ -1,6 +1,51 @@
 (() => {
   const sideNav = document.querySelector('.side-nav');
   const article = document.querySelector('article.doc-document');
+  const drawerToggle = document.getElementById('doc-drawer-toggle');
+  const drawerClose = document.getElementById('doc-drawer-close');
+  const drawerBackdrop = document.getElementById('doc-drawer-backdrop');
+  const sidebar = document.getElementById('network-sidebar') || document.querySelector('.network-sidebar');
+
+  function openDrawer() {
+    if (!sidebar) return;
+    sidebar.classList.add('drawer-open');
+    if (drawerBackdrop) drawerBackdrop.classList.add('active');
+    if (drawerToggle) drawerToggle.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('drawer-open');
+  }
+
+  function closeDrawer() {
+    if (!sidebar) return;
+    sidebar.classList.remove('drawer-open');
+    if (drawerBackdrop) drawerBackdrop.classList.remove('active');
+    if (drawerToggle) drawerToggle.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('drawer-open');
+  }
+
+  if (drawerToggle) {
+    drawerToggle.addEventListener('click', () => {
+      const isOpen = sidebar && sidebar.classList.contains('drawer-open');
+      if (isOpen) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    });
+  }
+
+  if (drawerClose) {
+    drawerClose.addEventListener('click', closeDrawer);
+  }
+
+  if (drawerBackdrop) {
+    drawerBackdrop.addEventListener('click', closeDrawer);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sidebar && sidebar.classList.contains('drawer-open')) {
+      closeDrawer();
+    }
+  });
 
   if (sideNav && article) {
     const headings = [...article.querySelectorAll('h2, h3')];
@@ -36,6 +81,7 @@
   links.forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
+      closeDrawer();
       const id = decodeURIComponent(link.getAttribute('href').slice(1));
       const target = document.getElementById(id);
       if (target) {

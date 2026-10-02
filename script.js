@@ -13,8 +13,8 @@
   const C = {
     name: 'Youssef Wael Elfeshawy', role: 'Network & Cybersecurity Engineer',
     phone: '+201141259125', phone2: '+201212442281', email: 'youssifelfeshawy@gmail.com',
-    linkedin: 'https://www.linkedin.com/in/youssefelfeshawy', place: 'Sidi Gaber, Alexandria, Egypt',
-    map: 'https://www.google.com/maps/search/?api=1&query=Sidi+Gaber+Alexandria+Egypt',
+    linkedin: 'https://www.linkedin.com/in/youssifelfeshawy', place: 'Alexandria, Egypt',
+    map: 'https://www.google.com/maps/search/?api=1&query=Alexandria+Egypt',
     cv: 'assets/Youssif-Elfeshawy-CV.pdf', docs: 'network.html'
   };
   const ALL = [C.name, C.role, C.phone, C.phone2, C.email, C.linkedin, C.place].join('\n');
@@ -37,13 +37,13 @@
   const TIMELINE = [
     { when: '2022', t: 'Egyptian American School', d: 'American Diploma, graduated with CGPA 4' },
     { when: '2022 – 2026', t: 'Alexandria University', d: 'Faculty of Computing and Data Science – Cybersecurity, CGPA 3.76' },
-    { when: '2022', t: 'Hospital System', d: 'Scalable Java program with a database and a JavaFX interface' },
-    { when: '2023', t: 'Client-Server Expression Evaluator', d: 'TCP/IP socket app that computes arithmetic expressions in real time' },
-    { when: '2024', t: 'Dockerized Application', d: 'Web server and database containers using Docker' },
+    // { when: '2022', t: 'Hospital System', d: 'Scalable Java program with a database and a JavaFX interface' },
+    // { when: '2023', t: 'Client-Server Expression Evaluator', d: 'TCP/IP socket app that computes arithmetic expressions in real time' },
+    // { when: '2024', t: 'Dockerized Application', d: 'Web server and database containers using Docker' },
     { when: 'CERTIFICATION', t: 'CompTIA A+', d: 'IT fundamentals', img: comptia },
     { when: 'CERTIFICATION', t: 'Cisco CCNA', d: 'Routing and switching', img: ccna },
-    { when: '2025', t: 'Zero Trust Architecture Simulation', d: 'Suricata IDS, Splunk SIEM, Keycloak and ML traffic classification' },
-    { when: '2026', t: 'Expected graduation', d: 'Alexandria University, Cybersecurity' }
+    // { when: '2025', t: 'Zero Trust Architecture Simulation', d: 'Suricata IDS, Splunk SIEM, Keycloak and ML traffic classification' },
+    // { when: '2026', t: 'Expected graduation', d: 'Alexandria University, Cybersecurity' }
   ];
 
   /* ---------------- Small helpers ---------------- */
@@ -82,7 +82,7 @@
 
   /* ---------------- Laptop screen (2D canvas used as the 3D screen texture) ---------------- */
   const W = 2048, H = 1408, M = 150;
-  const SANS = '"Plus Jakarta Sans",system-ui,sans-serif', MONO = '"JetBrains Mono",ui-monospace,monospace';
+  const SANS = '"Montserrat",system-ui,sans-serif', MONO = '"JetBrains Mono",ui-monospace,monospace';
   const sc = document.createElement('canvas'); sc.width = W; sc.height = H;
   const g = sc.getContext('2d');
   let tab = 0, tlX = 0, tlMax = 0, hits = [], hoverId = null, dirtyScreen = true, screenTex = null;
@@ -115,24 +115,25 @@
   const head = (eyebrow, title) => { txt(eyebrow, M, 250, 22, '#38bdf8', { w: 600, font: MONO }); txt(title, M, 332, 66, '#f8fafc', { w: 800 }); };
 
   function pageJourney() {
-    head('ABOUT', 'Journey');
+    head('', 'Journey');
     wrap(ABOUT, M, 440, 1560, 31, 50, '#cbd5e1');
-    const gap = 30, cw = (W - 2 * M - gap * (CARDS.length - 1)) / CARDS.length, y = 880, ch = 320;
-    CARDS.forEach((c, i) => {
-      const x = M + i * (cw + gap);
-      box(x, y, cw, ch, 18, 'rgba(15,23,42,.8)', 'rgba(56,189,248,.28)');
-      txt(c.k, x + 34, y + 58, 18, '#00e5ff', { w: 600, font: MONO });
-      const yy = wrap(c.t, x + 34, y + 114, cw - 68, 30, 38, '#f8fafc', 700);
-      wrap(c.d, x + 34, yy + 12, cw - 68, 22, 32, '#94a3b8');
-    });
   }
   function pageQualifications() {
-    head('QUALIFICATIONS', 'Education & certifications');
-    const y0 = 720, step = 480, cardW = 420;
-    tlMax = Math.max(0, (TIMELINE.length - 1) * step + cardW - (W - 2 * M));
+    head('', 'QUALIFICATIONS');
+    const y0 = 720, step = 800, cardW = 420;
+
+    // 1. Set how many empty steps you want at the start (e.g., 1 or 2)
+    const emptySteps = 0.4; 
+
+    // 2. Add emptySteps to tlMax so the scrollbar accounts for the extra space:
+    tlMax = Math.max(0, (TIMELINE.length - 1 + emptySteps) * step + cardW - (W - 2 * M));
+
     g.fillStyle = 'rgba(56,189,248,.35)'; g.fillRect(0, y0, W, 3);
+
     TIMELINE.forEach((t, i) => {
-      const x = M + i * step - tlX;
+      // 3. Shift every item to the right by emptySteps:
+      const x = M + (i + emptySteps) * step - tlX;
+
       if (x < -step || x > W) return;
       if (t.img && t.img.naturalWidth) g.drawImage(t.img, x, y0 - 190, 140, 140);
       g.beginPath(); g.arc(x + 8, y0 + 1.5, 11, 0, 7); g.fillStyle = '#00e5ff'; g.fill();
@@ -140,6 +141,7 @@
       const yy = wrap(t.t, x, y0 + 124, cardW, 32, 42, '#f8fafc', 700);
       wrap(t.d, x, yy + 16, cardW, 24, 36, '#94a3b8');
     });
+
     for (const [x0, x1, a, b] of [[0, 140, '#070b14', 'rgba(7,11,20,0)'], [W - 140, W, 'rgba(7,11,20,0)', '#070b14']]) {
       const gr = g.createLinearGradient(x0, 0, x1, 0); gr.addColorStop(0, a); gr.addColorStop(1, b);
       g.fillStyle = gr; g.fillRect(x0, 142, x1 - x0, H - 142);
@@ -149,24 +151,47 @@
     box(M + (tlMax ? tlX / tlMax : 0) * (tw - thumb), 1310, thumb, 6, 3, '#0ea5e9');
     txt(tlX < tlMax - 4 ? 'Keep scrolling to move along the timeline  →' : 'End of the timeline — scroll on  ↓', M, 1270, 20, '#64748b', { font: MONO });
   }
-  function pageDocumentation() {
-    head('DOCUMENTATION', 'Guides & notes');
-    const y = 430, h = 560, w = W - 2 * M;
-    box(M, y, w, h, 20, 'rgba(15,23,42,.85)', 'rgba(0,229,255,.4)');
-    txt('● LIVE GUIDE', M + 54, y + 78, 20, '#10b981', { w: 600, font: MONO });
-    txt('Network', M + 54, y + 164, 64, '#f8fafc', { w: 800 });
-    wrap('A structured networking guide covering the OSI model, encapsulation, Layer 1, Layer 2, STP, routing, and OSPF.', M + 54, y + 232, w - 108, 28, 42, '#94a3b8');
-    let x = M + 54;
-    ['OSI model', 'Encapsulation', 'Layer 1', 'Layer 2', 'STP', 'Routing & IP', 'OSPF'].forEach(tag => {
-      g.font = `600 20px ${MONO}`; const tw = g.measureText(tag).width + 40;
-      box(x, y + 330, tw, 46, 10, 'rgba(14,165,233,.12)', 'rgba(14,165,233,.35)');
-      txt(tag, x + 20, y + 361, 20, '#38bdf8', { w: 600, font: MONO }); x += tw + 14;
-    });
-    button('docs', 'Open the guide  →', M + 54, y + 430, 380, 76, true);
-    txt('More guides will be added here.', M, y + h + 70, 22, '#64748b');
+
+    function pageDocumentation() {
+    head('', 'DOCUMENTATIONS');
+    
+    // 1. Box dimensions (h = 320 fits the title, badge, and description cleanly)
+    const y = 400, h = 250, w = W - 2 * M;
+    const hv = hoverId === 'docs'; // Checks if user's mouse is hovering over the card
+
+    // 2. The main box (brightens the border and background when hovered)
+    box(
+      M, y, w, h, 20,
+      hv ? 'rgba(15,23,42,.95)' : 'rgba(15,23,42,.85)',
+      hv ? 'rgba(0,229,255,.9)' : 'rgba(0,229,255,.4)'
+    );
+
+    // 3. Make the entire box clickable
+    hits.push({ id: 'docs', x: M, y, w, h });
+
+    // 4. Texts inside the card
+    txt('Network', M + 54, y + 120, 64, '#f8fafc', { w: 650 });
+    wrap('    A structured networking guide.', M + 54, y + 180, w - 240, 28, 42, '#94a3b8');
+
+    // 5. Circle with arrow icon on the right side
+    const cx = M + w - 90; // Center X of the circle
+    const cy = y + h / 2;  // Center Y of the circle
+    const radius = 40;
+
+    // Draw the circle
+    g.beginPath();
+    g.arc(cx, cy, radius, 0, Math.PI * 2);
+    g.fillStyle = hv ? 'rgba(0,229,255,.18)' : 'rgba(255,255,255,.05)';
+    g.fill();
+    g.strokeStyle = hv ? '#00e5ff' : 'rgba(56,189,248,.4)';
+    g.lineWidth = 2.5;
+    g.stroke();
+
+    // Draw the arrow '→' inside the circle
+    txt('→', cx, cy + 9, 36, hv ? '#00e5ff' : '#cbd5e1', { font: MONO, align: 'center', w: 700 });
   }
   function pageProjects() {
-    head('PROJECTS', 'Selected work');
+    head('', 'PROJECTS');
     const gap = 28, cw = (W - 2 * M - gap) / 2, ch = 372;
     PROJECTS.forEach((p, i) => {
       const x = M + (i % 2) * (cw + gap), y = 410 + Math.floor(i / 2) * (ch + gap);
@@ -218,12 +243,14 @@
   const cpMail = () => { copy(C.email, 'email'); return null; };
   const KEYS = [
     // function row
-    key(.058, .065, .143, .158, hero), key(.148, .065, .207, .158, call), key(.210, .065, .270, .158, wa),
-    key(.273, .065, .333, .158, mail), key(.336, .065, .396, .158, li), key(.397, .065, .456, .158, map),
-    key(.459, .065, .519, .158, toTab(2, 'Documentation')), key(.521, .065, .579, .158, toTab(0, 'Journey')),
-    key(.582, .065, .642, .158, cv), key(.644, .065, .702, .158, toTab(3, 'Projects')),
-    key(.705, .065, .763, .158, () => { copy(location.href, 'page link'); return null; }), key(.766, .065, .826, .158, cpMail),
-    key(.828, .065, .883, .158, () => { soundOn = !soundOn; return soundOn ? 'Key sound on' : 'Key sound off'; }), key(.886, .065, .946, .158, cpAll),
+    key(.058, .065, .143, .158, hero),
+    //  key(.148, .065, .207, .158, call), key(.210, .065, .270, .158, wa),
+    // key(.273, .065, .333, .158, mail), key(.336, .065, .396, .158, li), key(.397, .065, .456, .158, map),
+    // key(.459, .065, .519, .158, toTab(2, 'Documentation')), key(.521, .065, .579, .158, toTab(0, 'Journey')),
+    // key(.582, .065, .642, .158, cv), key(.644, .065, .702, .158, toTab(3, 'Projects')),
+    // key(.705, .065, .763, .158, () => { copy(location.href, 'page link'); return null; }), key(.766, .065, .826, .158, cpMail),
+    key(.886, .065, .946, .158, () => { soundOn = !soundOn; return soundOn ? 'Key sound on' : 'Key sound off'; }), 
+    // key(.886, .065, .946, .158, cpAll),
     // contact keys
     key(.058, .162, .307, .270, call), key(.311, .162, .577, .270, wa), key(.581, .162, .946, .270, mail),
     key(.058, .275, .475, .390, li), key(.479, .275, .856, .390, map), key(.860, .275, .946, .390, hero),

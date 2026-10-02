@@ -1,0 +1,971 @@
+/* ==========================================================================
+   DOCUMENTATION STYLESHEET
+   Unified styles for network and technical documentation.
+   Inherits design tokens and color variables from style.css.
+   ========================================================================== */
+
+:root {
+  --doc-bg: #0f1117;
+  --doc-surface: rgba(26, 30, 40, 0.85);
+  --doc-surface-deep: rgba(17, 19, 26, 0.95);
+  --doc-card-border: rgba(255, 255, 255, 0.08);
+}
+
+.network-page {
+  background: var(--doc-bg);
+  color: var(--text);
+  font-family: var(--sans);
+}
+
+.network-page main {
+  position: static;
+  z-index: auto;
+  pointer-events: auto;
+}
+
+.network-page .wrap {
+  position: relative;
+  z-index: auto;
+}
+
+/* ==========================================================================
+   DOCUMENTATION HERO & HEADER
+   ========================================================================== */
+
+.header {
+  position: relative;
+  z-index: 10;
+}
+
+.network-hero {
+  padding: 140px 0 54px;
+}
+
+.network-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  align-items: end;
+}
+
+.network-hero h1 {
+  margin: 0;
+  max-width: 900px;
+  font-family: var(--sans);
+  font-size: clamp(38px, 5.2vw, 76px);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+  color: #ffffff;
+}
+
+.network-hero h1 span {
+  display: block;
+  color: var(--muted);
+}
+
+.network-hero .hero-description {
+  max-width: 760px;
+  margin: 22px 0 0;
+  color: #cbd5e1;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.doc-status {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.doc-status strong {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: 38px;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.doc-status p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.source-integrity {
+  margin-top: 16px !important;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+}
+
+/* ==========================================================================
+   DOCUMENTATION MAIN LAYOUT (Sidebar + Article)
+   ========================================================================== */
+
+.network-layout {
+  display: grid;
+  grid-template-columns: 275px minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+  padding-bottom: 112px;
+}
+
+/* Desktop Sidebar */
+.network-sidebar {
+  position: sticky;
+  top: 40px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-header {
+  display: none;
+}
+
+.side-nav {
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(56, 189, 248, 0.3) transparent;
+}
+
+.side-nav p {
+  margin: 0 0 12px;
+  color: var(--cyan);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.side-nav a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: var(--muted);
+  text-decoration: none;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.side-nav a.nav-h2 {
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 8px;
+}
+
+.side-nav a.nav-h3 {
+  padding-left: 22px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.side-nav a:hover,
+.side-nav a.active {
+  background: rgba(56, 189, 248, 0.08);
+  color: var(--cyan);
+}
+
+.side-note {
+  margin-top: 16px;
+  padding: 16px;
+  border-left: 2px solid var(--cyan);
+  background: rgba(56, 189, 248, 0.04);
+  border-radius: 0 12px 12px 0;
+}
+
+.side-note p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+/* ==========================================================================
+   MOBILE DRAWER NAVIGATION CONTROLS (Hidden on Desktop)
+   ========================================================================== */
+
+.doc-drawer-toggle {
+  display: none;
+}
+
+.doc-drawer-backdrop {
+  display: none;
+}
+
+/* ==========================================================================
+   MAIN DOCUMENT CONTAINER & TYPOGRAPHY
+   ========================================================================== */
+
+.doc-document {
+  min-width: 0;
+  padding: clamp(20px, 4vw, 52px);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: linear-gradient(145deg, var(--doc-surface), var(--doc-surface-deep));
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+}
+
+.source-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.cover-mark {
+  margin: 48px 0 6px;
+  color: var(--cyan);
+  font-family: var(--mono);
+  font-size: 13.5px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.cover-subtitle {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 17px;
+}
+
+.cover-title {
+  margin: 6px 0 0;
+  font-family: var(--sans);
+  font-size: clamp(34px, 4vw, 64px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.cover-release {
+  margin: 16px 0 64px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.major-heading,
+.topic-heading {
+  scroll-margin-top: 40px;
+}
+
+.major-heading {
+  margin: 80px 0 18px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+#network-intro.major-heading,
+.doc-document > .major-heading:first-child {
+  border-top: none !important;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+h1.major-heading {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+  font-size: clamp(38px, 5.2vw, 64px);
+  font-weight: 800;
+}
+
+h2.major-heading {
+  font-size: clamp(30px, 3.6vw, 42px);
+  font-weight: 800;
+}
+
+.topic-heading {
+  margin: 56px 0 16px;
+  font-family: var(--sans);
+  font-size: clamp(23px, 2.7vw, 30px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+}
+
+.subheading {
+  scroll-margin-top: 40px;
+  margin: 40px 0 14px;
+  font-family: var(--sans);
+  color: #f1f5f9;
+  font-size: clamp(18px, 2.1vw, 23px);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+.body-line,
+.figure-caption-source {
+  max-width: 900px;
+  margin: 13px 0;
+  color: #cbd5e1;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.numbered-line {
+  position: relative;
+  max-width: 920px;
+  margin: 12px 0;
+  padding-left: 32px;
+  color: #cbd5e1;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.numbered-line > span {
+  position: absolute;
+  left: 0;
+  color: var(--cyan);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.doc-list {
+  max-width: 920px;
+  margin: 14px 0 20px;
+  padding-left: 0;
+  list-style: none;
+}
+
+ol.doc-list {
+  counter-reset: doc-ol;
+}
+
+ol.doc-list > li::before {
+  content: counter(doc-ol) ".";
+  counter-increment: doc-ol;
+  color: var(--cyan);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: inherit;
+  font-weight: 600;
+  line-height: 1.65;
+}
+
+.doc-list li {
+  position: relative;
+  margin: 10px 0;
+  padding-left: 24px;
+  color: #cbd5e1;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.doc-list li::before {
+  content: "•";
+  position: absolute;
+  left: 4px;
+  top: -1px;
+  color: var(--cyan);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.doc-spacer {
+  height: 12px;
+  clear: both;
+}
+
+/* ==========================================================================
+   CODE & COMMAND LINE
+   ========================================================================== */
+
+code {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  padding: 2px 7px;
+  border-radius: 6px;
+  word-break: break-word;
+}
+
+.command-line,
+pre {
+  max-width: 940px;
+  margin: 14px 0;
+  padding: 16px 20px;
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: #090c12;
+  color: #e2e8f0;
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.command-line code,
+pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-size: 15px;
+  border-radius: 0;
+}
+
+/* ==========================================================================
+   CALLOUTS
+   ========================================================================== */
+
+.callout {
+  max-width: 930px;
+  margin: 20px 0;
+  padding: 16px 18px;
+  border-left: 3px solid var(--cyan);
+  border-radius: 0 12px 12px 0;
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.callout strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--cyan);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.callout p {
+  margin: 0;
+  color: #cbd5e1;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   FIGURES & IMAGES — STRICT SIZING & CONSTRAINTS
+   ========================================================================== */
+
+/* Universal documentation image constraint */
+article.doc-document img,
+.figure-block img,
+.overview-figure-block img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Hide empty images and placeholders */
+figure:has(img[src=""]),
+aside:has(img[src=""]),
+img[src=""] {
+  display: none !important;
+}
+
+.source-figure-line {
+  margin: 16px 0;
+  color: #94a3b8;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+/* Float figure cards (e.g. RJ45, SFP, cables, hubs) */
+.figure-block {
+  float: right;
+  width: min(42%, 400px);
+  margin: 12px 0 20px 24px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(56, 189, 248, 0.035);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.figure-block.float-left {
+  float: left;
+  margin: 12px 24px 20px 0;
+}
+
+.figure-block > span {
+  color: var(--cyan);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.figure-block p {
+  margin: 10px 0 0;
+  color: #94a3b8;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.figure-block img,
+.figure-with-image img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.figure-with-image {
+  border-style: solid;
+  border-color: var(--line);
+}
+
+.figure-with-image p {
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+/* Wide / full-width overview figures (e.g. network topology, headers, OSI) */
+.overview-figure-block {
+  float: none !important;
+  max-width: min(100%, 780px);
+  width: 100%;
+  margin: 28px auto 36px !important;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(56, 189, 248, 0.035);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  overflow: hidden;
+  text-align: center;
+}
+
+.overview-figure-block img {
+  max-width: 100%;
+  max-height: 520px;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 12px;
+  display: block;
+  object-fit: contain;
+}
+
+.figure-caption-source {
+  font-size: 13px;
+  color: #94a3b8;
+  text-align: center;
+}
+
+/* ==========================================================================
+   TABLES
+   ========================================================================== */
+
+.table-wrap {
+  clear: both;
+  max-width: 100%;
+  margin: 20px 0 28px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.015);
+}
+
+th,
+td {
+  padding: 14px 16px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+  color: #cbd5e1;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+th {
+  background: rgba(56, 189, 248, 0.08);
+  color: #f8fafc;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+tr:last-child td {
+  border-bottom: 0;
+}
+
+th:last-child,
+td:last-child {
+  border-right: 0;
+}
+
+/* ==========================================================================
+   INTERACTIVE OSI DIAGRAM & CARDS
+   ========================================================================== */
+
+.interactive-osi-figure {
+  clear: both;
+  margin: 24px 0 40px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  background: #111318;
+}
+
+.osi-figure-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 4px 4px 16px;
+}
+
+.osi-figure-heading div {
+  display: grid;
+  gap: 4px;
+}
+
+.osi-figure-heading span {
+  color: var(--cyan);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.13em;
+}
+
+.osi-figure-heading strong {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.osi-figure-heading small {
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+.osi-clickable-svg {
+  width: 100%;
+  min-height: 520px;
+}
+
+.osi-click-layer {
+  cursor: pointer;
+  outline: none;
+}
+
+.osi-click-layer g {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.osi-click-layer:hover g,
+.osi-click-layer:focus g {
+  filter: brightness(1.25) drop-shadow(0 0 14px rgba(56, 189, 248, 0.4));
+}
+
+.osi-text-card {
+  scroll-margin-top: 40px;
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 16px;
+  align-items: start;
+  max-width: 930px;
+  margin: 14px 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.osi-text-card > span {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(56, 189, 248, 0.32);
+  border-radius: 50%;
+  color: var(--cyan);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.osi-text-card p {
+  margin: 0;
+  color: #cbd5e1;
+  font-family: var(--sans);
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   ANCHOR HIGHLIGHT & FOOTER
+   ========================================================================== */
+
+.anchor-highlight {
+  animation: anchorGlow 1.5s ease-out;
+}
+
+@keyframes anchorGlow {
+  0% {
+    box-shadow: 0 0 0 4px var(--cyan), 0 0 24px rgba(0, 229, 255, 0.4);
+  }
+  100% {
+    box-shadow: none;
+  }
+}
+
+.footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 14px;
+}
+
+.footer .wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer a {
+  color: var(--cyan);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   RESPONSIVE & MOBILE DRAWER NAVIGATION (max-width: 960px)
+   ========================================================================== */
+
+@media (max-width: 960px) {
+  .network-layout {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  /* Vertical navigation moves into a slide-in drawer on mobile */
+  .network-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(85vw, 340px);
+    max-width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    z-index: 1000;
+    background: #0d1322;
+    border-right: 1px solid rgba(56, 189, 248, 0.25);
+    box-shadow: 12px 0 35px rgba(0, 0, 0, 0.85);
+    padding: 20px 16px 24px;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(-105%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .network-sidebar.drawer-open {
+    transform: translateX(0);
+  }
+
+  /* Drawer Header with Title and Close button */
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+
+  .sidebar-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 0.14em;
+  }
+
+  .doc-drawer-close {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--line);
+    color: #f1f5f9;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .doc-drawer-close:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .side-nav {
+    flex: 1;
+    max-height: none;
+    overflow-y: auto;
+    padding: 4px;
+    border: none;
+    background: transparent;
+  }
+
+  .network-sidebar .side-nav a {
+    color: #cbd5e1;
+    font-size: 13.5px;
+    padding: 9px 12px;
+  }
+
+  .network-sidebar .side-nav a.nav-h2 {
+    color: #ffffff;
+    font-weight: 700;
+  }
+
+  .network-sidebar .side-nav a.nav-h3 {
+    color: #94a3b8;
+  }
+
+  .network-sidebar .side-nav a:hover,
+  .network-sidebar .side-nav a.active {
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--cyan);
+  }
+
+  /* Mobile Drawer Backdrop */
+  .doc-drawer-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 7, 14, 0.75);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .doc-drawer-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Mobile Floating Drawer Toggle Button */
+  .doc-drawer-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    z-index: 997;
+    padding: 12px 20px;
+    border-radius: 9999px;
+    background: rgba(10, 16, 28, 0.94);
+    border: 1px solid var(--cyan);
+    color: #ffffff;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6), 0 0 14px rgba(0, 229, 255, 0.25);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+  }
+
+  body.drawer-open .doc-drawer-toggle {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .doc-drawer-toggle:hover,
+  .doc-drawer-toggle:focus-visible {
+    transform: scale(1.04);
+    background: rgba(14, 24, 42, 0.98);
+  }
+
+  /* Constrain floating figure blocks on tablet/mobile so text doesn't wrap poorly */
+  .figure-block,
+  .figure-block.float-left {
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    margin: 20px 0;
+  }
+
+  body.drawer-open {
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 720px) {
+  .network-hero {
+    padding-top: 110px;
+    padding-bottom: 36px;
+  }
+
+  .doc-document {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .osi-clickable-svg {
+    min-height: 360px;
+  }
+
+  .osi-figure-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .osi-clickable-svg text {
+    font-size: 26px;
+  }
+
+  .source-header {
+    flex-direction: column;
+  }
+
+  .footer .wrap {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}

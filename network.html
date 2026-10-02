@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -7,12 +7,15 @@
   <meta name="theme-color" content="#07111f">
   <title>Network Documentation</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="network.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="documentation.css">
 </head>
 <body class="network-page">
   <header class="header">
-    <div class="wrap nav">
+    <!-- <div class="wrap nav">
       <a class="brand" href="index.html">YE<span>.</span></a>
       <nav class="links" aria-label="Main navigation">
         <a href="index.html#about">About</a>
@@ -21,8 +24,21 @@
         <a href="index.html#knowledge">Knowledge</a>
       </nav>
       <a class="cv-link" href="assets/Youssif-Elfeshawy-CV.pdf" download>Download CV</a>
-    </div>
+    </div> -->
   </header>
+
+  <!-- Mobile Drawer Toggle Button -->
+  <button id="doc-drawer-toggle" class="doc-drawer-toggle" aria-label="Open Table of Contents" aria-expanded="false" aria-controls="network-sidebar">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+    <span>Contents</span>
+  </button>
+
+  <!-- Mobile Drawer Backdrop Overlay -->
+  <div id="doc-drawer-backdrop" class="doc-drawer-backdrop" aria-hidden="true"></div>
 
   <main>
     <section class="network-hero">
@@ -50,7 +66,16 @@
     </section>
 
     <section class="wrap network-layout">
-      <aside class="network-sidebar">
+      <aside class="network-sidebar" id="network-sidebar" aria-label="Documentation Navigation">
+        <div class="sidebar-header">
+          <span class="sidebar-title">TABLE OF CONTENTS</span>
+          <button id="doc-drawer-close" class="doc-drawer-close" aria-label="Close navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
         <nav class="side-nav"></nav>
       </aside>
 
@@ -328,13 +353,14 @@ write memory</code></pre>
 <ul class="doc-list">
   <li>Wired (guided) media: signals travel through a physical cable that guides the signal from source to destination. Examples: UTP (Unshielded Twisted Pair) copper cable, fiber optic cable, coaxial cable.</li>
   <li>Wireless (unguided) media: signals travel through the air as electromagnetic waves without any physical conductor. Examples: Wi-Fi local networks, cellular networks (4G/5G), satellite links, terrestrial microwave.</li>
+</ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="unshielded-twisted-pair-utp-copper-cables">UTP Cable</h4>
-<aside class="figure-block"><img src="assets/twisted_pair_cables.jpg" alt="UTP Cable"></aside>
+<aside class="figure-block figure-with-image"><img src="assets/twisted_pair_cables.jpg" alt="UTP Cable"></aside>
 <p class="body-line">UTP (Unshielded Twisted Pair) is the standard copper cable used in wired Ethernet networks. It contains 4 pairs of copper wires — 8 wires total — twisted together inside a plastic outer jacket. Twisting each pair reduces EMI (Electromagnetic Interference) that would otherwise corrupt the signal.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="the-rj-45-connector">RJ-45 Connector</h4>
-<aside class="figure-block float-left"><img src="assets/rj45.png" alt="RJ-45 Connector"></aside>
+<aside class="figure-block figure-with-image float-left"><img src="assets/rj45.png" alt="RJ-45 Connector"></aside>
 <p class="body-line">UTP cables terminate with an RJ-45 connector — the standard plastic plug used for all wired Ethernet connections. It has 8 pins, each corresponding to one of the 8 wires. How those pins are wired at each end determines the cable type.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="10base-t-and-100base-t-pin-usage">10BASE-T & 100BASE-T</h4>
@@ -357,7 +383,7 @@ write memory</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="fiber-optic-cables">Fiber Optic Cables</h4>
 <p class="body-line">Fiber optic cables transmit data as pulses of light through a glass core, rather than electrical signals through copper. This enables much longer distances, higher speeds, and complete immunity to electromagnetic interference — making fiber the preferred medium for inter-building links, WAN (Wide Area Network) connections, and high-security environments.</p>
-<aside class="figure-block"><img src="assets/fiber_optic_cable.jpg" alt="Fiber Optic Cable"></aside>
+<aside class="figure-block figure-with-image"><img src="assets/fiber_optic_cable.jpg" alt="Fiber Optic Cable"></aside>
 <ul class="doc-list">
   <li>Fiberglass core: the medium through which light pulses travel.</li>
   <li>Cladding: a glass layer surrounding the core with a different refractive index. This difference causes total internal reflection — light cannot escape through the cladding and stays confined to the core.</li>
@@ -366,7 +392,7 @@ write memory</code></pre>
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="small-form-factor-pluggable-sfp-transceivers">SFP Transceivers</h4>
-<aside class="figure-block float-left"><img src="assets/spf.jpg" alt=""></aside>
+<aside class="figure-block figure-with-image float-left"><img src="assets/spf.jpg" alt="SFP Transceiver"></aside>
 <p class="body-line">Standard network device ports use electrical signals, so a fiber optic cable cannot be plugged directly into a regular Ethernet port. To connect a fiber cable to a switch or router, a SFP (Small Form-factor Pluggable) transceiver is required — a compact, hot-swappable module that slots into an SFP port on the device. The SFP converts the device&#x27;s electrical signals into optical signals for transmission, and converts incoming light signals back into electrical signals.</p>
 <p class="body-line">Each fiber connection uses two separate strands — one for transmitting (TX) and one for receiving (RX) — making fiber connections inherently full-duplex.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
@@ -383,10 +409,11 @@ write memory</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="network-devices-at-layer-1">Network Devices</h3>
 <p class="body-line">Layer 1 devices operate purely on raw signals — they have no understanding of addresses or any higher-layer information. They simply receive a signal and retransmit it.</p>
-</ul><aside class="figure-block"><img src="assets/hub.png" alt="Hub Device"></aside>
+<aside class="figure-block figure-with-image"><img src="assets/hub.png" alt="Hub Device"></aside>
 <ul class="doc-list">
   <li>Hub: a basic Layer 1 device that connects multiple devices. When any device sends a signal, the hub amplifies and repeats it out of every other port with no intelligence about the intended destination. All devices share the same physical medium. Hubs are legacy technology replaced by switches.</li>
   <li>Repeater: receives a signal, amplifies it to restore signal strength lost over distance, and retransmits it. Used to extend the maximum cable length of a network segment.</li>
+</ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h2 class="major-heading" id="layer-2">Layer 2: Data Link Layer</h2>
 <p class="body-line">Layer 2 organizes raw bits into structured units called frames. Each Ethernet frame has a header, a payload, and a trailer. The header contains addressing information — source and destination MAC (Media Access Control) addresses — that identifies where the frame came from and where it needs to go. The payload carries the actual data from the layer above. The trailer contains an error-check value that lets the receiver verify the frame arrived intact. Layer 2 only handles delivery between devices on the same local network — delivering data across different networks is the job of Layer 3. Ethernet is the dominant Layer 2 protocol in wired local area networks, and every Ethernet frame follows the structure below.</p>
@@ -402,7 +429,7 @@ write memory</code></pre>
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="subheading" id="switches">Switches</h3>
-<aside class="figure-block"><img src="assets/cisco_switch.png" alt="Cisco Network Switch"></aside>
+<aside class="figure-block figure-with-image"><img src="assets/cisco_switch.png" alt="Cisco Network Switch"></aside>
 <p class="body-line">A switch is an intelligent Layer 2 device. Because it operates at the Data Link layer, it can read the source and destination MAC addresses inside Ethernet frames and forward each frame only through the port that leads toward the intended destination.</p>
 <p class="body-line">Unlike a hub, which repeats signals to all connected devices over a shared half-duplex medium, a switch normally uses full-duplex links. This allows devices on switch ports to send and receive at the same time without competing for the same shared medium.</p>
 <ul class="doc-list">
@@ -834,7 +861,7 @@ show mac address-table secure                 → list secured MAC address entri
 <h2 class="major-heading" id="layer-3">Layer 3: Network Layer</h2>
 <p class="body-line">While Layer 2 handles communication within a local network, Layer 3 allows data to travel between different networks. It provides the addressing and path-selection mechanisms needed to move packets from one network to another.</p>
 <h3 class="subheading" id="routers">Routers</h3>
-<aside class="figure-block"><img src="assets/router.png" alt="Cisco Network Router"></aside>
+<aside class="figure-block figure-with-image"><img src="assets/router.png" alt="Cisco Network Router"></aside>
 <p class="body-line">A router is the primary Layer 3 device and is used to connect different networks. When a packet arrives, the router examines its destination Layer 3 address and forwards the packet through the appropriate interface toward the next network.</p>
 <p class="body-line">As a packet travels from source to destination, it may pass through several routers, with each router representing one hop along the path. At every hop, the router processes the Layer 3 packet and sends it across the next link toward its destination.</p>
 <figure class="overview-figure-block figure-with-image"><img src="" alt="Packet Traveling Through Multiple Routers Between Different Networks"></figure>
@@ -1136,7 +1163,7 @@ show ip ospf interface                → view OSPF settings on interfaces</code
   ip address <i>ip-address subnet-mask</i>
   no shutdown</code></pre>
 <aside class="callout"><strong>Note:</strong><p>The physical router interface must be enabled using <code>no shutdown</code> for the physical interface and all of its subinterfaces to operate.</p></aside>
-<aside class="figure-block"><img src="assets/multilayer_switch.png" alt="Cisco Multilayer Switch"></aside>
+<aside class="figure-block figure-with-image"><img src="assets/multilayer_switch.png" alt="Cisco Multilayer Switch"></aside>
 <p class="body-line">Router on a Stick sends all inter-VLAN traffic through the same physical link between the switch and router, which can become a bottleneck as traffic increases. To avoid this limitation, larger networks commonly use a multilayer switch, also called a Layer 3 switch, which can perform both Layer 2 switching and Layer 3 routing directly on the switch.</p>
 <p class="body-line">Instead of sending inter-VLAN traffic to an external router, the multilayer switch creates an SVI (Switch Virtual Interface) for each VLAN. An SVI is a virtual Layer 3 interface associated with a VLAN, and its IP address normally acts as the default gateway for devices in that VLAN.</p>
 <p class="body-line">Layer 3 routing must first be enabled on the multilayer switch:</p>

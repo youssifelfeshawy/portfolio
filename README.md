@@ -12,8 +12,8 @@ python -m http.server 8000
 (Open it through a local server, not by double-clicking the file, so the 3D model can load.)
 
 ## Files
-- `index.html`, `portfolio.css`, `script.js` — the portfolio
-- `network.html`, `network.css`, `network.js` — the networking guide
+- `index.html`, `style.css`, `script.js` — the portfolio
+- `network.html`, `documentation.css`, `network.js` — the networking guide
 - `assets/models/Server.glb` — 3D model (textures compressed)
 - `assets/console-keyboard.jpg` — keyboard texture (the key positions in `script.js` match this image)
 - `assets/vendor/` — three.js, GLTFLoader, GSAP + ScrollTrigger (local copies)
