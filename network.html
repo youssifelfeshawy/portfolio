@@ -112,7 +112,7 @@
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="network-design">Network Topologies</h3>
+<h3 class="topic-heading" id="network-design">Network Topologies</h3>
 <p class="body-line">Network topology describes how devices are connected to each other, either physically or logically. The way a network is designed depends on factors such as the number of devices, the size of the network, the required performance, and the level of redundancy needed.</p>
 <ul class="doc-list">
   <li><strong>Star:</strong> multiple devices connect to one central device. It is the most common arrangement in local networks.</li>
@@ -160,7 +160,7 @@
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="number-systems">Number Systems</h3>
+<h3 class="topic-heading" id="number-systems">Number Systems</h3>
 <p class="body-line">Networking uses three common number systems to represent digital information. Each system uses a different base and has a standard prefix:</p>
 <ul class="doc-list">
   <li><strong>Binary (Base 2, prefix <code>0b</code>):</strong> uses only the digits 0 and 1. Used internally by all digital systems. Used internally by all digital systems.</li>
@@ -347,7 +347,7 @@ write memory</code></pre>
 
 <h2 class="major-heading" id="layer-1">Layer 1: Physical Layer</h2>
 <p class="body-line">The Physical Layer is the foundation of all networking. It defines the physical medium that carries raw bits — electrical signals on copper wire, light pulses through fiber optic cable, or radio waves through the air. Every higher layer depends on this layer to physically move data from one place to another.</p>
-<h3 class="subheading" id="transmission-media">Transmission Media</h3>
+<h3 class="topic-heading" id="transmission-media">Transmission Media</h3>
 <p class="body-line">The physical medium is what carries the actual signal between devices. All transmission media fall into one of two categories:</p>
 <ul class="doc-list">
   <li>Wired (guided) media: signals travel through a physical cable that guides the signal from source to destination. Examples: UTP (Unshielded Twisted Pair) copper cable, fiber optic cable, coaxial cable.</li>
@@ -406,7 +406,7 @@ write memory</code></pre>
 <div class="table-wrap"><table><thead><tr><th>Factor</th><th>UTP Copper</th><th>Fiber Optic</th></tr></thead><tbody><tr><td>Signal type</td><td>Electrical</td><td>Light (LED or laser)</td></tr><tr><td>Max distance</td><td>~100 m per segment</td><td>~550 m (Multi-Mode) to 100+ km (Single-Mode)</td></tr><tr><td>EMI immunity</td><td>Susceptible to EMI</td><td>Completely immune to EMI</td></tr><tr><td>Security</td><td>Signal can leak — can be tapped</td><td>No signal leakage — cannot be passively tapped</td></tr><tr><td>Cost</td><td>Lower</td><td>Higher, especially SMF (Single-Mode Fiber)</td></tr><tr><td>Connector type</td><td>RJ-45</td><td>LC, SC, or ST — requires SFP transceiver on the device</td></tr></tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="subheading" id="network-devices-at-layer-1">Network Devices</h3>
+<h3 class="topic-heading" id="network-devices-at-layer-1">Network Devices</h3>
 <p class="body-line">Layer 1 devices operate purely on raw signals — they have no understanding of addresses or any higher-layer information. They simply receive a signal and retransmit it.</p>
 <aside class="figure-block figure-with-image"><img src="assets/hub.png" alt="Hub Device"></aside>
 <ul class="doc-list">
@@ -420,14 +420,14 @@ write memory</code></pre>
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody><tr><td>Preamble</td><td>7 bytes</td><td>Alternating 1s and 0s (10101010 repeated). Allows receiving devices to synchronize their clock to the incoming bit stream before the actual frame begins.</td></tr><tr><td>Start Frame Delimiter (SFD)</td><td>1 byte</td><td>The bit pattern 10101011. Signals the end of the preamble — the very next byte is the start of the Destination MAC Address field.</td></tr><tr><td>Destination MAC Address</td><td>6 bytes</td><td>MAC address of the intended recipient. Can be unicast (one device), multicast (a group), or broadcast (FF:FF:FF:FF:FF:FF — all devices on the local network).</td></tr><tr><td>Source MAC Address</td><td>6 bytes</td><td>MAC address of the sending device&#x27;s network interface card (NIC).</td></tr><tr><td>Type / Length</td><td>2 bytes</td><td>Value 1536 (0x0600) or higher: identifies the Layer 3 protocol — 0x0800 = IPv4, 0x86DD = IPv6. Value below 1536: indicates the byte length of the payload.</td></tr><tr><td>Payload (Data)</td><td>46–1500 bytes</td><td>The encapsulated Layer 3 data — usually an IP packet. Minimum 46 bytes — if the actual data is shorter, padding bytes (zeros) are appended to reach the minimum. This ensures the total frame meets the 64-byte minimum required for correct collision detection.</td></tr><tr><td>FCS (Frame Check Sequence)</td><td>4 bytes</td><td>A Cyclic Redundancy Check (CRC) value — a mathematical checksum computed from all the data in the frame. The sender runs a CRC algorithm over the frame contents and places the result here. The receiver performs the same calculation on the received data and compares results. If they do not match, the frame was corrupted in transit and is silently discarded (no retransmission at this layer — reliability is handled by Layer 4).</td></tr></tbody></table></div>
 <aside class="callout"><strong>Important:</strong><p>Preamble and Start Frame Delimiter (SFD) are not counted in the Ethernet frame size. The 64-byte minimum applies from Destination MAC through FCS: 6 + 6 + 2 + 46 + 4 = 64 bytes.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="subheading" id="frame-errors">Frame Errors</h3>
+<h3 class="topic-heading" id="frame-errors">Frame Errors</h3>
 <p class="body-line">Frame errors occur when a received frame does not meet the size constraints defined by the Ethernet standard.</p>
 <ul class="doc-list">
   <li><strong>Runt:</strong> a frame smaller than the 64-byte minimum. Typically caused by a collision or a malfunctioning NIC. To prevent runts, the sender pads the payload with zeros if the actual data is shorter than 46 bytes, ensuring the frame always meets the minimum size.</li>
   <li><strong>Giant:</strong> a frame larger than the 1518-byte maximum. Usually caused by a misconfigured device. To prevent oversized data from being sent, Layer 3 uses fragmentation — breaking large packets into smaller pieces that each fit within the 1500-byte payload limit before they are encapsulated into frames.</li>
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
-<h3 class="subheading" id="switches">Switches</h3>
+<h3 class="topic-heading" id="switches">Switches</h3>
 <aside class="figure-block figure-with-image"><img src="assets/cisco_switch.png" alt="Cisco Network Switch"></aside>
 <p class="body-line">A switch is an intelligent Layer 2 device. Because it operates at the Data Link layer, it can read the source and destination MAC addresses inside Ethernet frames and forward each frame only through the port that leads toward the intended destination.</p>
 <p class="body-line">Unlike a hub, which repeats signals to all connected devices over a shared half-duplex medium, a switch normally uses full-duplex links. This allows devices on switch ports to send and receive at the same time without competing for the same shared medium.</p>
@@ -447,7 +447,7 @@ write memory</code></pre>
 <aside class="callout"><strong>Note:</strong><p>CSMA/CD is only needed in shared half-duplex Ethernet environments. Full-duplex switch connections can separate collision domains, so CSMA/CD is not used.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="media-access-control-mac-addresses">MAC Addresses</h3>
+<h3 class="topic-heading" id="media-access-control-mac-addresses">MAC Addresses</h3>
 <p class="body-line">At Layer 2, devices are identified using MAC (Media Access Control) addresses. A MAC address, also called physical address, is assigned to a network interface card (NIC) and is used by switches to identify the source and destination of Ethernet frames on the local network.</p>
 <ul class="doc-list">
   <li><strong>Length:</strong> 48 bits (6 bytes), usually written as 12 hexadecimal characters, for example AA:BB:CC:11:22:33.</li>
@@ -470,13 +470,13 @@ clear mac address-table dynamic [address <i>mac-addr</i> | interface <i>interfac
 <aside class="callout"><strong>Note:</strong><p>The clear command removes only dynamically learned MAC address entries. Static MAC address entries are not removed.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="local-area-network-lan-and-broadcast-domain">Broadcast Domain</h3>
+<h3 class="topic-heading" id="local-area-network-lan-and-broadcast-domain">Broadcast Domain</h3>
 <p class="body-line">A set of all devices that receive a broadcast frame (destination MAC FF:FF:FF:FF:FF:FF) sent by any one member. By default, all ports on a switch are in the same broadcast domain.</p>
 <figure class="overview-figure-block figure-with-image"><img src="assets/broadcast_domain.jpg" alt="Straight-Through vs. Crossover Cables"></figure>
 <aside class="callout"><strong>Note:</strong><p>Routers break broadcast domains — a broadcast does not cross a router. Switches alone do not break broadcast domains, but VLANs let you create multiple separate broadcast domains within a single switch.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="virtual-local-area-networks-vlans">VLANs</h3>
+<h3 class="topic-heading" id="virtual-local-area-networks-vlans">VLANs</h3>
 <p class="body-line">A VLAN (Virtual Local Area Network) logically separates end hosts at Layer 2, creating multiple isolated broadcast domains within the same physical switch. Devices in different VLANs cannot communicate directly at Layer 2; traffic between VLANs must be routed by a Layer 3 device.</p>
 <figure class="overview-figure-block figure-with-image"><img src="" alt="Switch Divided into Multiple VLAN Broadcast Domains"></figure>
 <p class="body-line">VLAN IDs identify these logical networks and are divided into several ranges:</p>
@@ -543,7 +543,7 @@ show interfaces trunk                            → view trunk configurations</
 <aside class="callout"><strong>Important:</strong><p>VTP is rarely used in modern networks and is generally not recommended. A switch with a higher revision number can overwrite the VLAN database on all connected switches, potentially destroying the network configuration. Manual VLAN configuration per switch is the safer approach.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="stp">Spanning Tree Protocol</h3>
+<h3 class="topic-heading" id="stp">Spanning Tree Protocol</h3>
 <p class="body-line">Network redundancy is important because it keeps traffic flowing if a switch or link fails. However, adding redundant Layer 2 links can create switching loops, where Ethernet frames circulate repeatedly between switches.</p>
 <p class="body-line">Unlike Layer 3 IP packets, Ethernet frames do not have a TTL (Time to Live) field, so there is nothing to automatically stop a frame from travelling around a loop.</p>
 <p class="body-line">These loops can cause serious network problems:</p>
@@ -804,7 +804,7 @@ show lldp traffic                → view LLDP packet statistics</code></pre>
 <aside class="callout"><strong>Note:</strong><p>CDP and LLDP are separate protocols and can operate at the same time on the same Cisco device and interfaces.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="port-security">Port Security</h3>
+<h3 class="topic-heading" id="port-security">Port Security</h3>
 <p class="body-line">Port Security is a security feature on Cisco switches that secures access to switchports by controlling which devices are allowed to transmit frames. By limiting and restricting the MAC addresses permitted on an interface, it prevents unauthorized devices from accessing the network and helps protect the switch from malicious attacks.</p>
 <p class="body-line">To enable Port Security, the interface must first be explicitly configured in a static mode (such as access or trunk) rather than a dynamic mode (dynamic desirable or dynamic auto):</p>
 <pre class="command-line"><code>interface <i>interface-id</i>
@@ -859,7 +859,7 @@ show mac address-table secure                 → list secured MAC address entri
 
 <h2 class="major-heading" id="layer-3">Layer 3: Network Layer</h2>
 <p class="body-line">While Layer 2 handles communication within a local network, Layer 3 allows data to travel between different networks. It provides the addressing and path-selection mechanisms needed to move packets from one network to another.</p>
-<h3 class="subheading" id="routers">Routers</h3>
+<h3 class="topic-heading" id="routers">Routers</h3>
 <aside class="figure-block figure-with-image"><img src="assets/router.png" alt="Cisco Network Router"></aside>
 <p class="body-line">A router is the primary Layer 3 device and is used to connect different networks. When a packet arrives, the router examines its destination Layer 3 address and forwards the packet through the appropriate interface toward the next network.</p>
 <p class="body-line">As a packet travels from source to destination, it may pass through several routers, with each router representing one hop along the path. At every hop, the router processes the Layer 3 packet and sends it across the next link toward its destination.</p>
@@ -867,7 +867,7 @@ show mac address-table secure                 → list secured MAC address entri
 <p class="body-line">For routers to know where packets come from and where they need to go, Layer 3 uses logical addresses called IP addresses.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="internet-protocol-version-4-ipv4-addressing">IPv4 Addressing</h3>
+<h3 class="topic-heading" id="internet-protocol-version-4-ipv4-addressing">IPv4 Addressing</h3>
 <p class="body-line">IPv4 (Internet Protocol version 4) is a protocol used to identify devices and route packets between networks. An IPv4 address is 32 bits long and is written in dotted-decimal notation as four 8-bit groups called octets.</p>
 <figure class="overview-figure-block figure-with-image"><img src="" alt="IPv4 Address Shown as Four 8-Bit Octets"></figure>
 <p class="body-line">Historically, IPv4 addresses were divided into five classes according to the leading values of the first octet. Classes A, B, and C were used for normal host addressing, while Classes D and E were reserved for other purposes:</p>
@@ -927,7 +927,7 @@ show mac address-table secure                 → list secured MAC address entri
 <p class="body-line">If a packet exceeds the next link's MTU and fragmentation is allowed, the router divides it into smaller fragments. The Identification, Flags, and Fragment Offset fields allow the destination host to rebuild the original packet. If the Don't Fragment flag is set, the router drops an oversized packet instead of fragmenting it.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="address-resolution-protocol-arp">ARP</h3>
+<h3 class="topic-heading" id="address-resolution-protocol-arp">ARP</h3>
 <p class="body-line">ARP (Address Resolution Protocol) is used with IPv4 to find the MAC address needed to deliver a frame on the local network. When a device knows the destination IP address but does not know the corresponding MAC address, it uses ARP to discover it.</p>
 <p class="body-line">The device first sends an ARP Request as a broadcast so every device on the local network receives it. The device that owns the requested IP address responds with an ARP Reply containing its MAC address.</p>
 <figure class="overview-figure-block figure-with-image"><img src="" alt="ARP Request Broadcast and ARP Reply Unicast"></figure>
@@ -944,7 +944,7 @@ show mac address-table secure                 → list secured MAC address entri
 <aside class="callout"><strong>Remember:</strong><p>A switch's MAC address table maps a MAC address to a switch port, while an ARP table maps an IPv4 address to a MAC address.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="internet-control-message-protocol-icmp">ICMP</h3>
+<h3 class="topic-heading" id="internet-control-message-protocol-icmp">ICMP</h3>
 <p class="body-line">ICMP (Internet Control Message Protocol) is a protocol used by network devices to report problems and provide diagnostic information about IP communication. It does not carry normal application data; instead, it sends control and error messages when certain network events occur.</p>
 <p class="body-line">Common ICMP messages include:</p>
 <div class="table-wrap"><table><thead><tr><th>ICMP Message</th><th>Purpose</th></tr></thead><tbody><tr><td>Echo Request</td><td>Sent to test whether a destination is reachable.</td></tr><tr><td>Echo Reply</td><td>Returned by the destination in response to an Echo Request.</td></tr><tr><td>Destination Unreachable</td><td>Indicates that a packet could not reach its destination or required service.</td></tr><tr><td>Time Exceeded</td><td>Sent by a router when a packet's TTL reaches 0 and the packet is discarded.</td></tr></tbody></table></div>
@@ -958,7 +958,7 @@ show mac address-table secure                 → list secured MAC address entri
 tracert <i>ip-address</i>                            → Windows</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="routing">Routing</h3>
+<h3 class="topic-heading" id="routing">Routing</h3>
 <p class="body-line">Routing is the process of forwarding IP packets between different networks. A router examines the destination IP address of each packet and determines the next path the packet should take toward its destination.</p>
 <p class="body-line">To forward packets, routers must know how to reach different networks. These routes can be learned in three main ways:</p>
 <ul class="doc-list">
@@ -1149,7 +1149,7 @@ show ip eigrp topology                   → view the EIGRP topology table</code
 show ip ospf database                 → view LSAs stored in the LSDB
 show ip ospf interface                → view OSPF settings on interfaces</code></pre>
 
-<h3 class="subheading" id="inter-vlan-routing">Inter-VLAN Routing</h3>
+<h3 class="topic-heading" id="inter-vlan-routing">Inter-VLAN Routing</h3>
 <p class="body-line">VLANs create separate Layer 2 broadcast domains, so devices in different VLANs cannot communicate directly through Layer 2 switching. Inter-VLAN routing uses a Layer 3 device to route traffic between these VLANs.</p>
 <p class="body-line">One way to provide inter-VLAN routing is Router on a Stick (ROAS), where a router uses a single physical interface connected to a trunk port on the switch. The router interface is divided into logical subinterfaces, with one subinterface for each VLAN.</p>
 
@@ -1189,7 +1189,7 @@ show ip ospf interface                → view OSPF settings on interfaces</code
   no shutdown</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="vrf">VRF</h3>
+<h3 class="topic-heading" id="vrf">VRF</h3>
 <p class="body-line">VRF (Virtual Routing and Forwarding) allows a single router or multilayer switch to maintain multiple independent routing tables. Each VRF acts like a separate virtual router, similar to how VLANs divide a switch into separate Layer 2 networks. Traffic belonging to one VRF is isolated from other VRFs unless VRF leaking is specifically configured.</p>
 <p class="body-line">Layer 3 interfaces, SVIs, and routed ports on multilayer switches can be assigned to a VRF. Because each VRF has its own independent routing table, the same IP subnet can be used in different VRFs without creating a conflict.</p>
 <p class="body-line">A common use of VRF is service-provider networks, where a single device can carry traffic for multiple customers while keeping their routing information and traffic isolated. This also allows different customers to use overlapping IP address ranges without conflict.</p>
@@ -1423,7 +1423,7 @@ show ipv6 route                       → view the IPv6 routing table</code></pr
 <tr><td>514</td><td>Syslog</td><td>UDP</td><td>Sends event log messages across the network to a central logging server.</td></tr>
 </tbody></table></div>
 
-<h3 class="subheading" id="acls">ACLs</h3>
+<h3 class="topic-heading" id="acls">ACLs</h3>
 <p class="body-line">ACLs (Access Control Lists) are sequential lists of permit and deny statements, known as Access Control Entries (ACEs), used to filter network traffic. ACLs examine packets passing through an interface and determine whether to permit or drop them based on criteria like source IP, destination IP, protocol, and port numbers.</p>
 <ul class="doc-list">
   <li><strong>Top-to-Bottom Processing:</strong> Packets are tested against each statement in order. As soon as a match is found, the router takes the specified action (permit or deny) and stops checking the rest of the list.</li>
@@ -1469,7 +1469,7 @@ access-list <i>number</i> remark <i>description</i>             → add a descri
 <aside class="callout"><strong>Note:</strong><p>Use the <code>ip</code> protocol keyword to match all IP traffic. For addressing, use <code>any</code> in place of an IP address and wildcard mask to match all addresses, or use <code>host</code> before a specific IP address to match a single device.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="nat">NAT</h3>
+<h3 class="topic-heading" id="nat">NAT</h3>
 <p class="body-line">NAT (Network Address Translation) is a short-term solution to IPv4 address exhaustion, alongside VLSM and private IPv4 addressing. NAT modifies the source and/or destination IP address of packets as they pass through a router. Most commonly, it translates private inside addresses into public addresses so internal hosts can communicate with external networks. NAT can use a permanent mapping, a dynamically assigned public address, or port numbers to allow multiple hosts to share a public address.</p>
 <p class="body-line">Before configuring NAT, the router interfaces must be identified as inside or outside, and the four NAT address terms describe how each address is viewed from the inside and outside networks:</p>
 <div class="table-wrap"><table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody>
@@ -1506,7 +1506,7 @@ show ip nat statistics                   → view NAT configuration and statisti
 clear ip nat translation *               → clear all dynamic NAT translations</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="qos">QoS</h3>
+<h3 class="topic-heading" id="qos">QoS</h3>
 <p class="body-line">Modern networks carry voice, video, and data traffic over the same cable. Because these traffic types have different requirements, they cannot always be treated equally during congestion. QoS (Quality of Service) is a set of tools that allows network devices to classify, mark, queue, and schedule traffic differently so that delay-sensitive traffic such as voice and video receives appropriate treatment. QoS manages several important traffic characteristics, including:</p>
 <ul class="doc-list">
   <li><strong>Bandwidth:</strong> The total capacity of a link in bits per second. QoS can reserve or allocate bandwidth for different traffic classes.</li>
@@ -1601,7 +1601,7 @@ clear ip nat translation *               → clear all dynamic NAT translations<
 <h2 class="major-heading" id="layer-7">Layer 7: Application Layer</h2>
 <p class="body-line">The Application Layer is the layer closest to the end user. It directly provides network services to software applications (like web browsers, email clients, and management tools). It defines the protocols used to browse websites, resolve domain names, lease IP addresses, log events, synchronize clocks, and manage network devices.</p>
 
-<h3 class="subheading" id="dns">DNS</h3>
+<h3 class="topic-heading" id="dns">DNS</h3>
 <p class="body-line">DNS (Domain Name System) translates human-readable hostnames, such as <code>google.com</code>, into IP addresses that devices can use to communicate. When a user enters a domain name in a browser, the device queries a DNS server to obtain the corresponding IP address before establishing the connection.</p>
 <p class="body-line">DNS stores this information using different types of DNS records, with each record serving a specific purpose:</p>
 <div class="table-wrap"><table><thead><tr><th>Record</th><th>Purpose</th></tr></thead><tbody>
@@ -1630,7 +1630,7 @@ ip domain lookup                          → enable DNS lookups</code></pre>
 <pre class="command-line"><code>show hosts</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="dhcp">DHCP</h3>
+<h3 class="topic-heading" id="dhcp">DHCP</h3>
 <p class="body-line">DHCP (Dynamic Host Configuration Protocol) allows hosts to automatically obtain their network configuration, including an IP address, subnet mask, default gateway, DNS server, and other parameters, without manual configuration. DHCP servers lease IP addresses to clients for a configurable duration.</p>
 <p class="body-line">When a client needs an IP address, it uses the DORA process:</p>
 <div class="table-wrap"><table><thead><tr><th>Message</th><th>Direction</th><th>Type</th><th>Description</th></tr></thead><tbody>
@@ -1697,7 +1697,7 @@ ipconfig /renew                  → request a new address from the DHCP server<
 <pre class="command-line"><code>errdisable recovery cause dhcp-rate-limit</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="dai">DAI</h3>
+<h3 class="topic-heading" id="dai">DAI</h3>
 <p class="body-line">DAI (Dynamic ARP Inspection) is a switch security feature that examines ARP messages received on untrusted ports to protect against ARP poisoning. In an ARP poisoning attack, an attacker sends false ARP information, often using Gratuitous ARP (GARP), to associate the attacker's MAC address with another device's IP address. This can cause traffic to be redirected through the attacker, enabling a Man-in-the-Middle attack.</p>
 <p class="body-line">DAI uses trusted and untrusted ports to determine how ARP messages are handled. Ports are untrusted by default. Ports connected toward other trusted network devices, such as switches or routers, should be configured as trusted, while ports connected to end hosts normally remain untrusted.</p>
 <p class="body-line">DAI must first be enabled on the VLANs that should be protected:</p>
@@ -1730,7 +1730,7 @@ ip arp inspection filter <i>acl-name</i> vlan <i>vlan-id</i>       → Apply ACL
 show ip arp inspection interfaces       → View interfaces config and rate limits</code></pre>
 <aside class="callout"><strong>Note:</strong><p>DAI uses the DHCP Snooping Binding Table in a similar way to how DHCP Snooping learns valid client information. For this reason, DHCP Snooping is commonly enabled when DAI is used for dynamically addressed hosts.</p></aside>
 
-<h3 class="subheading" id="remote-access">Remote Access</h3>
+<h3 class="topic-heading" id="remote-access">Remote Access</h3>
 <p class="body-line">Network devices can be accessed directly through the console port or remotely through the network. Remote access allows an administrator to manage a device's CLI from another network using protocols such as Telnet or SSH. The device must have a reachable IP address, and the required remote-access configuration must be enabled.</p>
 <p class="body-line">By default, access through the console port does not require a password. Cisco IOS provides a single console line, always identified as line 0, so only one console connection can be active at a time.</p>
 <p class="body-line">A password can be configured for the console line and required before allowing access to the CLI:</p>
@@ -1795,7 +1795,7 @@ show version           → view the IOS image and software information</code></p
 ssh <i>username</i>@<i>ip-address</i></code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="snmp">SNMP</h3>
+<h3 class="topic-heading" id="snmp">SNMP</h3>
 <p class="body-line">SNMP (Simple Network Management Protocol) is used to monitor the status of network devices and make configuration changes remotely. An SNMP-managed network relies on two main roles.</p>
 <p class="body-line">First is the Network Management Station (NMS), the server-side system that manages the network. It utilizes two main components:</p>
 <ul class="doc-list">
@@ -1823,7 +1823,7 @@ ssh <i>username</i>@<i>ip-address</i></code></pre>
 </tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="syslog">Syslog</h3>
+<h3 class="topic-heading" id="syslog">Syslog</h3>
 <p class="body-line">Syslog is an industry-standard protocol used to record messages generated by network devices. These messages can report events such as interface status changes, OSPF neighbor state changes, system restarts, and other system events. Syslog messages are useful for troubleshooting, incident analysis, auditing, and system monitoring.</p>
 <p class="body-line">A Cisco Syslog message can be represented as:</p>
 <pre class="command-line"><code>seq: timestamp: %facility-severity-MNEMONIC: description</code></pre>
@@ -1880,7 +1880,7 @@ logging trap <i>severity-level</i>         → set the minimum severity level to
 </tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="ntp">NTP</h3>
+<h3 class="topic-heading" id="ntp">NTP</h3>
 <p class="body-line">Every network device has an internal clock. Accurate time is important for troubleshooting, log correlation, security analysis, and other network operations. When devices have different times, it becomes difficult to determine the correct order of events and correlate logs from multiple devices.</p>
 <p class="body-line">Cisco IOS devices maintain two separate clocks: the software clock, which is used during normal operation, and the hardware calendar, which is stored in hardware and persists across reboots. These clocks can be configured independently and may drift apart over time.</p>
 <ul class="doc-list">
@@ -1927,7 +1927,7 @@ ntp trusted-key <i>key-number</i>                    → mark the key as trusted
 ntp server <i>ip-address</i> key <i>key-number</i>          → assign the key to the NTP server</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="ftp-tftp">FTP and TFTP</h3>
+<h3 class="topic-heading" id="ftp-tftp">FTP and TFTP</h3>
 <p class="body-line">FTP (File Transfer Protocol) and TFTP (Trivial File Transfer Protocol) are file transfer protocols that use a client-server model.</p>
 <div class="table-wrap"><table><thead><tr><th>Feature</th><th>TFTP</th><th>FTP</th></tr></thead><tbody>
 <tr><td>Authentication</td><td>None</td><td>Username and password</td></tr>
@@ -1977,7 +1977,7 @@ reload</code></pre>
 <pre class="command-line"><code>delete <i>filepath</i></code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="vpn">VPNs</h3>
+<h3 class="topic-heading" id="vpn">VPNs</h3>
 <p class="body-line">When organizations use private WAN services such as leased lines or MPLS, the communication path is provided through dedicated or provider-controlled infrastructure. When the Internet is used as the WAN, the traffic travels across a public network, so additional security is needed. VPNs (Virtual Private Networks) provide this security by creating encrypted communication paths over the Internet.</p>
 <p class="body-line">VPNs can be used to securely connect entire networks or to securely connect individual users to a private network. The two common approaches are site-to-site VPNs and remote-access VPNs.</p>
 <p class="body-line">A site-to-site VPN is commonly implemented using IPsec and creates an encrypted tunnel between two routers or firewalls, one at each site. The tunnel endpoints handle the encryption and decryption, so the end devices inside the sites do not need to perform these operations themselves.</p>
@@ -2003,7 +2003,7 @@ reload</code></pre>
 </tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="http_and_APIs">HTTP and REST APIs</h3>
+<h3 class="topic-heading" id="http_and_APIs">HTTP and REST APIs</h3>
 <p class="body-line">HTTP (Hypertext Transfer Protocol) is an application-layer protocol used to exchange requests and responses between a client and a server. REST (Representational State Transfer) is not a protocol or a specific API; it is a set of architectural constraints used when designing APIs. An API (Application Programming Interface) provides the interface through which one application can communicate with another.</p>
 <p class="body-line">REST APIs commonly use HTTP methods to perform CRUD operations: Create, Read, Update, and Delete. Each operation is associated with an HTTP method:</p>
 <div class="table-wrap"><table><thead><tr><th>CRUD Operation</th><th>HTTP Method</th><th>Description</th></tr></thead><tbody>
@@ -2046,7 +2046,7 @@ reload</code></pre>
 </tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="sdn">SDN</h3>
+<h3 class="topic-heading" id="sdn">SDN</h3>
 <p class="body-line">Network devices perform three main types of functions:</p>
 <ul class="doc-list">
   <li><strong>Data Plane:</strong> forwards user traffic at high speeds using specialized hardware called ASICs (Application-Specific Integrated Circuits) and a high-speed memory TCAM (Ternary Content-Addressable Memory). Tasks include routing and MAC lookups, VLAN tagging, NAT, and ACL processing.</li>
@@ -2088,7 +2088,7 @@ reload</code></pre>
 <p class="body-line">Cisco DNA Center runs as an application on Cisco UCS (Unified Computing System) server hardware and provides APIs and device-management protocols that allow it to communicate with network infrastructure. It can also centralize software and configuration management, including coordinated software updates across network devices.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="wireless">Wireless Networks</h3>
+<h3 class="topic-heading" id="wireless">Wireless Networks</h3>
 <p class="body-line">Wireless LANs are based on the IEEE 802.11 standards. Wi-Fi is the name used by the Wi-Fi Alliance for products that are tested and certified for interoperability with 802.11 standards. An Access Point (AP) is a network device that provides wireless connectivity to client devices and connects them to the wired network. Unlike a switched Ethernet network, wireless devices share the same radio medium, which introduces several challenges:</p>
 <ul class="doc-list">
   <li><strong>Shared medium:</strong> devices within radio range can receive transmitted frames but this makes wireless networks more exposed to interception and privacy concerns than switched wired networks.</li>
@@ -2231,7 +2231,7 @@ reload</code></pre>
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="network-automation">Network Automation</h3>
+<h3 class="topic-heading" id="network-automation">Network Automation</h3>
 <p class="body-line">In traditional networking, devices are configured individually through the CLI using methods such as SSH or the console. As the number of devices increases, this approach becomes slower, more difficult to maintain, and more prone to human error. Network automation uses software and machine-readable configurations to perform these tasks consistently across many devices, improving scalability, reducing errors, enforcing standard policies, and speeding up deployments and changes.</p>
 <p class="body-line">One problem automation helps address is configuration drift. Configuration drift occurs when devices that were originally configured according to the same standard gradually become different because of manual changes made over time. These changes may also be poorly documented, making it harder to understand why a device differs from the intended configuration and increasing troubleshooting difficulty.</p>
 <p class="body-line">Configuration provisioning is the process of applying configuration to devices, including configuring newly deployed devices. Instead of connecting to each device individually, automation tools can use templates and variables to generate and apply consistent configurations to many devices at once.</p>
@@ -2279,7 +2279,7 @@ reload</code></pre>
 <aside class="callout"><strong>Note:</strong><p>Terraform and Ansible can be used together: Terraform provisions the infrastructure itself, such as networks, servers, and other resources, while Ansible configures and manages the systems and network devices after they have been created.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 
-<h3 class="subheading" id="wireshark">Wireshark</h3>
+<h3 class="topic-heading" id="wireshark">Wireshark</h3>
 <p class="body-line">Wireshark is a network packet capture and analysis tool. It captures all network traffic visible on an interface and lets you inspect every layer of every packet — from the physical frame up through the application layer. It supports filtering by protocol, IP address, port, and many other criteria, making it an essential tool for network troubleshooting, learning, and security analysis.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 

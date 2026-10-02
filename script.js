@@ -236,10 +236,10 @@
     const contentY0 = tabY + tabH + 24;
 
     if (tab === 0) {
-      txt('JOURNEY', mx, contentY0 + 64, 30, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
-      wrap(ABOUT, mx, contentY0 + 114, mw, 19, 31, '#8a8a8a', 400);
+      txt('JOURNEY', mx, contentY0 + 64, 34, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
+      wrap(ABOUT, mx, contentY0 + 118, mw, 21, 34, '#8a8a8a', 400);
     } else if (tab === 1) {
-      txt('QUALIFICATIONS', mx, contentY0 + 64, 28, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
+      txt('QUALIFICATIONS', mx, contentY0 + 64, 30, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
 
       const cardW = mw, step = mw + 30;
       tlMax = Math.max(0, (TIMELINE.length - 1) * step);
@@ -255,13 +255,13 @@
 
         if (t.img && t.img.naturalWidth) {
           g.drawImage(t.img, x + 24, cY + 24, 76, 76);
-          txt(t.when.toUpperCase(), x + 116, cY + 54, 13, '#8a8a8a', { w: 400, font: HEAD_FONT, ls: '0.08em' });
-          wrap(t.t, x + 116, cY + 86, cardW - 136, 22, 28, '#f2f2f2', 600);
-          wrap(t.d, x + 24, cY + 140, cardW - 48, 17, 25, '#8a8a8a');
+          txt(t.when.toUpperCase(), x + 116, cY + 54, 14, '#8a8a8a', { w: 400, font: HEAD_FONT, ls: '0.08em' });
+          wrap(t.t, x + 116, cY + 86, cardW - 136, 24, 30, '#f2f2f2', 600);
+          wrap(t.d, x + 24, cY + 140, cardW - 48, 19, 27, '#8a8a8a');
         } else {
-          txt(t.when.toUpperCase(), x + 24, cY + 54, 14, '#8a8a8a', { w: 400, font: HEAD_FONT, ls: '0.08em' });
-          const yy = wrap(t.t, x + 24, cY + 98, cardW - 48, 25, 33, '#f2f2f2', 600);
-          wrap(t.d, x + 24, yy + 12, cardW - 48, 18, 27, '#8a8a8a');
+          txt(t.when.toUpperCase(), x + 24, cY + 54, 15, '#8a8a8a', { w: 400, font: HEAD_FONT, ls: '0.08em' });
+          const yy = wrap(t.t, x + 24, cY + 98, cardW - 48, 27, 36, '#f2f2f2', 600);
+          wrap(t.d, x + 24, yy + 14, cardW - 48, 20, 29, '#8a8a8a');
         }
 
         g.beginPath(); g.arc(x + cardW / 2, yMid + 1, 8, 0, Math.PI * 2);
@@ -272,9 +272,9 @@
       const barY = y0 + mobH - 70;
       box(mx, barY, tw, 4, 2, '#1a1a1a');
       box(mx + (tlMax ? tlX / tlMax : 0) * (tw - thumb), barY, thumb, 4, 2, '#ffffff');
-      txt(tlX < tlMax - 4 ? 'SCROLL TO EXPLORE  →' : 'END OF TIMELINE  ↓', mx, barY - 14, 12, '#555555', { font: HEAD_FONT, ls: '0.12em' });
+      txt(tlX < tlMax - 4 ? 'SCROLL TO EXPLORE  →' : 'END OF TIMELINE  ↓', mx, barY - 14, 13, '#555555', { font: HEAD_FONT, ls: '0.12em' });
     } else if (tab === 2) {
-      txt('DOCUMENTATION', mx, contentY0 + 64, 28, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
+      txt('DOCUMENTATION', mx, contentY0 + 64, 30, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
 
       const dY = contentY0 + 120, dH = 190;
       const hv = hoverId === 'docs';
@@ -288,20 +288,20 @@
       g.strokeStyle = hv ? '#ffffff' : '#2a2a2a'; g.lineWidth = 1.5; g.stroke();
       txt('→', cx, cy + 7, 24, hv ? '#000000' : '#8a8a8a', { font: MONO, align: 'center', w: 600 });
 
-      txt('NETWORK', mx + 28, dY + 76, 36, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
-      wrap('A structured, comprehensive networking engineering reference guide.', mx + 28, dY + 116, mw - 56, 17, 26, '#8a8a8a');
+      txt('NETWORK', mx + 28, dY + 76, 38, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
+      wrap('A structured, comprehensive networking engineering reference guide.', mx + 28, dY + 118, mw - 56, 19, 28, '#8a8a8a');
     } else if (tab === 3) {
-      txt('PROJECTS', mx, contentY0 + 64, 28, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
+      txt('PROJECTS', mx, contentY0 + 64, 30, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
 
-      const cardH = 240, cardGap = 16;
+      const cardH = 250, cardGap = 16;
       PROJECTS.forEach((p, i) => {
         const py = contentY0 + 100 + i * (cardH + cardGap);
         if (py + cardH > y0 + mobH) return;
         box(mx, py, mw, cardH, 14, 'rgba(12,12,12,.85)', '#2a2a2a');
-        txt(p.tag.toUpperCase(), mx + 20, py + 32, 11, '#555555', { w: 400, font: HEAD_FONT, ls: '0.12em' });
-        txt(p.y, mx + mw - 20, py + 32, 12, '#8a8a8a', { w: 400, font: HEAD_FONT, align: 'right' });
-        txt(p.t, mx + 20, py + 68, 20, '#f2f2f2', { w: 600, font: SANS });
-        wrap(p.d, mx + 20, py + 100, mw - 40, 15, 22, '#8a8a8a');
+        txt(p.tag.toUpperCase(), mx + 20, py + 34, 12, '#555555', { w: 400, font: HEAD_FONT, ls: '0.12em' });
+        txt(p.y, mx + mw - 20, py + 34, 13, '#8a8a8a', { w: 400, font: HEAD_FONT, align: 'right' });
+        txt(p.t, mx + 20, py + 72, 22, '#f2f2f2', { w: 600, font: SANS });
+        wrap(p.d, mx + 20, py + 106, mw - 40, 17, 25, '#8a8a8a');
       });
     }
   }
@@ -431,8 +431,8 @@
     pos.copy(P0).lerp(P1, e).lerp(P2, q); tgt.copy(T0).lerp(T1, e).lerp(T2, q);
     if (q > 0) pos.z += Math.sin(q * Math.PI) * 0.25;
     camera.up.set(0, 1, 0); camera.position.copy(pos); camera.lookAt(tgt);
-    // keep the server on the right (and vertically centred) in the hero, then centre it as we fly in
-    camera.setViewOffset(vw, vh, port ? 0 : -vw * .2 * (1 - e), port ? -vh * .2 * (1 - e) : 0, vw, vh);
+    // keep the server on the right (and vertically centred) in the hero, then centre it as we fly in; on mobile raise server up
+    camera.setViewOffset(vw, vh, port ? 0 : -vw * .2 * (1 - e), port ? -vh * .06 * (1 - e) : 0, vw, vh);
     renderer.render(scene, camera);
   }
   function fail() { document.body.classList.add('no-webgl'); hideLoader(); }
