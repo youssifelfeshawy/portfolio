@@ -241,19 +241,19 @@
     // 2. Mobile Page rendering
     if (tab === 0) {
       txt('SYSTEM PROFILE // ROADMAP', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
-      txt('Journey & Philosophy', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
+      txt('Journey', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
       let cy = wrap(ABOUT, mx, contentY0 + 124, mw, 21, 34, '#cbd5e1', 400);
 
-      cy += 24;
-      box(mx, cy, mw, 52, 10, 'rgba(15,23,42,.85)', 'rgba(56,189,248,.25)');
-      txt('● CompTIA A+ & Cisco CCNA Certified', mx + 16, cy + 33, 15, '#00e5ff', { w: 600, font: MONO });
-      cy += 64;
-      box(mx, cy, mw, 52, 10, 'rgba(15,23,42,.85)', 'rgba(56,189,248,.25)');
-      txt('● Alexandria University · CGPA 3.76', mx + 16, cy + 33, 15, '#38bdf8', { w: 600, font: MONO });
+      // cy += 24;
+      // box(mx, cy, mw, 52, 10, 'rgba(15,23,42,.85)', 'rgba(56,189,248,.25)');
+      // txt('● CompTIA A+ & Cisco CCNA Certified', mx + 16, cy + 33, 15, '#00e5ff', { w: 600, font: MONO });
+      // cy += 64;
+      // box(mx, cy, mw, 52, 10, 'rgba(15,23,42,.85)', 'rgba(56,189,248,.25)');
+      // txt('● Alexandria University · CGPA 3.76', mx + 16, cy + 33, 15, '#38bdf8', { w: 600, font: MONO });
 
-      cy += 76;
-      if (cy < y0 + mobH - 80) cy = y0 + mobH - 80;
-      button('cv', 'Download CV  ↓', mx, cy, mw, 60, true);
+      // cy += 76;
+      // if (cy < y0 + mobH - 80) cy = y0 + mobH - 80;
+      // button('cv', 'Download CV  ↓', mx, cy, mw, 60, true);
     } else if (tab === 1) {
       txt('TIMELINE // QUALIFICATIONS', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
       txt('Qualifications', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
