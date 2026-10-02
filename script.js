@@ -202,9 +202,159 @@
       wrap(p.d, x + 34, y + 164, cw - 68, 23, 33, '#94a3b8');
     });
   }
+  function getMobileMetrics() {
+    const asp = innerWidth / innerHeight;
+    const isMobile = asp < 0.85;
+    if (!isMobile) return null;
+    const s = screenMesh ? new THREE.Box3().setFromObject(screenMesh) : null;
+    const meshW = s ? (s.max.x - s.min.x) : 0.3207;
+    const meshH = s ? (s.max.y - s.min.y) : 0.2203;
+    const visFracY = 0.94;
+    const visFracX = (meshH * 0.94 * asp) / meshW;
+    const mobW = Math.round(W * visFracX);
+    const mobH = Math.round(H * visFracY);
+    const x0 = Math.round((W - mobW) / 2);
+    const y0 = Math.round((H - mobH) / 2);
+    return { isMobile, mobW, mobH, x0, y0, x1: x0 + mobW, y1: y0 + mobH };
+  }
+
+  function drawMobileScreen(m) {
+    const { mobW, mobH, x0, y0 } = m;
+    const mx = x0 + 18, mw = mobW - 36;
+
+    // 1. Mobile top tab bar
+    const tabY = y0 + 34, tabH = 50;
+    const tabLabels = ['Journey', 'Quals', 'Docs', 'Projects'];
+    const tabW = Math.floor((mw - 3 * 8) / 4);
+    tabLabels.forEach((label, i) => {
+      const tx = mx + i * (tabW + 8);
+      const id = 'tab' + i;
+      const isAct = tab === i;
+      const isHov = hoverId === id;
+      box(tx, tabY, tabW, tabH, 10, isAct ? '#0284c7' : isHov ? 'rgba(56,189,248,.18)' : 'rgba(255,255,255,.05)', isAct ? '#38bdf8' : isHov ? '#00e5ff' : 'rgba(255,255,255,.1)');
+      txt(label, tx + tabW / 2, tabY + 31, 17, isAct ? '#ffffff' : isHov ? '#00e5ff' : '#94a3b8', { w: 600, font: MONO, align: 'center' });
+      hits.push({ id, x: tx, y: tabY, w: tabW, h: tabH });
+    });
+
+    const contentY0 = tabY + tabH + 24;
+
+    // 2. Mobile Page rendering
+    if (tab === 0) {
+      txt('SYSTEM PROFILE // ROADMAP', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
+      txt('Journey & Philosophy', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
+      let cy = wrap(ABOUT, mx, contentY0 + 124, mw, 21, 34, '#cbd5e1', 400);
+
+      cy += 24;
+      box(mx, cy, mw, 52, 10, 'rgba(15,23,42,.85)', 'rgba(56,189,248,.25)');
+      txt('● CompTIA A+ & Cisco CCNA Certified', mx + 16, cy + 33, 15, '#00e5ff', { w: 600, font: MONO });
+      cy += 64;
+      box(mx, cy, mw, 52, 10, 'rgba(15,23,42,.85)', 'rgba(56,189,248,.25)');
+      txt('● Alexandria University · CGPA 3.76', mx + 16, cy + 33, 15, '#38bdf8', { w: 600, font: MONO });
+
+      cy += 76;
+      if (cy < y0 + mobH - 80) cy = y0 + mobH - 80;
+      button('cv', 'Download CV  ↓', mx, cy, mw, 60, true);
+    } else if (tab === 1) {
+      txt('TIMELINE // QUALIFICATIONS', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
+      txt('Qualifications', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
+
+      const cardW = mw;
+      const step = mw + 30;
+      tlMax = Math.max(0, (TIMELINE.length - 1) * step);
+
+      const yMid = contentY0 + 440;
+      g.fillStyle = 'rgba(56,189,248,.35)';
+      g.fillRect(mx, yMid, mw, 3);
+
+      TIMELINE.forEach((t, i) => {
+        const x = mx + i * step - tlX;
+        if (x < mx - step || x > mx + mw + step) return;
+
+        const cY = yMid - 310;
+        box(x, cY, cardW, 260, 16, 'rgba(15,23,42,.88)', 'rgba(56,189,248,.3)');
+
+        if (t.img && t.img.naturalWidth) {
+          g.drawImage(t.img, x + 24, cY + 24, 76, 76);
+          txt(t.when, x + 116, cY + 54, 16, '#00e5ff', { w: 600, font: MONO });
+          wrap(t.t, x + 116, cY + 86, cardW - 136, 24, 30, '#f8fafc', 700);
+          wrap(t.d, x + 24, cY + 140, cardW - 48, 18, 26, '#94a3b8');
+        } else {
+          txt(t.when, x + 24, cY + 54, 18, '#00e5ff', { w: 600, font: MONO });
+          const yy = wrap(t.t, x + 24, cY + 98, cardW - 48, 28, 36, '#f8fafc', 700);
+          wrap(t.d, x + 24, yy + 12, cardW - 48, 19, 28, '#94a3b8');
+        }
+
+        g.beginPath(); g.arc(x + cardW / 2, yMid + 1.5, 9, 0, Math.PI * 2);
+        g.fillStyle = '#00e5ff'; g.fill();
+      });
+
+      const tw = mw, thumb = Math.max(50, tw * 0.25);
+      const barY = y0 + mobH - 70;
+      box(mx, barY, tw, 6, 3, 'rgba(255,255,255,.08)');
+      box(mx + (tlMax ? tlX / tlMax : 0) * (tw - thumb), barY, thumb, 6, 3, '#0ea5e9');
+      txt(tlX < tlMax - 4 ? 'Scroll to explore timeline  →' : 'End of timeline — scroll on  ↓', mx, barY - 14, 16, '#64748b', { font: MONO });
+    } else if (tab === 2) {
+      txt('TECHNICAL GUIDES & RUNBOOKS', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
+      txt('Documentation', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
+
+      const dY = contentY0 + 130, dH = 370;
+      const hv = hoverId === 'docs';
+      box(mx, dY, mw, dH, 18, hv ? 'rgba(15,23,42,.95)' : 'rgba(15,23,42,.85)', hv ? '#00e5ff' : 'rgba(0,229,255,.4)');
+      hits.push({ id: 'docs', x: mx, y: dY, w: mw, h: dH });
+
+      box(mx + 28, dY + 28, 140, 34, 6, 'rgba(16,185,129,.14)', 'rgba(16,185,129,.35)');
+      txt('● LIVE GUIDE', mx + 38, dY + 51, 15, '#10b981', { w: 600, font: MONO });
+
+      const cx = mx + mw - 54, cy = dY + 45;
+      g.beginPath(); g.arc(cx, cy, 24, 0, Math.PI * 2);
+      g.fillStyle = hv ? 'rgba(0,229,255,.2)' : 'rgba(255,255,255,.06)'; g.fill();
+      g.strokeStyle = hv ? '#00e5ff' : 'rgba(56,189,248,.4)'; g.lineWidth = 2; g.stroke();
+      txt('→', cx, cy + 7, 24, hv ? '#00e5ff' : '#cbd5e1', { font: MONO, align: 'center', w: 700 });
+
+      txt('Network', mx + 28, dY + 115, 46, '#f8fafc', { w: 700 });
+      wrap('A structured, comprehensive networking engineering reference guide covering OSI layers, IP routing, switching, STP, OSPF, and security protocols.', mx + 28, dY + 165, mw - 56, 18, 28, '#94a3b8');
+
+      const tags = ['OSI model', 'Layer 2', 'STP', 'OSPF', 'Subnets'];
+      let tagX = mx + 28;
+      tags.forEach(tg => {
+        g.font = `600 14px ${MONO}`;
+        const tw = g.measureText(tg).width + 20;
+        if (tagX + tw > mx + mw - 20) return;
+        box(tagX, dY + 250, tw, 32, 6, 'rgba(14,165,233,.12)', 'rgba(14,165,233,.3)');
+        txt(tg, tagX + 10, dY + 271, 14, '#38bdf8', { w: 600, font: MONO });
+        tagX += tw + 10;
+      });
+
+      box(mx + 28, dY + 300, mw - 56, 44, 8, hv ? '#0ea5e9' : '#0284c7');
+      txt('Open the guide  →', mx + mw / 2, dY + 328, 16, '#ffffff', { w: 600, font: MONO, align: 'center' });
+
+      txt('More guides will be added here.', mx, dY + dH + 34, 18, '#64748b');
+    } else if (tab === 3) {
+      txt('SELECTED ENGINEERING BUILDS', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
+      txt('Projects', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
+
+      const cardH = 210, cardGap = 16;
+      PROJECTS.forEach((p, i) => {
+        const py = contentY0 + 110 + i * (cardH + cardGap);
+        if (py + cardH > y0 + mobH) return;
+        box(mx, py, mw, cardH, 14, 'rgba(15,23,42,.85)', 'rgba(56,189,248,.25)');
+        txt(p.tag, mx + 20, py + 34, 12, '#00e5ff', { w: 600, font: MONO });
+        txt(p.y, mx + mw - 20, py + 34, 13, '#94a3b8', { w: 600, font: MONO, align: 'right' });
+        txt(p.t, mx + 20, py + 72, 22, '#f8fafc', { w: 700 });
+        wrap(p.d, mx + 20, py + 106, mw - 40, 16, 23, '#94a3b8');
+      });
+    }
+  }
+
   function drawScreen() {
     hits = [];
     g.fillStyle = '#070b14'; g.fillRect(0, 0, W, H);
+    const m = getMobileMetrics();
+    if (m && m.isMobile) {
+      drawMobileScreen(m);
+      if (screenTex) screenTex.needsUpdate = true;
+      return;
+    }
     let x = M;
     NAV.forEach((n, i) => {
       g.font = `600 24px ${MONO}`; const w = g.measureText(n).width + 56, id = 'tab' + i;
@@ -290,14 +440,25 @@
 
   function layoutCamera() {
     const asp = innerWidth / innerHeight;
+    const isMobile = asp < 0.85;
     P0.copy(T0).add(BASE.clone().sub(T0).multiplyScalar(asp < 1 ? 1.5 : 1));
     if (!screenMesh) return;
     const s = new THREE.Box3().setFromObject(screenMesh), sc3 = s.getCenter(V());
-    const dS = Math.max((s.max.y - s.min.y) / (2 * TAN), (s.max.x - s.min.x) / (2 * TAN * asp)) * 1.06;
+    const meshH = s.max.y - s.min.y;
+    // On mobile view: go in the laptop more so all the screen is black after entering the laptop
+    const dS = isMobile
+      ? (meshH * 0.94) / (2 * TAN)
+      : Math.max(meshH / (2 * TAN), (s.max.x - s.min.x) / (2 * TAN * asp)) * 1.06;
     T1.copy(sc3); P1.set(sc3.x, sc3.y, s.max.z + dS);
+
     const k = new THREE.Box3().setFromObject(deckMesh || kbMeshes[0]), kc = k.getCenter(V());
-    const dK = Math.max((k.max.x - k.min.x) * 1.15 / (2 * TAN * asp), (k.max.z - k.min.z) * 1.7 / (2 * TAN), 1.8 * (asp < 1 ? 1.35 : 1));
-    T2.copy(kc); P2.set(kc.x, kc.y + dK * 0.85, kc.z + dK * 0.53);
+    const meshKW = k.max.x - k.min.x;
+    // On mobile view: zoom in more on the keys than the normal web view (keys fill mobile width edge-to-edge)
+    const dK = isMobile
+      ? (meshKW * 0.98) / (2 * TAN * asp)
+      : Math.max(meshKW * 1.15 / (2 * TAN * asp), (k.max.z - k.min.z) * 1.7 / (2 * TAN), 1.8 * (asp < 1 ? 1.35 : 1));
+    T2.copy(kc);
+    P2.set(kc.x, kc.y + dK * 0.85, kc.z + dK * 0.53);
   }
   function renderFrame() {
     const e = state.a, q = state.q, vw = innerWidth, vh = innerHeight, port = vw < vh;
@@ -382,6 +543,7 @@
     const long = stops[1], p = clamp((sy - stopTop(1)) / (long.offsetHeight - vh), 0, 1), x = p * tlMax;
     if (t !== tab || (t === 1 && Math.abs(x - tlX) > .5)) { tab = t; tlX = x; dirtyScreen = true; }
   }
+
   function setupScroll() {
     gsap.registerPlugin(ScrollTrigger);
     gsap.to('.hero-content', { opacity: 0, y: -40, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom 45%', scrub: true } });
@@ -417,7 +579,7 @@
   addEventListener('resize', () => {
     if (!renderer) return;
     renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight; layoutCamera();
-    if (window.ScrollTrigger) ScrollTrigger.refresh(); needRender = true;
+    if (window.ScrollTrigger) ScrollTrigger.refresh(); dirtyScreen = true; needRender = true;
   });
 
   /* ---------------- Start ---------------- */

@@ -767,9 +767,31 @@ td:last-child {
    ========================================================================== */
 
 @media (max-width: 960px) {
+  .network-hero {
+    padding-top: 84px;
+    padding-bottom: 24px;
+  }
+
+  .network-page .wrap {
+    width: 100%;
+    max-width: 100%;
+    padding-inline: 16px;
+    margin: 0;
+  }
+
   .network-layout {
     grid-template-columns: 1fr;
     gap: 0;
+    padding-bottom: 60px;
+  }
+
+  /* No card border / background wrapper on mobile — use full normal screen */
+  .doc-document {
+    padding: 0;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
   }
 
   /* Vertical navigation moves into a slide-in drawer on mobile */
@@ -885,25 +907,23 @@ td:last-child {
     pointer-events: auto;
   }
 
-  /* Mobile Floating Drawer Toggle Button */
+  /* Mobile Floating Drawer Toggle Button at Top-Left */
   .doc-drawer-toggle {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
     position: fixed;
-    bottom: 24px;
-    right: 20px;
+    top: 18px;
+    left: 18px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
     z-index: 997;
-    padding: 12px 20px;
-    border-radius: 9999px;
+    border-radius: 12px;
     background: rgba(10, 16, 28, 0.94);
     border: 1px solid var(--cyan);
-    color: #ffffff;
-    font-family: var(--sans);
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6), 0 0 14px rgba(0, 229, 255, 0.25);
+    color: var(--cyan);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 229, 255, 0.25);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     cursor: pointer;
@@ -937,13 +957,15 @@ td:last-child {
 
 @media (max-width: 720px) {
   .network-hero {
-    padding-top: 110px;
-    padding-bottom: 36px;
+    padding-top: 80px;
+    padding-bottom: 24px;
   }
 
   .doc-document {
-    padding: 18px;
-    border-radius: 20px;
+    padding: 0;
+    border: none !important;
+    background: transparent !important;
+    border-radius: 0;
   }
 
   .osi-clickable-svg {
