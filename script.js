@@ -240,22 +240,12 @@
 
     // 2. Mobile Page rendering
     if (tab === 0) {
-      txt('SYSTEM PROFILE // ROADMAP', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
+      // txt('SYSTEM PROFILE // ROADMAP', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
       txt('Journey', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
       let cy = wrap(ABOUT, mx, contentY0 + 124, mw, 21, 34, '#cbd5e1', 400);
 
-      // cy += 24;
-      // box(mx, cy, mw, 52, 10, 'rgba(15,23,42,.85)', 'rgba(56,189,248,.25)');
-      // txt('● CompTIA A+ & Cisco CCNA Certified', mx + 16, cy + 33, 15, '#00e5ff', { w: 600, font: MONO });
-      // cy += 64;
-      // box(mx, cy, mw, 52, 10, 'rgba(15,23,42,.85)', 'rgba(56,189,248,.25)');
-      // txt('● Alexandria University · CGPA 3.76', mx + 16, cy + 33, 15, '#38bdf8', { w: 600, font: MONO });
-
-      // cy += 76;
-      // if (cy < y0 + mobH - 80) cy = y0 + mobH - 80;
-      // button('cv', 'Download CV  ↓', mx, cy, mw, 60, true);
-    } else if (tab === 1) {
-      txt('TIMELINE // QUALIFICATIONS', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
+        } else if (tab === 1) {
+      // txt('TIMELINE // QUALIFICATIONS', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
       txt('Qualifications', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
 
       const cardW = mw;
@@ -294,46 +284,27 @@
       box(mx + (tlMax ? tlX / tlMax : 0) * (tw - thumb), barY, thumb, 6, 3, '#0ea5e9');
       txt(tlX < tlMax - 4 ? 'Scroll to explore timeline  →' : 'End of timeline — scroll on  ↓', mx, barY - 14, 16, '#64748b', { font: MONO });
     } else if (tab === 2) {
-      txt('TECHNICAL GUIDES & RUNBOOKS', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
+      // txt('TECHNICAL GUIDES & RUNBOOKS', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
       txt('Documentation', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
 
-      const dY = contentY0 + 130, dH = 370;
+      const dY = contentY0 + 130, dH = 190;
       const hv = hoverId === 'docs';
       box(mx, dY, mw, dH, 18, hv ? 'rgba(15,23,42,.95)' : 'rgba(15,23,42,.85)', hv ? '#00e5ff' : 'rgba(0,229,255,.4)');
       hits.push({ id: 'docs', x: mx, y: dY, w: mw, h: dH });
 
-      box(mx + 28, dY + 28, 140, 34, 6, 'rgba(16,185,129,.14)', 'rgba(16,185,129,.35)');
-      txt('● LIVE GUIDE', mx + 38, dY + 51, 15, '#10b981', { w: 600, font: MONO });
-
-      const cx = mx + mw - 54, cy = dY + 45;
+      const cx = mx + mw - 54, cy = dY + 65;
       g.beginPath(); g.arc(cx, cy, 24, 0, Math.PI * 2);
       g.fillStyle = hv ? 'rgba(0,229,255,.2)' : 'rgba(255,255,255,.06)'; g.fill();
       g.strokeStyle = hv ? '#00e5ff' : 'rgba(56,189,248,.4)'; g.lineWidth = 2; g.stroke();
       txt('→', cx, cy + 7, 24, hv ? '#00e5ff' : '#cbd5e1', { font: MONO, align: 'center', w: 700 });
 
-      txt('Network', mx + 28, dY + 115, 46, '#f8fafc', { w: 700 });
-      wrap('A structured, comprehensive networking engineering reference guide covering OSI layers, IP routing, switching, STP, OSPF, and security protocols.', mx + 28, dY + 165, mw - 56, 18, 28, '#94a3b8');
+      txt('Network', mx + 28, dY + 80, 46, '#f8fafc', { w: 700 });
+      wrap('A structured, comprehensive networking engineering reference guide.', mx + 28, dY + 120, mw - 56, 18, 28, '#94a3b8');
 
-      const tags = ['OSI model', 'Layer 2', 'STP', 'OSPF', 'Subnets'];
-      let tagX = mx + 28;
-      tags.forEach(tg => {
-        g.font = `600 14px ${MONO}`;
-        const tw = g.measureText(tg).width + 20;
-        if (tagX + tw > mx + mw - 20) return;
-        box(tagX, dY + 250, tw, 32, 6, 'rgba(14,165,233,.12)', 'rgba(14,165,233,.3)');
-        txt(tg, tagX + 10, dY + 271, 14, '#38bdf8', { w: 600, font: MONO });
-        tagX += tw + 10;
-      });
-
-      box(mx + 28, dY + 300, mw - 56, 44, 8, hv ? '#0ea5e9' : '#0284c7');
-      txt('Open the guide  →', mx + mw / 2, dY + 328, 16, '#ffffff', { w: 600, font: MONO, align: 'center' });
-
-      txt('More guides will be added here.', mx, dY + dH + 34, 18, '#64748b');
     } else if (tab === 3) {
-      txt('SELECTED ENGINEERING BUILDS', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
       txt('Projects', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
 
-      const cardH = 210, cardGap = 16;
+      const cardH = 250, cardGap = 16;
       PROJECTS.forEach((p, i) => {
         const py = contentY0 + 110 + i * (cardH + cardGap);
         if (py + cardH > y0 + mobH) return;
