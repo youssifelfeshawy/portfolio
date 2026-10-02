@@ -82,16 +82,21 @@
 
   /* ---------------- Laptop screen (2D canvas used as the 3D screen texture) ---------------- */
   const W = 2048, H = 1408, M = 150;
-  const SANS = '"Montserrat",system-ui,sans-serif', MONO = '"JetBrains Mono",ui-monospace,monospace';
+  const HEAD_FONT = '"Michroma",system-ui,sans-serif';
+  const SANS = '"Geist","Inter",system-ui,sans-serif';
+  const MONO = '"JetBrains Mono",ui-monospace,monospace';
   const sc = document.createElement('canvas'); sc.width = W; sc.height = H;
   const g = sc.getContext('2d');
   let tab = 0, tlX = 0, tlMax = 0, hits = [], hoverId = null, dirtyScreen = true, screenTex = null;
 
   function txt(s, x, y, size, color, o = {}) {
-    g.font = `${o.w || 500} ${size}px ${o.font || SANS}`; g.fillStyle = color;
+    g.font = `${o.w || 400} ${size}px ${o.font || SANS}`; g.fillStyle = color;
+    if (o.ls && 'letterSpacing' in g) g.letterSpacing = o.ls;
+    else if ('letterSpacing' in g) g.letterSpacing = '0px';
     g.textAlign = o.align || 'left'; g.textBaseline = 'alphabetic'; g.fillText(s, x, y);
   }
   function wrap(s, x, y, maxW, size, lh, color, w = 400) {
+    if ('letterSpacing' in g) g.letterSpacing = '0px';
     g.font = `${w} ${size}px ${SANS}`; g.fillStyle = color; g.textAlign = 'left'; g.textBaseline = 'alphabetic';
     let line = '';
     for (const word of s.split(' ')) {
@@ -104,19 +109,22 @@
   function box(x, y, w, h, r, fill, stroke) {
     g.beginPath(); g.roundRect(x, y, w, h, r);
     if (fill) { g.fillStyle = fill; g.fill(); }
-    if (stroke) { g.strokeStyle = stroke; g.lineWidth = 2; g.stroke(); }
+    if (stroke) { g.strokeStyle = stroke; g.lineWidth = 1.5; g.stroke(); }
   }
   function button(id, label, x, y, w, h, primary) {
     const hv = hoverId === id;
-    box(x, y, w, h, 12, primary ? (hv ? '#0ea5e9' : '#0284c7') : (hv ? 'rgba(56,189,248,.18)' : 'rgba(255,255,255,.04)'), primary ? null : (hv ? '#38bdf8' : 'rgba(255,255,255,.14)'));
-    txt(label, x + w / 2, y + h / 2 + 8, 22, primary ? '#fff' : (hv ? '#7dd3fc' : '#cbd5e1'), { w: 600, font: MONO, align: 'center' });
+    box(x, y, w, h, 12, primary ? (hv ? '#e0e0e0' : '#ffffff') : (hv ? 'rgba(255,255,255,.12)' : 'rgba(255,255,255,.03)'), primary ? (hv ? '#ffffff' : '#ffffff') : (hv ? '#ffffff' : '#2a2a2a'));
+    txt(label, x + w / 2, y + h / 2 + 7, 18, primary ? '#000000' : (hv ? '#ffffff' : '#8a8a8a'), { w: 400, font: HEAD_FONT, align: 'center', ls: '0.08em' });
     hits.push({ id, x, y, w, h });
   }
-  const head = (eyebrow, title) => { txt(eyebrow, M, 250, 22, '#38bdf8', { w: 600, font: MONO }); txt(title, M, 332, 66, '#f8fafc', { w: 800 }); };
+  const head = (eyebrow, title) => {
+    if (eyebrow) txt(eyebrow.toUpperCase(), M, 250, 16, '#555555', { w: 400, font: HEAD_FONT, ls: '0.16em' });
+    txt(title.toUpperCase(), M, 332, 54, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
+  };
 
   function pageJourney() {
     head('', 'Journey');
-    wrap(ABOUT, M, 440, 1560, 31, 50, '#cbd5e1');
+    wrap(ABOUT, M, 440, 1560, 29, 48, '#8a8a8a');
   }
   function pageQualifications() {
     head('', 'QUALIFICATIONS');
@@ -128,7 +136,7 @@
     // 2. Add emptySteps to tlMax so the scrollbar accounts for the extra space:
     tlMax = Math.max(0, (TIMELINE.length - 1 + emptySteps) * step + cardW - (W - 2 * M));
 
-    g.fillStyle = 'rgba(56,189,248,.35)'; g.fillRect(0, y0, W, 3);
+    g.fillStyle = '#2a2a2a'; g.fillRect(0, y0, W, 2);
 
     TIMELINE.forEach((t, i) => {
       // 3. Shift every item to the right by emptySteps:
@@ -136,70 +144,59 @@
 
       if (x < -step || x > W) return;
       if (t.img && t.img.naturalWidth) g.drawImage(t.img, x, y0 - 190, 140, 140);
-      g.beginPath(); g.arc(x + 8, y0 + 1.5, 11, 0, 7); g.fillStyle = '#00e5ff'; g.fill();
-      txt(t.when, x, y0 + 72, 21, '#00e5ff', { w: 600, font: MONO });
-      const yy = wrap(t.t, x, y0 + 124, cardW, 32, 42, '#f8fafc', 700);
-      wrap(t.d, x, yy + 16, cardW, 24, 36, '#94a3b8');
+      g.beginPath(); g.arc(x + 8, y0 + 1, 9, 0, Math.PI * 2); g.fillStyle = '#ffffff'; g.fill();
+      txt(t.when.toUpperCase(), x, y0 + 72, 17, '#8a8a8a', { w: 400, font: HEAD_FONT, ls: '0.1em' });
+      const yy = wrap(t.t, x, y0 + 120, cardW, 28, 38, '#f2f2f2', 600);
+      wrap(t.d, x, yy + 14, cardW, 22, 34, '#8a8a8a');
     });
 
-    for (const [x0, x1, a, b] of [[0, 140, '#070b14', 'rgba(7,11,20,0)'], [W - 140, W, 'rgba(7,11,20,0)', '#070b14']]) {
+    for (const [x0, x1, a, b] of [[0, 140, '#000000', 'rgba(0,0,0,0)'], [W - 140, W, 'rgba(0,0,0,0)', '#000000']]) {
       const gr = g.createLinearGradient(x0, 0, x1, 0); gr.addColorStop(0, a); gr.addColorStop(1, b);
       g.fillStyle = gr; g.fillRect(x0, 142, x1 - x0, H - 142);
     }
     const tw = W - 2 * M, thumb = tw * .22;
-    box(M, 1310, tw, 6, 3, 'rgba(255,255,255,.08)');
-    box(M + (tlMax ? tlX / tlMax : 0) * (tw - thumb), 1310, thumb, 6, 3, '#0ea5e9');
-    txt(tlX < tlMax - 4 ? 'Keep scrolling to move along the timeline  →' : 'End of the timeline — scroll on  ↓', M, 1270, 20, '#64748b', { font: MONO });
+    box(M, 1310, tw, 4, 2, '#1a1a1a');
+    box(M + (tlMax ? tlX / tlMax : 0) * (tw - thumb), 1310, thumb, 4, 2, '#ffffff');
+    txt(tlX < tlMax - 4 ? 'KEEP SCROLLING TO MOVE ALONG THE TIMELINE  →' : 'END OF THE TIMELINE — SCROLL ON  ↓', M, 1270, 15, '#555555', { font: HEAD_FONT, ls: '0.12em' });
   }
 
-    function pageDocumentation() {
-    head('', 'DOCUMENTATIONS');
-    
-    // 1. Box dimensions (h = 320 fits the title, badge, and description cleanly)
+  function pageDocumentation() {
+    head('', 'DOCUMENTATION');
     const y = 400, h = 250, w = W - 2 * M;
-    const hv = hoverId === 'docs'; // Checks if user's mouse is hovering over the card
+    const hv = hoverId === 'docs';
 
-    // 2. The main box (brightens the border and background when hovered)
     box(
       M, y, w, h, 20,
-      hv ? 'rgba(15,23,42,.95)' : 'rgba(15,23,42,.85)',
-      hv ? 'rgba(0,229,255,.9)' : 'rgba(0,229,255,.4)'
+      hv ? 'rgba(20,20,20,.95)' : 'rgba(12,12,12,.85)',
+      hv ? '#ffffff' : '#2a2a2a'
     );
-
-    // 3. Make the entire box clickable
     hits.push({ id: 'docs', x: M, y, w, h });
 
-    // 4. Texts inside the card
-    txt('Network', M + 54, y + 120, 64, '#f8fafc', { w: 650 });
-    wrap('    A structured networking guide.', M + 54, y + 180, w - 240, 28, 42, '#94a3b8');
+    txt('NETWORK', M + 54, y + 115, 50, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
+    wrap('A structured, comprehensive networking engineering reference guide.', M + 54, y + 175, w - 240, 26, 40, '#8a8a8a');
 
-    // 5. Circle with arrow icon on the right side
-    const cx = M + w - 90; // Center X of the circle
-    const cy = y + h / 2;  // Center Y of the circle
-    const radius = 40;
-
-    // Draw the circle
+    const cx = M + w - 90, cy = y + h / 2, radius = 40;
     g.beginPath();
     g.arc(cx, cy, radius, 0, Math.PI * 2);
-    g.fillStyle = hv ? 'rgba(0,229,255,.18)' : 'rgba(255,255,255,.05)';
+    g.fillStyle = hv ? '#ffffff' : 'rgba(255,255,255,.05)';
     g.fill();
-    g.strokeStyle = hv ? '#00e5ff' : 'rgba(56,189,248,.4)';
-    g.lineWidth = 2.5;
+    g.strokeStyle = hv ? '#ffffff' : '#2a2a2a';
+    g.lineWidth = 1.5;
     g.stroke();
 
-    // Draw the arrow '→' inside the circle
-    txt('→', cx, cy + 9, 36, hv ? '#00e5ff' : '#cbd5e1', { font: MONO, align: 'center', w: 700 });
+    txt('→', cx, cy + 9, 32, hv ? '#000000' : '#8a8a8a', { font: MONO, align: 'center', w: 600 });
   }
+
   function pageProjects() {
     head('', 'PROJECTS');
     const gap = 28, cw = (W - 2 * M - gap) / 2, ch = 372;
     PROJECTS.forEach((p, i) => {
       const x = M + (i % 2) * (cw + gap), y = 410 + Math.floor(i / 2) * (ch + gap);
-      box(x, y, cw, ch, 18, 'rgba(15,23,42,.8)', 'rgba(56,189,248,.28)');
-      txt(p.tag, x + 34, y + 58, 17, '#00e5ff', { w: 600, font: MONO });
-      txt(p.y, x + cw - 34, y + 58, 17, '#94a3b8', { w: 600, font: MONO, align: 'right' });
-      txt(p.t, x + 34, y + 112, 32, '#f8fafc', { w: 700 });
-      wrap(p.d, x + 34, y + 164, cw - 68, 23, 33, '#94a3b8');
+      box(x, y, cw, ch, 18, 'rgba(12,12,12,.85)', '#2a2a2a');
+      txt(p.tag.toUpperCase(), x + 34, y + 54, 13, '#555555', { w: 400, font: HEAD_FONT, ls: '0.14em' });
+      txt(p.y, x + cw - 34, y + 54, 15, '#8a8a8a', { w: 400, font: HEAD_FONT, align: 'right' });
+      txt(p.t, x + 34, y + 108, 26, '#f2f2f2', { w: 600, font: SANS });
+      wrap(p.d, x + 34, y + 160, cw - 68, 21, 32, '#8a8a8a');
     });
   }
   function getMobileMetrics() {
@@ -222,104 +219,96 @@
     const { mobW, mobH, x0, y0 } = m;
     const mx = x0 + 18, mw = mobW - 36;
 
-    // 1. Mobile top tab bar
-    const tabY = y0 + 34, tabH = 50;
-    const tabLabels = ['Journey', 'Quals', 'Docs', 'Projects'];
+    // Mobile top tab bar
+    const tabY = y0 + 34, tabH = 46;
+    const tabLabels = ['JOURNEY', 'QUALS', 'DOCS', 'PROJECTS'];
     const tabW = Math.floor((mw - 3 * 8) / 4);
     tabLabels.forEach((label, i) => {
       const tx = mx + i * (tabW + 8);
       const id = 'tab' + i;
       const isAct = tab === i;
       const isHov = hoverId === id;
-      box(tx, tabY, tabW, tabH, 10, isAct ? '#0284c7' : isHov ? 'rgba(56,189,248,.18)' : 'rgba(255,255,255,.05)', isAct ? '#38bdf8' : isHov ? '#00e5ff' : 'rgba(255,255,255,.1)');
-      txt(label, tx + tabW / 2, tabY + 31, 17, isAct ? '#ffffff' : isHov ? '#00e5ff' : '#94a3b8', { w: 600, font: MONO, align: 'center' });
+      box(tx, tabY, tabW, tabH, 10, isAct ? '#ffffff' : isHov ? 'rgba(255,255,255,.12)' : 'rgba(255,255,255,.03)', isAct ? '#ffffff' : isHov ? '#ffffff' : '#2a2a2a');
+      txt(label, tx + tabW / 2, tabY + 28, 12, isAct ? '#000000' : isHov ? '#ffffff' : '#8a8a8a', { w: 400, font: HEAD_FONT, align: 'center', ls: '0.06em' });
       hits.push({ id, x: tx, y: tabY, w: tabW, h: tabH });
     });
 
     const contentY0 = tabY + tabH + 24;
 
-    // 2. Mobile Page rendering
     if (tab === 0) {
-      // txt('SYSTEM PROFILE // ROADMAP', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
-      txt('Journey', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
-      let cy = wrap(ABOUT, mx, contentY0 + 124, mw, 21, 34, '#cbd5e1', 400);
+      txt('JOURNEY', mx, contentY0 + 64, 30, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
+      wrap(ABOUT, mx, contentY0 + 114, mw, 19, 31, '#8a8a8a', 400);
+    } else if (tab === 1) {
+      txt('QUALIFICATIONS', mx, contentY0 + 64, 28, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
 
-        } else if (tab === 1) {
-      // txt('TIMELINE // QUALIFICATIONS', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
-      txt('Qualifications', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
-
-      const cardW = mw;
-      const step = mw + 30;
+      const cardW = mw, step = mw + 30;
       tlMax = Math.max(0, (TIMELINE.length - 1) * step);
-
       const yMid = contentY0 + 440;
-      g.fillStyle = 'rgba(56,189,248,.35)';
-      g.fillRect(mx, yMid, mw, 3);
+      g.fillStyle = '#2a2a2a'; g.fillRect(mx, yMid, mw, 2);
 
       TIMELINE.forEach((t, i) => {
         const x = mx + i * step - tlX;
         if (x < mx - step || x > mx + mw + step) return;
 
         const cY = yMid - 310;
-        box(x, cY, cardW, 260, 16, 'rgba(15,23,42,.88)', 'rgba(56,189,248,.3)');
+        box(x, cY, cardW, 260, 16, 'rgba(12,12,12,.9)', '#2a2a2a');
 
         if (t.img && t.img.naturalWidth) {
           g.drawImage(t.img, x + 24, cY + 24, 76, 76);
-          txt(t.when, x + 116, cY + 54, 16, '#00e5ff', { w: 600, font: MONO });
-          wrap(t.t, x + 116, cY + 86, cardW - 136, 24, 30, '#f8fafc', 700);
-          wrap(t.d, x + 24, cY + 140, cardW - 48, 18, 26, '#94a3b8');
+          txt(t.when.toUpperCase(), x + 116, cY + 54, 13, '#8a8a8a', { w: 400, font: HEAD_FONT, ls: '0.08em' });
+          wrap(t.t, x + 116, cY + 86, cardW - 136, 22, 28, '#f2f2f2', 600);
+          wrap(t.d, x + 24, cY + 140, cardW - 48, 17, 25, '#8a8a8a');
         } else {
-          txt(t.when, x + 24, cY + 54, 18, '#00e5ff', { w: 600, font: MONO });
-          const yy = wrap(t.t, x + 24, cY + 98, cardW - 48, 28, 36, '#f8fafc', 700);
-          wrap(t.d, x + 24, yy + 12, cardW - 48, 19, 28, '#94a3b8');
+          txt(t.when.toUpperCase(), x + 24, cY + 54, 14, '#8a8a8a', { w: 400, font: HEAD_FONT, ls: '0.08em' });
+          const yy = wrap(t.t, x + 24, cY + 98, cardW - 48, 25, 33, '#f2f2f2', 600);
+          wrap(t.d, x + 24, yy + 12, cardW - 48, 18, 27, '#8a8a8a');
         }
 
-        g.beginPath(); g.arc(x + cardW / 2, yMid + 1.5, 9, 0, Math.PI * 2);
-        g.fillStyle = '#00e5ff'; g.fill();
+        g.beginPath(); g.arc(x + cardW / 2, yMid + 1, 8, 0, Math.PI * 2);
+        g.fillStyle = '#ffffff'; g.fill();
       });
 
       const tw = mw, thumb = Math.max(50, tw * 0.25);
       const barY = y0 + mobH - 70;
-      box(mx, barY, tw, 6, 3, 'rgba(255,255,255,.08)');
-      box(mx + (tlMax ? tlX / tlMax : 0) * (tw - thumb), barY, thumb, 6, 3, '#0ea5e9');
-      txt(tlX < tlMax - 4 ? 'Scroll to explore timeline  →' : 'End of timeline — scroll on  ↓', mx, barY - 14, 16, '#64748b', { font: MONO });
+      box(mx, barY, tw, 4, 2, '#1a1a1a');
+      box(mx + (tlMax ? tlX / tlMax : 0) * (tw - thumb), barY, thumb, 4, 2, '#ffffff');
+      txt(tlX < tlMax - 4 ? 'SCROLL TO EXPLORE  →' : 'END OF TIMELINE  ↓', mx, barY - 14, 12, '#555555', { font: HEAD_FONT, ls: '0.12em' });
     } else if (tab === 2) {
-      // txt('TECHNICAL GUIDES & RUNBOOKS', mx, contentY0 + 26, 16, '#38bdf8', { w: 600, font: MONO });
-      txt('Documentation', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
+      txt('DOCUMENTATION', mx, contentY0 + 64, 28, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
 
-      const dY = contentY0 + 130, dH = 190;
+      const dY = contentY0 + 120, dH = 190;
       const hv = hoverId === 'docs';
-      box(mx, dY, mw, dH, 18, hv ? 'rgba(15,23,42,.95)' : 'rgba(15,23,42,.85)', hv ? '#00e5ff' : 'rgba(0,229,255,.4)');
+      box(mx, dY, mw, dH, 18, hv ? 'rgba(20,20,20,.95)' : 'rgba(12,12,12,.85)', hv ? '#ffffff' : '#2a2a2a');
       hits.push({ id: 'docs', x: mx, y: dY, w: mw, h: dH });
 
       const cx = mx + mw - 54, cy = dY + 65;
       g.beginPath(); g.arc(cx, cy, 24, 0, Math.PI * 2);
-      g.fillStyle = hv ? 'rgba(0,229,255,.2)' : 'rgba(255,255,255,.06)'; g.fill();
-      g.strokeStyle = hv ? '#00e5ff' : 'rgba(56,189,248,.4)'; g.lineWidth = 2; g.stroke();
-      txt('→', cx, cy + 7, 24, hv ? '#00e5ff' : '#cbd5e1', { font: MONO, align: 'center', w: 700 });
+      g.fillStyle = hv ? '#ffffff' : 'rgba(255,255,255,.05)';
+      g.fill();
+      g.strokeStyle = hv ? '#ffffff' : '#2a2a2a'; g.lineWidth = 1.5; g.stroke();
+      txt('→', cx, cy + 7, 24, hv ? '#000000' : '#8a8a8a', { font: MONO, align: 'center', w: 600 });
 
-      txt('Network', mx + 28, dY + 80, 46, '#f8fafc', { w: 700 });
-      wrap('A structured, comprehensive networking engineering reference guide.', mx + 28, dY + 120, mw - 56, 18, 28, '#94a3b8');
-
+      txt('NETWORK', mx + 28, dY + 76, 36, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
+      wrap('A structured, comprehensive networking engineering reference guide.', mx + 28, dY + 116, mw - 56, 17, 26, '#8a8a8a');
     } else if (tab === 3) {
-      txt('Projects', mx, contentY0 + 74, 42, '#f8fafc', { w: 800 });
+      txt('PROJECTS', mx, contentY0 + 64, 28, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
 
-      const cardH = 250, cardGap = 16;
+      const cardH = 240, cardGap = 16;
       PROJECTS.forEach((p, i) => {
-        const py = contentY0 + 110 + i * (cardH + cardGap);
+        const py = contentY0 + 100 + i * (cardH + cardGap);
         if (py + cardH > y0 + mobH) return;
-        box(mx, py, mw, cardH, 14, 'rgba(15,23,42,.85)', 'rgba(56,189,248,.25)');
-        txt(p.tag, mx + 20, py + 34, 12, '#00e5ff', { w: 600, font: MONO });
-        txt(p.y, mx + mw - 20, py + 34, 13, '#94a3b8', { w: 600, font: MONO, align: 'right' });
-        txt(p.t, mx + 20, py + 72, 22, '#f8fafc', { w: 700 });
-        wrap(p.d, mx + 20, py + 106, mw - 40, 16, 23, '#94a3b8');
+        box(mx, py, mw, cardH, 14, 'rgba(12,12,12,.85)', '#2a2a2a');
+        txt(p.tag.toUpperCase(), mx + 20, py + 32, 11, '#555555', { w: 400, font: HEAD_FONT, ls: '0.12em' });
+        txt(p.y, mx + mw - 20, py + 32, 12, '#8a8a8a', { w: 400, font: HEAD_FONT, align: 'right' });
+        txt(p.t, mx + 20, py + 68, 20, '#f2f2f2', { w: 600, font: SANS });
+        wrap(p.d, mx + 20, py + 100, mw - 40, 15, 22, '#8a8a8a');
       });
     }
   }
 
   function drawScreen() {
     hits = [];
-    g.fillStyle = '#070b14'; g.fillRect(0, 0, W, H);
+    g.fillStyle = '#000000'; g.fillRect(0, 0, W, H);
     const m = getMobileMetrics();
     if (m && m.isMobile) {
       drawMobileScreen(m);
@@ -328,12 +317,16 @@
     }
     let x = M;
     NAV.forEach((n, i) => {
-      g.font = `600 24px ${MONO}`; const w = g.measureText(n).width + 56, id = 'tab' + i;
-      if (tab === i) box(x, 40, w, 60, 12, '#0284c7'); else if (hoverId === id) box(x, 40, w, 60, 12, 'rgba(56,189,248,.16)');
-      txt(n, x + w / 2, 78, 24, tab === i ? '#fff' : hoverId === id ? '#7dd3fc' : '#94a3b8', { w: 600, font: MONO, align: 'center' });
-      hits.push({ id, x, y: 40, w, h: 60 }); x += w + 16;
+      g.font = `400 18px ${HEAD_FONT}`;
+      if ('letterSpacing' in g) g.letterSpacing = '0.08em';
+      const label = n.toUpperCase();
+      const w = g.measureText(label).width + 56, id = 'tab' + i;
+      const isAct = tab === i, isHov = hoverId === id;
+      box(x, 40, w, 56, 12, isAct ? '#ffffff' : isHov ? 'rgba(255,255,255,.12)' : 'rgba(255,255,255,.03)', isAct ? '#ffffff' : isHov ? '#ffffff' : '#2a2a2a');
+      txt(label, x + w / 2, 75, 17, isAct ? '#000000' : isHov ? '#ffffff' : '#8a8a8a', { w: 400, font: HEAD_FONT, align: 'center', ls: '0.08em' });
+      hits.push({ id, x, y: 40, w, h: 56 }); x += w + 16;
     });
-    button('cv', 'Download CV  ↓', W - M - 290, 40, 290, 60, true);
+    button('cv', 'DOWNLOAD CV  ↓', W - M - 260, 40, 260, 56, true);
     g.save(); g.beginPath(); g.rect(0, 142, W, H - 142); g.clip();
     [pageJourney, pageQualifications, pageDocumentation, pageProjects][tab]();
     g.restore();
@@ -382,14 +375,16 @@
   const keyAt = uv => KEYS.find(k => uv.x >= k.u0 && uv.x <= k.u1 && uv.y >= k.v0 && uv.y <= k.v1) || null;
   function paintKeys() {
     if (!kbImg.naturalWidth) return;
+    kctx.filter = 'grayscale(100%) brightness(1.15) contrast(1.1)';
     kctx.drawImage(kbImg, 0, 0, KW, KH);
+    kctx.filter = 'none';
     const mark = (k, fill, stroke, glow) => {
-      kctx.save(); kctx.shadowColor = glow || 'transparent'; kctx.shadowBlur = glow ? 30 : 0;
-      kctx.fillStyle = fill; kctx.strokeStyle = stroke; kctx.lineWidth = 6; kctx.beginPath();
+      kctx.save(); kctx.shadowColor = glow || 'transparent'; kctx.shadowBlur = glow ? 25 : 0;
+      kctx.fillStyle = fill; kctx.strokeStyle = stroke; kctx.lineWidth = 5; kctx.beginPath();
       kctx.roundRect(k.u0 * KW, k.v0 * KH, (k.u1 - k.u0) * KW, (k.v1 - k.v0) * KH, 16); kctx.fill(); kctx.stroke(); kctx.restore();
     };
-    if (kHover && kHover !== kDown) mark(kHover, 'rgba(0,229,255,.16)', '#00e5ff', '#00e5ff');
-    if (kDown) mark(kDown, 'rgba(0,0,0,.5)', 'rgba(255,255,255,.85)');
+    if (kHover && kHover !== kDown) mark(kHover, 'rgba(255,255,255,.15)', '#ffffff', 'rgba(255,255,255,.3)');
+    if (kDown) mark(kDown, 'rgba(255,255,255,.35)', '#ffffff');
     if (kbTex) kbTex.needsUpdate = true;
     needRender = true;
   }
@@ -447,14 +442,14 @@
     try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' }); } catch (e) { return fail(); }
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setSize(innerWidth, innerHeight, false);
     renderer.outputEncoding = THREE.sRGBEncoding; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.15;
-    scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x060a11, .03);
+    scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x000000, .03);
     camera = new THREE.PerspectiveCamera(FOV, innerWidth / innerHeight, .05, 120);
-    const grid = new THREE.GridHelper(60, 60, 0x16324a, 0x0d1c2c); grid.position.y = -1.02; scene.add(grid);
+    const grid = new THREE.GridHelper(60, 60, 0x222222, 0x0f0f0f); grid.position.y = -1.02; scene.add(grid);
 
     // soft studio reflections for the metal, plus key / rim lights
     const env = new THREE.Scene();
-    env.add(new THREE.Mesh(new THREE.BoxGeometry(30, 30, 30), new THREE.MeshBasicMaterial({ color: 0x1b2430, side: THREE.BackSide })));
-    [[8, 8, 10, 0xffffff], [-10, 4, 6, 0x9fe9f5], [0, 12, -8, 0xffffff]].forEach(([x, y, z, c]) => {
+    env.add(new THREE.Mesh(new THREE.BoxGeometry(30, 30, 30), new THREE.MeshBasicMaterial({ color: 0x111111, side: THREE.BackSide })));
+    [[8, 8, 10, 0xffffff], [-10, 4, 6, 0xffffff], [0, 12, -8, 0xffffff]].forEach(([x, y, z, c]) => {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(10, 6), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }));
       m.material.color.set(c).multiplyScalar(5); m.position.set(x, y, z); m.lookAt(0, 2, 0); env.add(m);
     });
@@ -463,9 +458,9 @@
     } catch (e) {
       console.warn('PMREM skipped', e);
     }
-    scene.add(new THREE.HemisphereLight(0xcfe8ff, 0x1a2230, .7));
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x151515, .8));
     const key1 = new THREE.DirectionalLight(0xffffff, 1.6); key1.position.set(5, 8, 9); scene.add(key1);
-    const rim = new THREE.DirectionalLight(0x00e5ff, 1.4); rim.position.set(-6, 3, -4); scene.add(rim);
+    const rim = new THREE.DirectionalLight(0xffffff, 1.2); rim.position.set(-6, 3, -4); scene.add(rim);
 
     const aniso = renderer.capabilities.getMaxAnisotropy();
     screenTex = new THREE.CanvasTexture(sc); kbTex = new THREE.CanvasTexture(kbc);

@@ -1,30 +1,34 @@
 /* ==========================================================================
-   PORTFOLIO DESIGN SYSTEM — DATACENTER / 3D SERVER CONSOLE THEME
+   PORTFOLIO DESIGN SYSTEM — MONOCHROME FUTURISTIC THEME
    Engineered for Youssef Wael Elfeshawy (Network & Cybersecurity Engineer)
+   Aesthetic: Pure Black, Crisp White, Refined Grays, Geometric Typography
    ========================================================================== */
 
 :root {
-  /* Core Theme Color Palette */
-  --bg: #060a11;
-  --bg-deep: #060a11;
-  --bg-datacenter: #080d1a;
-  --bg-surface: rgba(10, 16, 28, 0.65);
-  --bg-card: rgba(17, 24, 39, 0.7);
+  /* Monochrome Futuristic Color Palette (Reference match) */
+  --bg: #000000;
+  --bg-deep: #000000;
+  --bg-datacenter: #050505;
+  --bg-surface: rgba(14, 14, 14, 0.75);
+  --bg-card: rgba(12, 12, 12, 0.85);
 
-  --text: #f1f5f9;
-  --text-main: #f8fafc;
-  --muted: #94a3b8;
-  --dim: #64748b;
-  --line: rgba(255, 255, 255, 0.08);
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-glow: rgba(14, 165, 233, 0.35);
+  --text: #f2f2f2;
+  --text-main: #f2f2f2;
+  --muted: #8a8a8a;
+  --dim: #555555;
+  --line: #2a2a2a;
+  --border-subtle: #2a2a2a;
+  --border-glow: rgba(255, 255, 255, 0.2);
 
-  --cyan: #00e5ff;
-  --blue: #38bdf8;
-  --emerald: #10b981;
+  /* Monochrome High-Contrast Accents */
+  --cyan: #ffffff;
+  --blue: #8a8a8a;
+  --emerald: #f2f2f2;
+  --white: #ffffff;
 
-  /* Typography — Montserrat across the whole site */
-  --sans: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Typography — Futuristic geometric heading + clean modern sans body */
+  --heading-font: "Michroma", system-ui, sans-serif;
+  --sans: "Geist", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Layout Spacing */
@@ -48,11 +52,11 @@ body {
   line-height: 1.6;
   color: var(--text);
   overflow-x: hidden;
-  background: radial-gradient(ellipse 48% 62% at 74% 50%, rgba(0, 229, 255, 0.13), transparent 70%), var(--bg);
+  background: #000000;
 }
 
 :focus-visible {
-  outline: 2px solid var(--cyan);
+  outline: 2px solid #ffffff;
   outline-offset: 3px;
 }
 
@@ -81,7 +85,7 @@ body {
 .webgl-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 75% 50%, transparent 40%, rgba(6, 9, 17, 0.45) 80%, var(--bg-deep) 100%);
+  background: radial-gradient(circle at 75% 50%, transparent 40%, rgba(0, 0, 0, 0.7) 80%, #000000 100%);
   pointer-events: none;
 }
 
@@ -125,7 +129,7 @@ main {
 }
 
 .hero-content {
-  width: min(100%, 550);
+  width: min(100%, 620px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -135,12 +139,13 @@ main {
 
 h1,
 .hero-name {
-  font-family: var(--sans);
-  font-size: clamp(46px, 5.6vw, 84px);
-  font-weight: 800;
-  line-height: 1.03;
-  letter-spacing: -0.04em;
-  color: #ffffff;
+  font-family: var(--heading-font);
+  font-size: clamp(32px, 4.2vw, 62px);
+  font-weight: 400;
+  line-height: 1.22;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-main);
   margin: 0;
   text-align: left;
 }
@@ -154,9 +159,10 @@ h1,
 .hero-role {
   font-family: var(--sans);
   margin: 22px 0 34px;
-  font-size: clamp(16px, 1.6vw, 21px);
+  font-size: clamp(13px, 1.3vw, 16px);
   color: var(--muted);
-  letter-spacing: -0.01em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   font-weight: 400;
   text-align: left;
 }
@@ -167,21 +173,22 @@ h1,
   max-width: 440px;
   padding: 22px 26px 24px;
   border-radius: 16px;
-  background: rgba(10, 16, 28, 0.65);
-  border: 1px solid rgba(56, 189, 248, 0.22);
+  background: rgba(12, 12, 12, 0.75);
+  border: 1px solid var(--border-subtle);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
   text-align: left;
 }
 
 .skills h2,
 .skills-card-title {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--muted);
+  font-family: var(--heading-font);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
   margin-bottom: 14px;
   text-align: left;
 }
@@ -201,18 +208,18 @@ h1,
   align-items: center;
   gap: 10px;
   font-family: var(--sans);
-  font-size: 14.5px;
-  font-weight: 500;
-  color: #f1f5f9;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text);
 }
 
 .skills li::before,
 .skill-item .bullet {
   content: "";
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   flex: none;
-  background: var(--blue);
+  background: #ffffff;
   border-radius: 1px;
 }
 
@@ -220,8 +227,10 @@ h1,
 .hero-scroll-cue {
   margin-top: 40px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: 12px;
   color: var(--dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   text-align: left;
 }
 
@@ -266,11 +275,11 @@ h1,
   max-width: calc(100vw - 48px);
   padding: 12px 20px;
   border-radius: 10px;
-  background: rgba(10, 18, 32, 0.95);
-  border: 1px solid var(--cyan);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 16px rgba(0, 229, 255, 0.25);
-  font: 500 13px var(--mono);
-  color: #ffffff;
+  background: rgba(14, 14, 14, 0.95);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 1px rgba(255, 255, 255, 0.2);
+  font: 400 13px var(--sans);
+  color: var(--text);
   opacity: 0;
   transform: translateY(12px);
   pointer-events: none;
@@ -293,7 +302,7 @@ h1,
   z-index: 1000;
   display: grid;
   place-items: center;
-  background: var(--bg);
+  background: #000000;
   transition: opacity 0.6s ease, visibility 0.6s ease;
 }
 
@@ -316,28 +325,28 @@ h1,
 
 .loader-box p,
 .loader-text {
-  font: 600 11px var(--mono);
-  letter-spacing: 0.12em;
+  font: 400 11px var(--heading-font);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--cyan);
+  color: var(--muted);
   text-align: center;
 }
 
 .loader-spinner {
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  border: 2px solid rgba(0, 229, 255, 0.15);
-  border-top-color: var(--cyan);
+  border: 2px solid var(--border-subtle);
+  border-top-color: #ffffff;
   animation: spin 0.9s linear infinite;
 }
 
 .loader-track,
 .loader-bar-track {
   width: 100%;
-  height: 4px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.08);
+  height: 3px;
+  border-radius: 3px;
+  background: #1a1a1a;
   overflow: hidden;
 }
 
@@ -345,8 +354,8 @@ h1,
 .loader-bar-fill {
   width: 0;
   height: 100%;
-  background: linear-gradient(90deg, #0ea5e9, var(--cyan));
-  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
   transition: width 0.2s ease;
 }
 
@@ -360,7 +369,9 @@ h1,
   z-index: 1001;
   padding: 16px;
   text-align: center;
-  background: #0a1220;
+  background: #0a0a0a;
+  color: #8a8a8a;
+  border-top: 1px solid #2a2a2a;
 }
 
 /* ==========================================================================
@@ -381,12 +392,15 @@ h1,
   }
   h1,
   .hero-name {
-    font-size: clamp(38px, 11vw, 56px);
+    font-size: clamp(28px, 8vw, 44px);
+    letter-spacing: 0.12em;
     text-align: left;
   }
   .role,
   .hero-role {
     margin: 14px 0 22px;
+    font-size: 13px;
+    letter-spacing: 0.06em;
     text-align: left;
   }
   .skills,
