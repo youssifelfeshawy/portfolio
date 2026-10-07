@@ -1,0 +1,12 @@
+{
+  "liveServer.settings.ignoreFiles": [
+    ".vscode/**",
+    "**/*.blend",
+    "**/*.blend1",
+    "assets/models/**",
+    "assets/images/*original*",
+    "**/*.tmp",
+    "**/*.git/**"
+  ],
+  "liveServer.settings.wait": 1000
+}

@@ -23,6 +23,45 @@
 
   <div id="stage" aria-hidden="true"><canvas id="webgl-canvas"></canvas></div>
 
+  <!-- Mobile Drawer Navigation -->
+  <button id="mobile-drawer-toggle" class="mobile-drawer-toggle" aria-label="Open Navigation" aria-expanded="false" aria-controls="mobile-drawer">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+  <div id="mobile-drawer-backdrop" class="mobile-drawer-backdrop" aria-hidden="true"></div>
+  <aside id="mobile-drawer" class="mobile-drawer" aria-label="Mobile Navigation">
+    <div class="drawer-header">
+      <span class="drawer-title">SCREEN PAGES</span>
+      <button id="mobile-drawer-close" class="drawer-close" aria-label="Close Navigation">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <nav class="drawer-nav">
+      <button type="button" class="drawer-link" data-nav="0">
+        <span class="drawer-num">01</span>
+        <span class="drawer-label">JOURNEY</span>
+      </button>
+      <button type="button" class="drawer-link" data-nav="1">
+        <span class="drawer-num">02</span>
+        <span class="drawer-label">QUALIFICATIONS</span>
+      </button>
+      <button type="button" class="drawer-link" data-nav="2">
+        <span class="drawer-num">03</span>
+        <span class="drawer-label">DOCUMENTATION</span>
+      </button>
+      <button type="button" class="drawer-link" data-nav="3">
+        <span class="drawer-num">04</span>
+        <span class="drawer-label">PROJECTS</span>
+      </button>
+    </nav>
+  </aside>
+
   <main>
     <!-- 1. Hero: intro on the left, server on the right -->
     <section id="hero">
@@ -32,7 +71,7 @@
         <div class="skills">
           <h2>Skills</h2>
           <ul>
-            <li> Python</li><li>Cybersecurity</li>
+            <li>Python</li><li>Cybersecurity</li>
             <li>Java</li><li>Cloud</li>
             <li>Linux</li><li>Docker</li>
             <li>Splunk</li><li>Network analysis</li>
@@ -41,12 +80,12 @@
       </div>
     </section>
 
-    <!-- 2. Laptop screen: one scroll stop per page (Qualifications is a long horizontal timeline) -->
+    <!-- 2. Laptop screen: one scroll stop per page (Qualifications and Projects have long scroll distance) -->
     <section id="screen-stops">
       <div class="stop" data-tab="0"></div>
       <div class="stop stop-long" data-tab="1"></div>
       <div class="stop" data-tab="2"></div>
-      <div class="stop" data-tab="3"></div>
+      <div class="stop stop-long" data-tab="3"></div>
     </section>
 
     <!-- 3. Keyboard / contact -->

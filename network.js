@@ -41,6 +41,11 @@
     drawerBackdrop.addEventListener('click', closeDrawer);
   }
 
+  const urlParams = new URLSearchParams(location.search);
+  if (urlParams.has('drawer')) {
+    openDrawer();
+  }
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && sidebar && sidebar.classList.contains('drawer-open')) {
       closeDrawer();

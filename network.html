@@ -6,7 +6,7 @@
   <meta name="description" content="Complete networking study documentation by Youssif Elfeshawy.">
   <meta name="theme-color" content="#000000">
   <title>Network Documentation</title>
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/images/network_documentation/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Michroma&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
         <a href="index.html#skills">Skills</a>
         <a href="index.html#knowledge">Knowledge</a>
       </nav>
-      <a class="cv-link" href="assets/Youssif-Elfeshawy-CV.pdf" download>Download CV</a>
+      <a class="cv-link" href="assets/images/network_documentation/Youssif-Elfeshawy-CV.pdf" download>Download CV</a>
     </div> -->
   </header>
 
@@ -82,7 +82,7 @@
 <h2 class="major-heading" id="network-intro">Overview</h2>
 <p class="body-line">A network is a collection of devices connected together so they can communicate and share resources. It can be as small as two computers connected at home, or as large as millions of servers spread across the globe forming the Internet.</p>
 <figure class="overview-figure-block figure-with-image">
-  <img src="assets/network_overview.png" alt="Network Overview">
+  <img src="assets/images/network_documentation/network_overview.png" alt="Network Overview">
 </figure>
 <div class="doc-spacer" aria-hidden="true"></div>
 
@@ -114,6 +114,7 @@
 
 <h3 class="topic-heading" id="network-design">Network Topologies</h3>
 <p class="body-line">Network topology describes how devices are connected to each other, either physically or logically. The way a network is designed depends on factors such as the number of devices, the size of the network, the required performance, and the level of redundancy needed.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/network_topologies.png" alt="Network Topologies"></figure>
 <ul class="doc-list">
   <li><strong>Star:</strong> multiple devices connect to one central device. It is the most common arrangement in local networks.</li>
   <li><strong>Full Mesh:</strong> every device has a direct connection to every other device, providing high redundancy but requiring many connections.</li>
@@ -121,14 +122,14 @@
   <li><strong>Hub-and-Spoke:</strong> multiple remote sites connect to one central site, commonly used to connect branch locations to a main location.</li>
 </ul>
 <p class="body-line">As a local network grows, devices can be arranged in layers to make the network easier to manage and expand:</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/three-layers_design.png" alt="Three-layers Design"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/three-layers_design.png" alt="Three-layers Design"></figure>
 <ul class="doc-list">
   <li><strong>Access Layer:</strong> connects end devices such as computers, phones, printers, cameras, and wireless access points.</li>
   <li><strong>Distribution Layer:</strong> connects groups of access devices and provides connectivity to other parts of the network.</li>
   <li><strong>Core Layer:</strong> While standard networks only require two layers (access and distribution), this third layer is added to larger environments to provide a high-speed central path that maintains connectivity during device or link failures.</li>
 </ul>
 <p class="body-line">Data centers may use a different design called a spine-leaf architecture:</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/spine-leaf_architecture.jpg" alt="Spine-leaf Architecture"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/spine-leaf_architecture.jpg" alt="Spine-leaf Architecture"></figure>
 <p class="body-line">In this design, servers connect to leaf switches, and every leaf switch connects to every spine switch. Leaf switches do not connect directly to other leaf switches, and spine switches do not connect directly to other spine switches. This creates multiple paths between servers and provides predictable traffic flow and latency.</p>
 
 <p class="body-line">When an organization needs to connect different sites, such as branch offices in different cities, it needs a WAN connection between those locations. One option is a leased line, which provides a dedicated connection between two sites and gives the organization a direct and private communication link.</p>
@@ -151,7 +152,7 @@
 
 <h3 class="topic-heading" id="communication-types">Communication Types</h3>
 <p class="body-line">Network communication is classified by how many destinations a single transmission is intended for:</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/cast_types.jpg" alt="Unicast Broadcast Multicast and Anycast Communication Types"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/cast_types.jpg" alt="Unicast Broadcast Multicast and Anycast Communication Types"></figure>
 <ul class="doc-list">
   <li><strong>Unicast (One to One):</strong> a message sent from one source to one specific destination.</li>
   <li><strong>Broadcast (One to All):</strong> a message sent from one source to every device on the local network.</li>
@@ -182,7 +183,7 @@
 
 <h3 class="topic-heading" id="console-access-and-cisco-ios-cli">Console and CLI</h3>
 <p class="body-line">Network devices such as routers and switches have a console port that provides direct out-of-band access to the device, allowing it to be configured even when no network connection is available. Console access is commonly used for initial configuration, recovery, and troubleshooting.</p>
-<aside class="figure-block figure-with-image"><img src="assets/rollover_cable.png" alt="Rollover Cable"></aside>
+<aside class="figure-block figure-with-image"><img src="assets/images/network_documentation/rollover_cable.png" alt="Rollover Cable"></aside>
 <p class="body-line">A traditional Cisco console connection uses a rollover cable, where the pins are reversed from one end to the other. The RJ-45 end connects to the network device, while the other end connects to the computer through a DB9 (serial) connector. Some modern devices also provide a direct USB console port.</p>
 <p class="body-line">A terminal emulator such as PuTTY is then used to open the console session. A typical Cisco console connection uses <code>9600</code> speed (baud) rate, <code>8</code> data bits, <code>1</code> stop bit, no parity, and no flow control. The stop bit is sent after the 8 data bits to mark the end of each byte.</p>
 <p class="body-line">Once the connection is established, the Cisco IOS (Internetwork Operating System) command-line interface becomes available. Cisco IOS organizes commands into different modes, with each mode providing a different level of access:</p>
@@ -333,8 +334,8 @@ write memory</code></pre>
 <h3 class="topic-heading" id="encapsulation">Encapsulation</h3>
 <p class="body-line">When data is sent, it travels down the OSI (Open Systems Interconnection) layers on the sending device, across the physical medium, then back up the layers on the receiving device. As data moves down, each layer adds its own header — and sometimes a trailer. This process is called encapsulation. The data unit at each layer has its own name called a PDU (Protocol Data Unit).</p>
 <figure class="overview-figure-block figure-with-image">
-<img src="assets/encapsulation.svg" alt="encapsulation"></figure>
-<!-- <aside class="figure-block figure-with-image"><img src="assets/encapsulation.svg" alt=""></aside> -->
+<img src="assets/images/network_documentation/encapsulation.svg" alt="encapsulation"></figure>
+<!-- <aside class="figure-block figure-with-image"><img src="assets/images/network_documentation/encapsulation.svg" alt=""></aside> -->
 <!-- <pre class="command-line"></pre> -->
 <div class="doc-spacer" aria-hidden="true"></div>
 <ul class="doc-list">
@@ -355,11 +356,11 @@ write memory</code></pre>
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="unshielded-twisted-pair-utp-copper-cables">UTP Cable</h4>
-<aside class="figure-block figure-with-image"><img src="assets/twisted_pair_cables.jpg" alt="UTP Cable"></aside>
+<aside class="figure-block figure-with-image"><img src="assets/images/network_documentation/twisted_pair_cables.jpg" alt="UTP Cable"></aside>
 <p class="body-line">UTP (Unshielded Twisted Pair) is the standard copper cable used in wired Ethernet networks. It contains 4 pairs of copper wires — 8 wires total — twisted together inside a plastic outer jacket. Twisting each pair reduces EMI (Electromagnetic Interference) that would otherwise corrupt the signal.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="the-rj-45-connector">RJ-45 Connector</h4>
-<aside class="figure-block figure-with-image float-left"><img src="assets/rj45.png" alt="RJ-45 Connector"></aside>
+<aside class="figure-block figure-with-image float-left"><img src="assets/images/network_documentation/rj45.png" alt="RJ-45 Connector"></aside>
 <p class="body-line">UTP cables terminate with an RJ-45 connector — the standard plastic plug used for all wired Ethernet connections. It has 8 pins, each corresponding to one of the 8 wires. How those pins are wired at each end determines the cable type.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="10base-t-and-100base-t-pin-usage">10BASE-T & 100BASE-T</h4>
@@ -373,7 +374,7 @@ write memory</code></pre>
   <li>Straight-Through: pins are wired identically at both ends (1→1, 2→2, 3→3, 6→6). Used when connecting different device types — PC to Switch, Router to Switch — because TX pins on one device type align with RX pins on the other.</li>
   <li>Crossover: pairs are swapped at one end (1→3, 2→6, 3→1, 6→2). Used when connecting the same device types — PC to PC, Switch to Switch, Router to Router — so that TX connects to RX rather than TX to TX.</li>
 </ul>
-<figure class="overview-figure-block figure-with-image"><img src="assets/Straight_vs_crossover.jpg" alt="Straight-Through vs. Crossover Cables"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/Straight_vs_crossover.jpg" alt="Straight-Through vs. Crossover Cables"></figure>
 <aside class="callout"><strong>Note:</strong><p>Auto MDI-X (Auto Medium Dependent Interface Crossover): a feature on virtually all modern switches and routers that automatically detects the cable type and adjusts internally. Either cable type can be used in any situation — the device compensates automatically.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="gigabit-and-10-gigabit-ethernet">Gigabit & 10-Gigabit Ethernet</h4>
@@ -382,7 +383,7 @@ write memory</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="fiber-optic-cables">Fiber Optic Cables</h4>
 <p class="body-line">Fiber optic cables transmit data as pulses of light through a glass core, rather than electrical signals through copper. This enables much longer distances, higher speeds, and complete immunity to electromagnetic interference — making fiber the preferred medium for inter-building links, WAN (Wide Area Network) connections, and high-security environments.</p>
-<aside class="figure-block figure-with-image"><img src="assets/fiber_optic_cable.jpg" alt="Fiber Optic Cable"></aside>
+<aside class="figure-block figure-with-image"><img src="assets/images/network_documentation/fiber_optic_cable.jpg" alt="Fiber Optic Cable"></aside>
 <ul class="doc-list">
   <li>Fiberglass core: the medium through which light pulses travel.</li>
   <li>Cladding: a glass layer surrounding the core with a different refractive index. This difference causes total internal reflection — light cannot escape through the cladding and stays confined to the core.</li>
@@ -391,7 +392,7 @@ write memory</code></pre>
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="small-form-factor-pluggable-sfp-transceivers">SFP Transceivers</h4>
-<aside class="figure-block figure-with-image float-left"><img src="assets/spf.jpg" alt="SFP Transceiver"></aside>
+<aside class="figure-block figure-with-image float-left"><img src="assets/images/network_documentation/spf.jpg" alt="SFP Transceiver"></aside>
 <p class="body-line">Standard network device ports use electrical signals, so a fiber optic cable cannot be plugged directly into a regular Ethernet port. To connect a fiber cable to a switch or router, a SFP (Small Form-factor Pluggable) transceiver is required — a compact, hot-swappable module that slots into an SFP port on the device. The SFP converts the device&#x27;s electrical signals into optical signals for transmission, and converts incoming light signals back into electrical signals.</p>
 <p class="body-line">Each fiber connection uses two separate strands — one for transmitting (TX) and one for receiving (RX) — making fiber connections inherently full-duplex.</p>
 <div class="doc-spacer" aria-hidden="true"></div>
@@ -399,7 +400,7 @@ write memory</code></pre>
 <ul class="doc-list">
   <li>MMF (Multi-Mode Fiber): uses a LED (Light Emitting Diode) light source and a wider core (50 or 62.5 micrometers). Light bounces along multiple paths (modes), which causes slight signal spreading (modal dispersion) that limits distance to roughly 550 meters. Cheaper than single-mode. Best suited for short distances inside buildings or data centers.</li>
   <li>SMF (Single-Mode Fiber): uses a laser light source and an extremely narrow core (9 micrometers). Light travels in a single straight path (mode) with virtually no dispersion, enabling distances of 100 kilometers or more. More expensive. Used for long-distance runs between buildings, campuses, and WANs (Wide Area Networks).</li>
-</ul><aside class="overview-figure-block figure-with-image"><img src="assets/Single_Mode_vs_Multimode_Fiber.jpg" alt="Single Mode vs Multimode Fiber"></aside>
+</ul><aside class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/Single_Mode_vs_Multimode_Fiber.jpg" alt="Single Mode vs Multimode Fiber"></aside>
 <div class="table-wrap"><table><thead><tr><th>Informal Name</th><th>IEEE Standard</th><th>Speed</th><th>Cable Type</th><th>Maximum Length</th></tr></thead><tbody><tr><td>1000BASE-LX</td><td>802.3z</td><td>1 Gbps</td><td>Multimode or Single-Mode</td><td>550 m (MM) / 5 km (SM)</td></tr><tr><td>10GBASE-SR</td><td>802.3ae</td><td>10 Gbps</td><td>Multimode</td><td>400 m</td></tr><tr><td>10GBASE-LR</td><td>802.3ae</td><td>10 Gbps</td><td>Single-Mode</td><td>10 km</td></tr><tr><td>10GBASE-ER</td><td>802.3ae</td><td>10 Gbps</td><td>Single-Mode</td><td>30 km</td></tr></tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="UTP-vs-fiber">UTP vs. Fiber</h4>
@@ -408,7 +409,7 @@ write memory</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="topic-heading" id="network-devices-at-layer-1">Network Devices</h3>
 <p class="body-line">Layer 1 devices operate purely on raw signals — they have no understanding of addresses or any higher-layer information. They simply receive a signal and retransmit it.</p>
-<aside class="figure-block figure-with-image"><img src="assets/hub.png" alt="Hub Device"></aside>
+<aside class="figure-block figure-with-image"><img src="assets/images/network_documentation/hub.png" alt="Hub Device"></aside>
 <ul class="doc-list">
   <li>Hub: a basic Layer 1 device that connects multiple devices. When any device sends a signal, the hub amplifies and repeats it out of every other port with no intelligence about the intended destination. All devices share the same physical medium. Hubs are legacy technology replaced by switches.</li>
   <li>Repeater: receives a signal, amplifies it to restore signal strength lost over distance, and retransmits it. Used to extend the maximum cable length of a network segment.</li>
@@ -416,7 +417,7 @@ write memory</code></pre>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h2 class="major-heading" id="layer-2">Layer 2: Data Link Layer</h2>
 <p class="body-line">Layer 2 organizes raw bits into structured units called frames. Each Ethernet frame has a header, a payload, and a trailer. The header contains addressing information — source and destination MAC (Media Access Control) addresses — that identifies where the frame came from and where it needs to go. The payload carries the actual data from the layer above. The trailer contains an error-check value that lets the receiver verify the frame arrived intact. Layer 2 only handles delivery between devices on the same local network — delivering data across different networks is the job of Layer 3. Ethernet is the dominant Layer 2 protocol in wired local area networks, and every Ethernet frame follows the structure below.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/layer_2_header.png" alt="Straight-Through vs. Crossover Cables"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/layer_2_header.png" alt="Straight-Through vs. Crossover Cables"></figure>
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody><tr><td>Preamble</td><td>7 bytes</td><td>Alternating 1s and 0s (10101010 repeated). Allows receiving devices to synchronize their clock to the incoming bit stream before the actual frame begins.</td></tr><tr><td>Start Frame Delimiter (SFD)</td><td>1 byte</td><td>The bit pattern 10101011. Signals the end of the preamble — the very next byte is the start of the Destination MAC Address field.</td></tr><tr><td>Destination MAC Address</td><td>6 bytes</td><td>MAC address of the intended recipient. Can be unicast (one device), multicast (a group), or broadcast (FF:FF:FF:FF:FF:FF — all devices on the local network).</td></tr><tr><td>Source MAC Address</td><td>6 bytes</td><td>MAC address of the sending device&#x27;s network interface card (NIC).</td></tr><tr><td>Type / Length</td><td>2 bytes</td><td>Value 1536 (0x0600) or higher: identifies the Layer 3 protocol — 0x0800 = IPv4, 0x86DD = IPv6. Value below 1536: indicates the byte length of the payload.</td></tr><tr><td>Payload (Data)</td><td>46–1500 bytes</td><td>The encapsulated Layer 3 data — usually an IP packet. Minimum 46 bytes — if the actual data is shorter, padding bytes (zeros) are appended to reach the minimum. This ensures the total frame meets the 64-byte minimum required for correct collision detection.</td></tr><tr><td>FCS (Frame Check Sequence)</td><td>4 bytes</td><td>A Cyclic Redundancy Check (CRC) value — a mathematical checksum computed from all the data in the frame. The sender runs a CRC algorithm over the frame contents and places the result here. The receiver performs the same calculation on the received data and compares results. If they do not match, the frame was corrupted in transit and is silently discarded (no retransmission at this layer — reliability is handled by Layer 4).</td></tr></tbody></table></div>
 <aside class="callout"><strong>Important:</strong><p>Preamble and Start Frame Delimiter (SFD) are not counted in the Ethernet frame size. The 64-byte minimum applies from Destination MAC through FCS: 6 + 6 + 2 + 46 + 4 = 64 bytes.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
@@ -428,7 +429,7 @@ write memory</code></pre>
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h3 class="topic-heading" id="switches">Switches</h3>
-<aside class="figure-block figure-with-image"><img src="assets/cisco_switch.png" alt="Cisco Network Switch"></aside>
+<aside class="figure-block figure-with-image"><img src="assets/images/network_documentation/cisco_switch.png" alt="Cisco Network Switch"></aside>
 <p class="body-line">A switch is an intelligent Layer 2 device. Because it operates at the Data Link layer, it can read the source and destination MAC addresses inside Ethernet frames and forward each frame only through the port that leads toward the intended destination.</p>
 <p class="body-line">Unlike a hub, which repeats signals to all connected devices over a shared half-duplex medium, a switch normally uses full-duplex links. This allows devices on switch ports to send and receive at the same time without competing for the same shared medium.</p>
 <ul class="doc-list">
@@ -455,7 +456,7 @@ write memory</code></pre>
   <li><strong>Burned-In Address (BIA):</strong> the hardware MAC address assigned by the manufacturer. It can be overridden or spoofed by software, but the original hardware address remains unchanged.</li>
 </ul>
 <p class="body-line">A MAC address is divided into two main portions:</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/mac_address_OUI_ID.jpg" alt="MAC Address OUI and Device Identifier Structure"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/mac_address_OUI_ID.jpg" alt="MAC Address OUI and Device Identifier Structure"></figure>
 <div class="table-wrap"><table><thead><tr><th>Portion</th><th>Bytes</th><th>Name</th><th>Purpose</th></tr></thead><tbody><tr><td>First half (6 hex characters)</td><td>Bytes 1–3</td><td>Organizationally Unique Identifier (OUI)</td><td>Identifies the organization or manufacturer that was assigned that OUI.</td></tr><tr><td>Second half (6 hex characters)</td><td>Bytes 4–6</td><td>Device Identifier</td><td>Identifies the individual network interface within that OUI range.</td></tr></tbody></table></div>
 <p class="body-line">Because a switch forwards Ethernet frames using MAC addresses, it keeps a MAC address table, also called a CAM (Content Addressable Memory) table. This table maps learned MAC addresses to the switch ports where they were last seen and is built automatically as frames enter the switch.</p>
 <ul class="doc-list">
@@ -472,7 +473,7 @@ clear mac address-table dynamic [address <i>mac-addr</i> | interface <i>interfac
 
 <h3 class="topic-heading" id="local-area-network-lan-and-broadcast-domain">Broadcast Domain</h3>
 <p class="body-line">A set of all devices that receive a broadcast frame (destination MAC FF:FF:FF:FF:FF:FF) sent by any one member. By default, all ports on a switch are in the same broadcast domain.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/broadcast_domain.jpg" alt="Straight-Through vs. Crossover Cables"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/broadcast_domain.jpg" alt="Straight-Through vs. Crossover Cables"></figure>
 <aside class="callout"><strong>Note:</strong><p>Routers break broadcast domains — a broadcast does not cross a router. Switches alone do not break broadcast domains, but VLANs let you create multiple separate broadcast domains within a single switch.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 
@@ -492,7 +493,7 @@ clear mac address-table dynamic [address <i>mac-addr</i> | interface <i>interfac
 show vlan brief                            → view VLANs and assigned access ports</code></pre>
 <p class="body-line">Access ports are sufficient when devices in a VLAN are connected to the same switch. However, when the same VLAN must extend across multiple switches, traffic for several VLANs may need to share a single physical link. This is done using a <strong>trunk port</strong>.</p>
 <p class="body-line">A trunk carries traffic for multiple VLANs simultaneously. To keep the traffic separated, IEEE 802.1Q (dot1q) adds a VLAN tag to Ethernet frames so the receiving switch can identify which VLAN each frame belongs to. IEEE 802.1Q is the industry-standard tagging method and replaced the older Cisco-proprietary ISL (Inter-Switch Link).</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/IEEE 802.1Q.png" alt="IEEE 802.1Q VLAN Tagging"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/IEEE 802.1Q.png" alt="IEEE 802.1Q VLAN Tagging"></figure>
 <p class="body-line">When a frame is sent across a trunk, 802.1Q inserts a 4-byte tag between the Source MAC Address and the Type/Length field of the Ethernet frame. The receiving switch reads this tag to identify the VLAN before forwarding the frame toward its destination.</p>
 <div class="table-wrap"><table><thead><tr><th>Field</th><th style="width: 80px; white-space: nowrap;">Size</th><th>Purpose</th></tr></thead><tbody><tr><td>TPID (Tag Protocol Identifier)</td><td>16 bits</td><td>Always 0x8100 — identifies the frame as 802.1Q tagged.</td></tr><tr><td>PCP (Priority Code Point)</td><td>3 bits</td><td>Class of Service (CoS) — used for Quality of Service (QoS) to prioritize delay-sensitive traffic such as voice.</td></tr><tr><td>DEI (Drop Eligible Indicator)</td><td>1 bit</td><td>If set to 1, the frame may be dropped first during network congestion.</td></tr><tr><td>VID (VLAN Identifier)</td><td>12 bits</td><td>Identifies the VLAN the frame belongs to. 12 bits provide 4,096 possible values from 0–4,095.</td></tr></tbody></table></div>
 <p class="body-line">One VLAN on an 802.1Q trunk is treated differently: the <strong>native VLAN</strong>. Frames belonging to the native VLAN are normally sent across the trunk without an 802.1Q tag. If an untagged frame arrives on a trunk port, the switch associates it with the native VLAN.</p>
@@ -552,7 +553,7 @@ show interfaces trunk                            → view trunk configurations</
   <li><strong>MAC Address Flapping:</strong> the same source MAC address is learned on different switch ports repeatedly, causing the MAC address table to constantly change and making frame forwarding unstable.</li>
 </ul>
 <p class="body-line">STP (Spanning Tree Protocol) prevents these problems by detecting redundant Layer 2 paths and placing selected paths into a blocking state. This creates a loop-free topology while keeping the redundant links available as backup paths if the active path fails.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/stp-topology.svg" alt="STP Topology"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/stp-topology.svg" alt="STP Topology"></figure>
 <p class="body-line">STP has evolved into several versions that differ in convergence speed, VLAN support, and load-balancing capabilities:</p>
 <div class="table-wrap"><table><thead><tr><th>Version</th><th>Standard</th><th>Load Balance?</th><th>Description</th></tr></thead><tbody><tr><td>Classic STP</td><td>IEEE 802.1D</td><td>No</td><td>The original STP. All VLANs share one STP instance.</td></tr><tr><td>PVST</td><td>Cisco proprietary</td><td>Yes</td><td>Per-VLAN Spanning Tree. One STP instance per VLAN.  Supports ISL trunking only.</td></tr><tr><td>PVST+</td><td>Cisco proprietary</td><td>Yes</td><td>Per-VLAN Spanning Tree Plus. One STP instance per VLAN. Supports IEEE 802.1Q trunking.</td></tr><tr><td>Rapid STP (RSTP)</td><td>IEEE 802.1w</td><td>No</td><td>Much faster convergence than 802.1D. All VLANs share one STP instance.</td></tr><tr><td>Rapid PVST+</td><td>Cisco proprietary</td><td>Yes</td><td>Cisco&#x27;s upgrade to 802.1w. One STP instance per VLAN. Supports IEEE 802.1Q.</td></tr><tr><td>MSTP</td><td>IEEE 802.1s</td><td>Yes</td><td>Multiple Spanning Tree Protocol. Uses RSTP mechanics. Groups multiple VLANs into instances (e.g. VLANs 1–5 in instance 1, VLANs 6–10 in instance 2) to load balance.</td></tr></tbody></table></div>
 <p class="body-line">Cisco switches support different STP modes. When configuring the mode, the keyword <code>pvst</code> refers to PVST+, while <code>rapid-pvst</code> enables Rapid PVST+. To change the STP mode:</p>
@@ -562,7 +563,7 @@ show interfaces trunk                            → view trunk configurations</
 
 <h4 class="subheading" id="classic-stp">Classic STP</h4>
 <p class="body-line">Classic STP, defined in IEEE 802.1D, prevents Layer 2 loops by allowing switches to identify redundant paths and block selected ports while keeping them available as backup paths.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/bpdu_exchange.jpg" alt="STP BPDU Exchange Between Switches"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/bpdu_exchange.jpg" alt="STP BPDU Exchange Between Switches"></figure>
 <p class="body-line">To make these decisions, switches need to exchange information about the STP topology. They do this using BPDUs (Bridge Protocol Data Units). BPDUs are special STP messages that switches use to share information about themselves and the paths they know about. By comparing the information carried in these BPDUs, the switches can agree on one loop-free topology.</p>
 <aside class="callout"><strong>Note:</strong><p>Classic STP (IEEE 802.1D) uses destination MAC address 0180.C200.0000 for BPDUs while Cisco&#x27;s PVST+ uses 0100.0CCC.CCCD.</p></aside>
 <p class="body-line">However, all switches need the same reference point when comparing their available paths. STP therefore selects one switch to become the Root Bridge. The Root Bridge acts as the central reference for the entire STP topology, and all other switches calculate their best path toward it.</p>
@@ -573,7 +574,7 @@ show interfaces trunk                            → view trunk configurations</
   <li><strong>MAC Address:</strong> used as the tiebreaker when two switches have the same Bridge Priority. The switch with the numerically lower MAC address wins.</li>
 </ul>
 <p class="body-line">In Cisco's PVST+ implementation, the Bridge ID also contains an Extended System ID, which represents the VLAN ID. The original 16-bit priority field is divided into a 4-bit configurable Bridge Priority and a 12-bit Extended System ID. For example, with the default priority of 32,768 in VLAN 1, the value represented in the Bridge ID becomes 32,768 + 1 = 32,769. Because part of this field is reserved for the Extended System ID, the configurable Bridge Priority changes in increments of 4,096: 0, 4096, 8192, 12288,....</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/stp_bridge_id.png" alt="STP Bridge ID Structure"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/stp_bridge_id.png" alt="STP Bridge ID Structure"></figure>
 <p class="body-line">The Bridge Priority can also be changed manually to influence which switch becomes the Root Bridge:</p>
 <pre class="command-line"><code>spanning-tree vlan <i>vlan-id</i> [priority <i>priority</i> | root {primary | secondary}]</code></pre>
 <p class="body-line">A lower Bridge Priority makes the switch more likely to become the Root Bridge. Cisco also provides shortcuts for selecting a primary and secondary Root Bridge:</p>
@@ -603,7 +604,7 @@ show interfaces trunk                            → view trunk configurations</
 <p class="body-line">If the remaining candidate ports are connected to the same neighboring switch, their Neighbor Bridge ID is also equal, so STP compares the Neighbor Port IDs. The port connected to the neighbor's lowest Port ID is preferred.</p>
 <p class="body-line">The Port ID is formed from the Port Priority and the Port Number. The default Port Priority is 128, while the Port Number identifies the specific interface on the neighboring switch, such as G0/1 or G0/2. If the Port Priority is also equal, the port connected to the neighbor's lower Port Number — and therefore lower Port ID — is preferred.</p>
 <!-- <p class="body-line">The Port ID is formed from the Port Priority and the Port Number. The default Port Priority is 128. The port connected to the neighbor's lower Port ID is prefered.</p> -->
-<!-- <figure class="overview-figure-block figure-with-image"><img src="assets/Straight_vs_crossover.jpg" alt="Straight-Through vs. Crossover Cables"></figure> -->
+<!-- <figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/Straight_vs_crossover.jpg" alt="Straight-Through vs. Crossover Cables"></figure> -->
 <p class="body-line">The Port Priority can be changed on the upstream interface to influence this final tiebreaker:</p>
 <pre class="command-line"><code>spanning-tree vlan <i>vlan-id</i> port-priority <i>priority</i></code></pre>
 </ul><aside class="callout"><strong>Note:</strong><p>It is the neighbor switch&#x27;s Port ID that is used to break ties — not the local switch&#x27;s own Port ID.</p></aside>
@@ -860,7 +861,7 @@ show mac address-table secure                 → list secured MAC address entri
 <h2 class="major-heading" id="layer-3">Layer 3: Network Layer</h2>
 <p class="body-line">While Layer 2 handles communication within a local network, Layer 3 allows data to travel between different networks. It provides the addressing and path-selection mechanisms needed to move packets from one network to another.</p>
 <h3 class="topic-heading" id="routers">Routers</h3>
-<aside class="figure-block figure-with-image"><img src="assets/router.png" alt="Cisco Network Router"></aside>
+<aside class="figure-block figure-with-image"><img src="assets/images/network_documentation/router.png" alt="Cisco Network Router"></aside>
 <p class="body-line">A router is the primary Layer 3 device and is used to connect different networks. When a packet arrives, the router examines its destination Layer 3 address and forwards the packet through the appropriate interface toward the next network.</p>
 <p class="body-line">As a packet travels from source to destination, it may pass through several routers, with each router representing one hop along the path. At every hop, the router processes the Layer 3 packet and sends it across the next link toward its destination.</p>
 <figure class="overview-figure-block figure-with-image"><img src="" alt="Packet Traveling Through Multiple Routers Between Different Networks"></figure>
@@ -920,7 +921,7 @@ show mac address-table secure                 → list secured MAC address entri
 <div class="table-wrap"><table><thead><tr><th>Column</th><th>Layer</th><th>Meaning</th></tr></thead><tbody><tr><td>Status</td><td>Layer 1</td><td><code>up</code> means the physical connection is active, <code>down</code> indicates a physical connection problem, and <code>administratively down</code> means the interface has been manually disabled with <code>shutdown</code>.</td></tr><tr><td>Protocol</td><td>Layer 2</td><td><code>up</code> means the line protocol is operating correctly, while <code>down</code> means the data-link connection is not operational.</td></tr></tbody></table></div>
 <aside class="callout"><strong>Important:</strong><p>Router interfaces are administratively down by default and must be enabled with <code>no shutdown</code> while switch access ports are enabled by default and become active when a working device is connected.</p></aside>
 <p class="body-line">Once configured on an interface, an IP address becomes part of the IP packet header together with other information used to deliver the packet across the network. In normal routing, the source and destination IP addresses remain unchanged from source to destination, while a new Layer 2 frame is created for each link along the path.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/ipv4_header.png" alt="IPv4 Header Field Layout"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/ipv4_header.png" alt="IPv4 Header Field Layout"></figure>
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody><tr><td>Version</td><td>4 bits</td><td>Identifies the IP version.</td></tr><tr><td>Internet Header Length (IHL)</td><td>4 bits</td><td>Specifies the header length. Multiply its value by 4 to get the length in bytes. The minimum IPv4 header is 20 bytes and the maximum is 60.</td></tr><tr><td>Differentiated Services Code Point (DSCP)</td><td>6 bits</td><td>Used for Quality of Service to classify and prioritize traffic.</td></tr><tr><td>Explicit Congestion Notification (ECN)</td><td>2 bits</td><td>Allows network congestion to be signaled without immediately dropping packets when supported.</td></tr><tr><td>Total Length</td><td>16 bits</td><td>Total size of the packet including the header and payload in bytes. Maximum size is 65,535 bytes.</td></tr><tr><td>Identification</td><td>16 bits</td><td>Identifies fragments that belong to the same original packet.</td></tr><tr><td>Flags</td><td>3 bits</td><td>Controls fragmentation using 3 bits: the first bit is always 0, the second bit (DF) allows fragmentation when set to 0 and prevents it when set to 1, and the third bit (MF) is 1 when more fragments follow and 0 for the last fragment.</td></tr><tr><td>Fragment Offset</td><td>13 bits</td><td>Shows where a fragment belongs within the original packet. Allows correct reassembly even if fragments arrive out of order.</td></tr><tr><td>TTL (Time to Live)</td><td>8 bits</td><td>Decreases by 1 at every hob. If it reaches 0, the packet is discarded to prevent routing loops.</td></tr><tr><td>Protocol</td><td>8 bits</td><td>Identifies the upper-layer protocol carried inside the packet, such as TCP or UDP.</td></tr><tr><td>Header Checksum</td><td>16 bits</td><td>Checks the IP header for errors using CRC, recalculates it at each hop because TTL changes, and drops the packet if the CRC does not match.</td></tr><tr><td>Source IP Address</td><td>32 bits</td><td>Identifies the original sender of the packet.</td></tr><tr><td>Destination IP Address</td><td>32 bits</td><td>Identifies the final destination which is used by routers to make forwarding decisions.</td></tr><tr><td>Options</td><td>0–320 bits</td><td>Optional additional IPv4 information that is rarely used in normal traffic.</td></tr></tbody></table></div>
 <aside class="callout"><strong>Note:</strong><p>The IPv4 Header Checksum protects only the IP header, not the payload. Error detection for the transported data is handled by higher-layer protocols.</p></aside>
 <p class="body-line">IPv4 also supports fragmentation when a packet is too large for the next network link. Every link has an MTU (Maximum Transmission Unit), which defines the largest packet it can carry. Standard Ethernet commonly uses an MTU of 1,500 bytes.</p>
@@ -1059,7 +1060,7 @@ show ip eigrp topology                   → view the EIGRP topology table</code
 <p class="body-line">OSPF supports different versions depending on the IP version being used:</p>
 <div class="table-wrap"><table><thead><tr><th>Version</th><th>Usage</th></tr></thead><tbody><tr><td>OSPFv1</td><td>Original version. No longer used.</td></tr><tr><td>OSPFv2</td><td>The standard version for IPv4 networks.</td></tr><tr><td>OSPFv3</td><td>Designed for IPv6 networks and can also support IPv4.</td></tr></tbody></table></div>
 <p class="body-line">OSPF is designed for large networks by dividing the network into areas. Instead of every router processing all topology changes in the entire network, areas limit LSA flooding and reduce the CPU, memory, and bandwidth required for SPF calculations.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/ospf_areas.jpg" alt="OSPF topology showing Area 0 backbone, ABRs, and an ASBR connected to the Internet"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/ospf_areas.jpg" alt="OSPF topology showing Area 0 backbone, ABRs, and an ASBR connected to the Internet"></figure>
 <ul class="doc-list">
   <li><strong>Area 0 (Backbone Area):</strong> is the central OSPF area, and all other OSPF areas must connect to it.</li>
   <li><strong>Backbone Router:</strong> is any router that has at least one interface in Area 0.</li>
@@ -1105,7 +1106,7 @@ show ip eigrp topology                   → view the EIGRP topology table</code
 <pre class="command-line"><code>show controllers <i>interface-id</i>       → identify whether the interface is DCE or DTE</code></pre>
 <pre class="command-line"><code>clock rate <i>bits-per-second</i>          → configure the clock rate on the DCE side</code></pre>
 <p class="body-line">OSPF routers pass through several states before reaching a Full adjacency and synchronizing their LSDBs:</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/ospf_states.png" alt="OSPF States"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/ospf_states.png" alt="OSPF States"></figure>
 <div class="table-wrap"><table><thead><tr><th>State</th><th>Description</th></tr></thead><tbody><tr><td>Down</td><td>OSPF is enabled on the interface and begins sending Hello messages, but no OSPF neighbors have been discovered yet.</td></tr><tr><td>Init</td><td>A Hello packet is received from a neighbor, but the router's own Router ID is not yet seen in the neighbor's Hello packet.</td></tr><tr><td>2-Way</td><td>Both routers have discovered each other. On broadcast networks, the DR and BDR election takes place at this stage, while DROther routers stay in this stage with each other and do not continue to the Full state.</td></tr><tr><td>Exstart</td><td>Routers choose a Master and Slave to organize the DBD exchange. The router with the highest Router ID becomes the Master and starts sending first, which prevents both routers from sending at the same time.</td></tr><tr><td>Exchange</td><td>Routers exchange DBD (Database Description) packets containing summaries of their LSDB information so they can compare their information and determine whether any LSAs are missing or different.</td></tr><tr><td>Loading</td><td>Routers send LSR (Link State Request) messages to request specific missing LSAs. The requested LSAs are sent in LSU (Link State Update) messages and are acknowledged using LSAck (Link State Acknowledgment) messages.</td></tr><tr><td>Full</td><td>Routers have synchronized LSDBs and a complete OSPF adjacency.</td></tr></tbody></table></div>
 <p class="body-line">After OSPF neighbors reach the required adjacency state, they continue sending Hello messages to make sure the neighbor relationship is still active. On Broadcast and Point-to-Point networks, the default Hello and Dead timers are <code>10</code> and <code>40</code> seconds, while Non-Broadcast networks use <code>30</code> and <code>120</code> seconds. If the Dead timer expires without receiving a Hello message, the neighbor relationship is removed.</p>
 <p class="body-line">The Hello and Dead timer values can be changed manually on an OSPF-enabled interface:</p>
@@ -1162,7 +1163,7 @@ show ip ospf interface                → view OSPF settings on interfaces</code
   ip address <i>ip-address subnet-mask</i>
   no shutdown</code></pre>
 <aside class="callout"><strong>Note:</strong><p>The physical router interface must be enabled using <code>no shutdown</code> for the physical interface and all of its subinterfaces to operate.</p></aside>
-<aside class="figure-block figure-with-image"><img src="assets/multilayer_switch.png" alt="Cisco Multilayer Switch"></aside>
+<aside class="figure-block figure-with-image"><img src="assets/images/network_documentation/multilayer_switch.png" alt="Cisco Multilayer Switch"></aside>
 <p class="body-line">Router on a Stick sends all inter-VLAN traffic through the same physical link between the switch and router, which can become a bottleneck as traffic increases. To avoid this limitation, larger networks commonly use a multilayer switch, also called a Layer 3 switch, which can perform both Layer 2 switching and Layer 3 routing directly on the switch.</p>
 <p class="body-line">Instead of sending inter-VLAN traffic to an external router, the multilayer switch creates an SVI (Switch Virtual Interface) for each VLAN. An SVI is a virtual Layer 3 interface associated with a VLAN, and its IP address normally acts as the default gateway for devices in that VLAN.</p>
 <p class="body-line">Layer 3 routing must first be enabled on the multilayer switch:</p>
@@ -1210,7 +1211,7 @@ show ip ospf interface                → view OSPF settings on interfaces</code
 <h3 class="topic-heading" id="fhrp">FHRP</h3>
 <p class="body-line">Hosts normally depend on one default gateway to reach other networks. If that gateway fails, the hosts lose connectivity even if another router is available. FHRPs (First Hop Redundancy Protocols) solve this problem by allowing multiple routers to provide one redundant default gateway.</p>
 <p class="body-line">The routers share a Virtual IP address and a Virtual MAC address. Hosts use the Virtual IP as their default gateway instead of the physical IP address of a specific router. One router forwards the traffic while another remains ready to take over if the forwarding router fails.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/fhrp.png" alt="Two routers sharing a virtual IP address to provide a redundant default gateway"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/fhrp.png" alt="Two routers sharing a virtual IP address to provide a redundant default gateway"></figure>
 <p class="body-line">When a host needs to send traffic outside its subnet, it sends an ARP request for the Virtual IP. The router currently responsible for forwarding traffic responds using the Virtual MAC address, so the host sends its gateway traffic to that router.</p>
 <p class="body-line">If the forwarding router fails, a backup router takes over the same Virtual IP and Virtual MAC. For the hosts, nothing changes during the failover. They continue using the same Virtual IP as their default gateway, and their ARP table still maps that IP to the same Virtual MAC address.</p>
 <p class="body-line">However, switches use their MAC address tables to map the Virtual MAC address to a physical port. When the backup router takes over, it sends a Gratuitous ARP without waiting for an ARP request. Because this message is broadcast using the Virtual MAC, switches relearn that MAC on the new port and update their MAC address tables.</p>
@@ -1257,14 +1258,14 @@ show ip ospf interface                → view OSPF settings on interfaces</code
 <p class="body-line">IPv6 uses several address types, each designed for a different purpose:</p>
 <p class="body-line"><strong>Global Unicast Address (GUA):</strong> a globally unique and Internet-routable IPv6 address, similar to a public IPv4 address. The GUA addresses commonly use the <code>2000::/3</code> range and are allocated through the global addressing hierarchy, starting with IANA (Internet Assigned Numbers Authority), which allocates address blocks to RIRs (Regional Internet Registries). RIRs then distribute these blocks to ISPs and organizations within their respective regions.</p>
 <p class="body-line">Organizations commonly receive a <code>/48</code> Global Routing Prefix and create <code>/64</code> subnets from it. This leaves a 16-bit Subnet ID and a 64-bit Interface Identifier:</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/global_unicast_address_structure.png" alt="Global Unicast Address Structure"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/global_unicast_address_structure.png" alt="Global Unicast Address Structure"></figure>
 <p class="body-line">A Global Unicast address can be manually assigned to an interface using:</p>
 <pre class="command-line"><code>interface <i>interface-id</i>
   ipv6 address <i>global-unicast-address</i>/<i>prefix-length</i>
   no shutdown</code></pre>
 <p class="body-line"><strong>Unique Local Address (ULA):</strong> is used for private communication inside an organization and is not intended to be routed on the public Internet. The ULA address space is <code>FC00::/7</code>, covering addresses beginning with <code>FC</code> or <code>FD</code>. Locally generated ULA addresses use the <code>FD00::/8</code> range because the <strong>8th bit is set to 1</strong>, changing the first byte from <code>FC</code> (<code>11111100</code>) to <code>FD</code> (<code>11111101</code>). The <code>FC00::/8</code> range is reserved for future use.</p>
 <p class="body-line">Its structure is similar to a Global Unicast address, but instead of receiving the prefix from an ISP, the organization randomly generates its own 40-bit ID locally:</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/unique_local_address_structure.jpg" alt="Unique Local Address Structure"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/unique_local_address_structure.jpg" alt="Unique Local Address Structure"></figure>
 <p class="body-line">A Unique Local address uses the same IPv6 address command because the router identifies the address type from its prefix:</p>
 <pre class="command-line"><code>interface <i>interface-id</i>
   ipv6 address <i>unique-local-address</i>/<i>prefix-length</i>
@@ -1274,7 +1275,7 @@ show ip ospf interface                → view OSPF settings on interfaces</code
   ipv6 enable</code></pre>
 <aside class="callout"><strong>Note:</strong><p>When a Global Unicast or Unique Local IPv6 address is configured on an interface, a Link-Local address is also created automatically.</p></aside>
 <p class="body-line"><strong>Multicast Address:</strong> uses the <code>FF00::/8</code> range and sends traffic to a group of devices. IPv6 does not use broadcast addresses; multicast is used instead when traffic needs to reach multiple devices.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/ipv6_multicast_scope.png" alt="Multicast Scope"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/ipv6_multicast_scope.png" alt="Multicast Scope"></figure>
 <ul class="doc-list">
   <li><code>FF01::</code> — Interface-Local: remains inside the local device.</li>
   <li><code>FF02::</code> — Link-Local: remains inside the local link or subnet.</li>
@@ -1310,7 +1311,7 @@ Interface ID:     1034:56FF:FE78:90AB</code></pre>
 <pre class="command-line"><code>show ipv6 interface brief</code></pre>
 <h4 class="subheading" id="ipv6-header">IPv6 Header</h4>
 <p class="body-line">IPv6 uses a simpler and fixed-size header of <code>40 bytes</code>, unlike the IPv4 header which can vary from <code>20</code> to <code>60 bytes</code>. Several IPv4 header fields were removed or simplified to make packet processing more efficient.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/ipv6_header.png" alt="IPv6 Header"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/ipv6_header.png" alt="IPv6 Header"></figure>
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody><tr><td>Version</td><td>4 bits</td><td>Identifies the packet as IPv6 using the value <code>6</code>.</td></tr><tr><td>Traffic Class</td><td>8 bits</td><td>Marks traffic for QoS so important traffic such as voice or video can receive priority.</td></tr><tr><td>Flow Label</td><td>20 bits</td><td>Identifies packets that belong to the same traffic flow so routers can handle them consistently.</td></tr><tr><td>Payload Length</td><td>16 bits</td><td>Specifies the size of the data following the IPv6 header. The fixed 40-byte IPv6 header is not included.</td></tr><tr><td>Next Header</td><td>8 bits</td><td>Identifies what comes after the IPv6 header, such as TCP, UDP, or another IPv6 extension header.</td></tr><tr><td>Hop Limit</td><td>8 bits</td><td>Decreases by <code>1</code> each time the packet passes through a router. The packet is discarded when the value reaches <code>0</code>.</td></tr><tr><td>Source Address</td><td>128 bits</td><td>Contains the IPv6 address of the original sender.</td></tr><tr><td>Destination Address</td><td>128 bits</td><td>Contains the IPv6 address of the intended destination.</td></tr></tbody></table></div>
 <h4 class="subheading" id="ndp">Neighbor Discovery Protocol (NDP)</h4>
 <p class="body-line">NDP (Neighbor Discovery Protocol) is used by IPv6 devices to discover neighbors, learn their MAC addresses, discover routers, and verify that IPv6 addresses are unique. It uses ICMPv6 messages and multicast instead of the broadcast-based ARP process used by IPv4.</p>
@@ -1365,7 +1366,7 @@ show ipv6 route                       → view the IPv6 routing table</code></pr
 <h4 class="subheading" id="tcp">1. TCP</h4>
 <p class="body-line">TCP (Transmission Control Protocol) is a connection-oriented, reliable transport protocol designed to deliver data accurately between applications. It establishes and maintains a verified connection between endpoints throughout the session. To guarantee reliability, TCP tracks sent data using sequence numbers and requires the receiver to acknowledge every received segment; if an acknowledgment is not received within a timeout period, the sender automatically retransmits the missing segment.</p>
 <p class="body-line">Data in TCP is encapsulated into segments. The TCP header contains various control fields to manage this transmission:</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/new images/tcp_segment_header.png" alt="TCP Segment Header 32-Bit Field Layout"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/tcp_segment_header.png" alt="TCP Segment Header 32-Bit Field Layout"></figure>
 <div class="table-wrap"><table><thead><tr><th>Header Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody>
 <tr><td>Source Port</td><td>16 bits</td><td>Identifies the sending application port.</td></tr>
 <tr><td>Destination Port</td><td>16 bits</td><td>Identifies the receiving application port.</td></tr>
@@ -1395,7 +1396,7 @@ show ipv6 route                       → view the IPv6 routing table</code></pr
 <aside class="callout"><strong>Note:</strong><p>Window Size field is used to regulate transmission speed and prevent receiver buffer overflow. The sender can transmit multiple segments up to the advertised window size before requiring an acknowledgment. If the receiver's buffer fills, it reduces this window size—even down to zero—to throttle or pause the sender.</p></aside>
 <h4 class="subheading" id="udp">2. UDP</h4>
 <p class="body-line">UDP (User Datagram Protocol) is a connectionless, lightweight transport protocol. It does not establish a connection, send handshakes, track sequence numbers, or require acknowledgments. Instead, it sends datagrams immediately with minimal latency and a small, fixed 8-byte header.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/new images/udp_datagram_header.png" alt="UDP Datagram Header 64-Bit Field Layout"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/udp_datagram_header.png" alt="UDP Datagram Header 64-Bit Field Layout"></figure>
 <div class="doc-spacer" aria-hidden="true"></div>
 <div class="table-wrap"><table><thead><tr><th>Header Field</th><th>Size</th><th>Purpose</th></tr></thead><tbody>
   <tr><td>Source Port</td><td>16 bits</td><td>Identifies the sending application port on the source device.</td></tr>
@@ -1531,7 +1532,7 @@ clear ip nat translation *               → clear all dynamic NAT translations<
 <p class="body-line">While PCP just operates a Layer 2, DSCP is therefore used at Layer 3. DSCP uses 6 bits in the IP header, providing 64 possible values and allowing QoS markings to be carried across routed networks. The main DSCP marking standards are Default Forwarding (DF), Expedited Forwarding (EF), Assured Forwarding (AF), and Class Selector (CS).</p>
 <p class="body-line">DF uses all six DSCP bits as zero: <code>000000</code>, giving a decimal value of 0. It represents normal best-effort traffic. EF uses the DSCP value 46 <code>101110</code>. It is designed for traffic requiring low loss, low latency, and low jitter, and is typically used for voice traffic.</p>
 <p class="body-line">AF divides the six DSCP bits into three parts: 3 bits for the class, 2 bits for drop precedence, and 1 bit that is always zero</strong>. AF markings are written as <code>AFxy</code>, where <code>x</code> represents the class from 1 to 4 and <code>y</code> represents the drop precedence from 1 to 3.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/assured_forwarding.png" alt="Assured Forwarding Class and Drop Precedence Matrix"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/assured_forwarding.png" alt="Assured Forwarding Class and Drop Precedence Matrix"></figure>
 <p class="body-line">For example, <strong>AF11</strong> means class 1 and drop precedence 1. The three class bits for class 1 are <code>001</code>, the two drop-precedence bits for level 1 are <code>01</code>, and the final bit is always <code>0</code>:</p>
 <pre class="command-line"><code>AF11 → 001 01 0 → 001010</code></pre>
 <p class="body-line">The binary value <code>001010</code> equals <strong>10</strong> in decimal. A convenient formula for converting an AF marking to its DSCP decimal value is:</p>
@@ -1558,7 +1559,7 @@ clear ip nat translation *               → clear all dynamic NAT translations<
   <li>Port 2 — downlink to the connected PC.</li>
   <li>Port 3 — internal connection to the phone itself.</li>
 </ul>
-<figure class="overview-figure-block figure-with-image"><img src="assets/ip-phone_structure.png" alt="IP phone Structure"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/ip-phone_structure.png" alt="IP phone Structure"></figure>
 <p class="body-line">This arrangement allows the same Ethernet connection to provide power to the IP phone through PoE (Power over Ethernet). The switch acts as the PSE (Power Sourcing Equipment), supplying DC power over the Ethernet cable to the phone, which acts as the PD (Powered Device). This eliminates the need for a separate power supply for the phone.</p>
 <p class="body-line">When a device is connected to a PoE-enabled port, the switch sends low-power signals and monitors the response to determine whether the device needs power and how much. If power is needed, the switch supplies it and continues monitoring to ensure the PD does not draw more than its allocated amount.</p>
 <p class="body-line">To monitor and control this power draw, PoE policing can be configured on the interface:</p>
@@ -1901,6 +1902,7 @@ clock summer-time <i>name</i> recurring <i>start-time end-time</i></code></pre>
 <p class="body-line">Manually setting the clock does not prevent it from drifting over time. NTP allows devices to automatically synchronize their software clocks with a reliable time source across the network. NTP uses UDP port 123.</p>
 <p class="body-line">A device can act as an NTP client, an NTP server, or both. An NTP client can also use multiple NTP servers as time sources and select the most appropriate source.</p>
 <p class="body-line">NTP uses a stratum hierarchy to indicate the distance from the original reference clock. Lower stratum values generally represent a closer and preferred time source.</p>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/ntp.png" alt="NTP Stratum Hierarchy"></figure>
 <div class="table-wrap"><table><thead><tr><th>Stratum</th><th>Description</th></tr></thead><tbody>
 <tr><td>0</td><td>Reference clocks such as atomic or GPS clocks. They provide time to stratum 1 servers but do not participate in NTP directly.</td></tr>
 <tr><td>1</td><td>Primary NTP servers directly connected to a stratum 0 reference clock.</td></tr>
@@ -1981,7 +1983,7 @@ reload</code></pre>
 <p class="body-line">When organizations use private WAN services such as leased lines or MPLS, the communication path is provided through dedicated or provider-controlled infrastructure. When the Internet is used as the WAN, the traffic travels across a public network, so additional security is needed. VPNs (Virtual Private Networks) provide this security by creating encrypted communication paths over the Internet.</p>
 <p class="body-line">VPNs can be used to securely connect entire networks or to securely connect individual users to a private network. The two common approaches are site-to-site VPNs and remote-access VPNs.</p>
 <p class="body-line">A site-to-site VPN is commonly implemented using IPsec and creates an encrypted tunnel between two routers or firewalls, one at each site. The tunnel endpoints handle the encryption and decryption, so the end devices inside the sites do not need to perform these operations themselves.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/site_to_site_vpn.png" alt="Site-to-Site VPN"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/network_documentation/site_to_site_vpn.png" alt="Site-to-Site VPN"></figure>
 <p class="body-line">For example, when a host at one site sends a packet to a host at another site, the local VPN device takes the original packet, encrypts it, and adds the information required to transport it across the Internet:</p>
 <ul class="doc-list">
   <li>The original packet is encrypted using a session key and encapsulated with VPN-related information and a new outer IP header.</li>
@@ -1989,11 +1991,11 @@ reload</code></pre>
   <li>The receiving VPN device removes the outer information, decrypts the original packet, and forwards it to the destination host.</li>
 </ul>
 <p class="body-line">Although IPsec provides encryption and secure transport, it has some limitations when it is used by itself. IPsec normally carries unicast IP traffic, so protocols that depend on broadcast or multicast traffic, such as OSPF, cannot run directly across a basic IPsec tunnel. GRE (Generic Routing Encapsulation) can be used with IPsec to solve this problem, which is known as GRE over IPsec. GRE encapsulates the original traffic and supports multicast, broadcast, and multiple Layer 3 protocols, while IPsec provides encryption for the GRE packet.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/gre_over_ipsec.png" alt="GRE over IPsec"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/gre_over_ipsec.png" alt="GRE over IPsec"></figure>
 <p class="body-line">Another challenge appears when many sites need to communicate with each other. Building a separate tunnel between every pair of sites creates a complex full-mesh configuration. DMVPN (Dynamic Multipoint VPN) can reduce this complexity by allowing spoke routers to initially connect to a hub and then dynamically establish direct spoke-to-spoke tunnels when needed.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/dynamic_multipoint_vpn.png" alt="Dynamic Multipoint VPN"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/dynamic_multipoint_vpn.png" alt="Dynamic Multipoint VPN"></figure>
 <p class="body-line">A different approach is required when the VPN connection is for an individual user rather than an entire site. Remote-access VPNs allow a laptop, phone, or other end device to securely access internal company resources over the Internet. The user runs VPN client software, which establishes an encrypted tunnel to a VPN gateway such as a router or firewall.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/remote_access_vpn.jpg" alt="Remote-Access VPN"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/remote_access_vpn.jpg" alt="Remote-Access VPN"></figure>
 <p class="body-line">Remote-access VPNs commonly use TLS (Transport Layer Security), the same security protocol used by HTTPS. TLS creates an encrypted connection between the user's device and the VPN gateway, protecting the traffic while it crosses an untrusted network such as the public Internet. TLS was originally associated with SSL (Secure Sockets Layer), but TLS became the standardized successor.</p>
 <div class="table-wrap"><table><thead><tr><th>Feature</th><th>Site-to-Site VPN</th><th>Remote-Access VPN</th></tr></thead><tbody>
 <tr><td>Common protocol</td><td>IPsec</td><td>TLS</td></tr>
@@ -2061,7 +2063,7 @@ reload</code></pre>
   <li><strong>Infrastructure Layer:</strong> consists of the physical network devices that forward traffic according to the controller's commands.</li>
 </ul>
 <p class="body-line">Communication between these layers is provided through interfaces:</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/sbi_vs_nbi.png" alt="SBI vs. NBI"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/sbi_vs_nbi.png" alt="SBI vs. NBI"></figure>
 <ul class="doc-list">
   <li><strong>Southbound Interface (SBI):</strong> connects the controller to the infrastructure devices. The controller uses the SBI to learn device information, configure devices, and influence forwarding behavior. Examples include OpenFlow, Cisco OpFlex, Cisco onePK, NETCONF, and RESTCONF.</li>
   <li><strong>Northbound Interface (NBI):</strong> connects applications and automation tools to the controller. Applications use the NBI to request network-wide changes, retrieve information collected by the controller, and express higher-level policies. REST APIs are commonly used for this communication, with structured data formats such as JSON or XML.</li>
@@ -2110,7 +2112,7 @@ reload</code></pre>
 <tr><td>6 GHz</td><td>Provides additional spectrum and less congestion.</td><td>Shorter range than 5 GHz.</td></tr>
 </tbody></table></div>
 <p class="body-line">Because wireless frequencies and transmission power are subject to varying regional regulations, careful channel planning is essential. In the 2.4 GHz band, where adjacent channels overlap, access points are typically arranged using non-overlapping channels 1, 6, and 11 to provide seamless coverage while minimizing co-channel interference.</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/2.4ghz_channels.png" alt="2.4 GHz Channels"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/2.4ghz_channels.png" alt="2.4 GHz Channels"></figure>
 <p class="body-line">802.11 also defines different service sets, which describe how wireless devices are organized. Devices belonging to the same service set use the same SSID (Service Set Identifier), which is the human-readable name of the wireless network:</p>
 <div class="table-wrap"><table><thead><tr><th>Service Set</th><th>Full Name</th><th>Description</th></tr></thead><tbody>
 <tr><td>IBSS</td><td>Independent Basic Service Set</td><td>Ad hoc network in which devices communicate directly without an access point. Suitable only for small, simple deployments.</td></tr>
@@ -2168,7 +2170,7 @@ reload</code></pre>
 <tr><td>Data</td><td>Carries the actual user data between stations and the AP.</td><td>Data frames</td></tr>
 </tbody></table></div>
 <p class="body-line">An 802.11 frame contains several fields. Depending on the frame type and the wireless standard being used, some fields may not be present:</p>
-<figure class="overview-figure-block figure-with-image"><img src="assets/wireless_frame_structure.png" alt="Wireless Frame Structure"></figure>
+<figure class="overview-figure-block figure-with-image"><img src="assets/images/network_documentation/wireless_frame_structure.png" alt="Wireless Frame Structure"></figure>
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody>
 <tr><td>Frame Control</td><td>Identifies the frame type and subtype and provides control information.</td></tr>
 <tr><td>Duration / ID</td><td>Indicates how long the wireless medium may be reserved for transmission or provides an association identifier, depending on the frame type.</td></tr>
@@ -2261,7 +2263,7 @@ reload</code></pre>
 <tr><td>Templates</td><td>Used to generate manifests dynamically.</td></tr>
 </tbody></table></div>
 <h4 class="subheading" id="chef">Chef</h4>
-<p class="body-line">Chef is a configuration management tool written in Ruby and uses a DSL (Domain-Specific Language) based on Ruby. It is typically agent-based and follows a pull model. Chef organizes configuration into reusable resources and recipes, which are grouped into cookbooks and executed according to a run-list.</p>
+<p class="body-line">Chef is a configuration management tool written in Ruby and uses a DSL (Domain-Specific Language) based on Ruby. It is typically agent-based and follows a pull model, using TCP port 10002. Chef organizes configuration into reusable resources and recipes, which are grouped into cookbooks and executed according to a run-list.</p>
 <div class="table-wrap"><table><thead><tr><th>Component</th><th>Purpose</th></tr></thead><tbody>
 <tr><td>Resources</td><td>Describe individual configuration objects that Chef manages.</td></tr>
 <tr><td>Recipes</td><td>Define the logic and actions used to configure resources.</td></tr>

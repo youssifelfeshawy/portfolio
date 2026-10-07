@@ -52,12 +52,14 @@
   margin: 0;
   max-width: 900px;
   font-family: var(--heading-font);
-  font-size: clamp(30px, 4.4vw, 58px);
+  font-size: clamp(20px, 5.5vw, 58px);
   font-weight: 400;
-  line-height: 1.15;
-  letter-spacing: 0.12em;
+  line-height: 1.18;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #f2f2f2;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .network-hero h1 span {
@@ -920,6 +922,10 @@ td:last-child {
     padding: 4px;
     border: none;
     background: transparent;
+  }
+
+  .network-sidebar .side-nav p {
+    display: none;
   }
 
   .network-sidebar .side-nav a {
