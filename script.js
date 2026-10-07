@@ -749,19 +749,19 @@
     const canvas = $('webgl-canvas');
     try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' }); } catch (e) { return fail(); }
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setSize(innerWidth, innerHeight, false);
-    renderer.outputEncoding = THREE.sRGBEncoding; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.15;
+    renderer.outputEncoding = THREE.sRGBEncoding; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.1;
     scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x000000, .03);
     camera = new THREE.PerspectiveCamera(FOV, innerWidth / innerHeight, .05, 120);
     const grid = new THREE.GridHelper(60, 60, 0x222222, 0x0f0f0f); grid.position.y = -1.5; scene.add(grid);
 
     // High-end studio lighting & metallic PBR reflections
     const env = new THREE.Scene();
-    env.add(new THREE.Mesh(new THREE.BoxGeometry(30, 30, 30), new THREE.MeshBasicMaterial({ color: 0x111111, side: THREE.BackSide })));
-    [[8, 8, 10, 0xffffff], [-10, 4, 6, 0xffffff], [0, 12, -8, 0xffffff]].forEach(([x, y, z, c]) => {
-      const m = new THREE.Mesh(new THREE.PlaneGeometry(10, 6), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }));
-      m.material.color.set(c).multiplyScalar(5);
+    env.add(new THREE.Mesh(new THREE.BoxGeometry(30, 30, 30), new THREE.MeshBasicMaterial({ color: 0x141416, side: THREE.BackSide })));
+    [[8, 8, 10, 0xffffff], [-10, 5, 8, 0xd0e0ff], [0, 14, 0, 0xffffff], [-8, 4, -8, 0xffffff]].forEach(([x, y, z, c]) => {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(12, 8), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }));
+      m.material.color.set(c).multiplyScalar(4.5);
       m.position.set(x, y, z);
-      m.lookAt(0, 2, 0);
+      m.lookAt(0, 1, 0);
       env.add(m);
     });
     try {
@@ -770,22 +770,32 @@
       console.warn('PMREM skipped', e);
     }
 
-    // Sky/ground ambient fill
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x151515, 0.8));
+    // Sky/ground balanced ambient fill
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x222228, 0.95));
 
     // Studio key light (crisp illumination of server faceplates and laptop)
-    const key1 = new THREE.DirectionalLight(0xffffff, 1.6);
-    key1.position.set(5, 8, 9);
+    const key1 = new THREE.DirectionalLight(0xffffff, 1.45);
+    key1.position.set(5.5, 7.5, 8);
     scene.add(key1);
 
-    // Studio rim light (traces sleek chassis silhouette against dark background)
-    const rim = new THREE.DirectionalLight(0xffffff, 1.2);
-    rim.position.set(-6, 3, -4);
+    // Studio fill light (soft cool tint to illuminate rack handles and keyboard tray)
+    const fill = new THREE.DirectionalLight(0xdce6f2, 0.85);
+    fill.position.set(-6, 4, 7);
+    scene.add(fill);
+
+    // Subtle top light (illuminates top server lid and keyboard deck)
+    const topLight = new THREE.DirectionalLight(0xffffff, 0.45);
+    topLight.position.set(0, 10, 2);
+    scene.add(topLight);
+
+    // Studio rim light (rear-left edge glow separating chassis from background)
+    const rim = new THREE.DirectionalLight(0xffffff, 1.1);
+    rim.position.set(-7, 3.5, -5);
     scene.add(rim);
 
-    // Server rack green LED glow
-    const ledGlow = new THREE.PointLight(0x10b981, 0.5, 4);
-    ledGlow.position.set(-0.2, -0.52, 0.5);
+    // Server rack green status LED point light
+    const ledGlow = new THREE.PointLight(0x10b981, 0.65, 4.5);
+    ledGlow.position.set(-0.2, -0.52, 0.55);
     scene.add(ledGlow);
 
     const aniso = renderer.capabilities.getMaxAnisotropy();
@@ -825,6 +835,12 @@
           }
           uv.needsUpdate = true;
         } else {
+          mats.forEach(m => {
+            if (m && m.isMeshStandardMaterial) {
+              m.envMapIntensity = 1.0;
+              if (m.normalMap) m.normalScale.set(1.0, 1.0);
+            }
+          });
           const keyDef = findKeyDef(o.name);
           if (keyDef) {
             o.userData.origY = o.position.y;
