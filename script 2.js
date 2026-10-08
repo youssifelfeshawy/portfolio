@@ -12,13 +12,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   const $ = id => document.getElementById(id);
   const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 
-  /* ---------------- Responsive settings ---------------- */
-  const COMPACT_BELOW = 1.25;              // window shape (width ÷ height) below this = phone / portrait-tablet layout
-  const ROTATE_KEYBOARD_ON_PHONE = true;   // portrait phones: turn the final keyboard view 90° so the keys use the full screen height
-  const CROP_FY = .94;                     // phone: camera shows 94% of the laptop display height
-  const PHONE_TEXT = 560;                  // phone: design width that maps to 1 CSS-pixel-per-design-pixel scale (smaller = bigger text)
-  const FONTS = ['400 20px "Michroma"', '400 16px "Geist"', '600 16px "Geist"', '400 16px "JetBrains Mono"'];
-
   /* ---------------- Content (from the CV) ---------------- */
   const C = {
     name: 'Youssef Wael Elfeshawy', role: 'Network & Cybersecurity Engineer',
@@ -45,7 +38,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   ];
   const NAV = ['Journey', 'Qualifications', 'Documentations', 'Projects'];
   const loadImg = src => { const i = new Image(); i.onload = () => (dirtyScreen = true); i.src = src; return i; };
-  const school_cert = loadImg('assets/images/school_cert.jpg'), college_cert = loadImg('assets/images/college_cert.jpg'), ccna = loadImg('assets/images/ccna_cert.png'), comptia = loadImg('assets/images/A+_cert.png');
+  const school_cert = loadImg('assets/images/school_cert.jpg'), college_cert = loadImg('assets/images/college_cert.jpg'), ccna = loadImg('assets/images/ccna_cert.png'), comptia = loadImg('assets/images/A+_cert.png'), digital_cyber5w_cert = loadImg('assets/images/digital_cyber5w_cert.jpg'), elab_cert = loadImg('assets/images/elab_cert.jpg'), ethydco_cert = loadImg('assets/images/ethydco_cert.jpg');
   const TIMELINE = [
     {
       when: '2022',
@@ -144,11 +137,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   const MONO = '"JetBrains Mono",ui-monospace,monospace';
   const sc = document.createElement('canvas'); sc.width = W; sc.height = H;
   const g = sc.getContext('2d');
-  // Two layouts share one canvas: the laptop layout (2048×1408 design space) and the phone layout, whose design space is
-  // exactly the part of the laptop display the camera shows (so nothing is cropped or stretched on any phone / tablet).
-  let compact = false, DW = 560, DH = 1200, K = 1, screenSetup = false;
-  const crop = { fx: 1, fy: 1 };
-  const screenDim = { w: 1.139, h: .625 };   // the 16:9 display, measured from the model
   let tab = 0, tlX = 0, tlMax = 0, docsY = 0, docsMax = 0, projY = 0, projMax = 0, hits = [], hoverId = null, dirtyScreen = true, screenTex = null, screenMat = null;
 
   function txt(s, x, y, size, color, o = {}) {
@@ -156,7 +144,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     if (o.ls && 'letterSpacing' in g) g.letterSpacing = o.ls;
     else if ('letterSpacing' in g) g.letterSpacing = '0px';
     g.textAlign = o.align || 'left'; g.textBaseline = 'alphabetic'; g.fillText(s, x, y);
-    if ('letterSpacing' in g) g.letterSpacing = '0px';
   }
   function wrap(s, x, y, maxW, size, lh, color, w = 400) {
     if ('letterSpacing' in g) g.letterSpacing = '0px';
@@ -319,7 +306,19 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   }
 
   function getMobileMetrics() {
-    return compact ? { isMobile: true, mobW: DW, mobH: DH, x0: 0, y0: 0, x1: DW, y1: DH } : null;
+    const asp = innerWidth / innerHeight;
+    const isMobile = asp < 0.85;
+    if (!isMobile) return null;
+    const s = screenMesh ? new THREE.Box3().setFromObject(screenMesh) : null;
+    const meshW = s ? (s.max.x - s.min.x) : 0.3207;
+    const meshH = s ? (s.max.y - s.min.y) : 0.2203;
+    const visFracY = 0.94;
+    const visFracX = Math.min(0.96, (meshH * 0.94 * asp) / meshW);
+    const mobW = Math.round(W * visFracX);
+    const mobH = Math.round(H * visFracY);
+    const x0 = Math.round((W - mobW) / 2);
+    const y0 = Math.round((H - mobH) / 2);
+    return { isMobile, mobW, mobH, x0, y0, x1: x0 + mobW, y1: y0 + mobH };
   }
 
   function drawMobileScreen(m) {
@@ -330,15 +329,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
     // Canvas drawer toggle button at top-left of the screen
     const bx = mx, by = y0 + 36, bw = 46, bh = 46;
-    if (!drawerToggle) {   // (when the page has the HTML menu button, that one is used instead)
-      box(bx, by, bw, bh, 10, 'rgba(14, 14, 14, 0.94)', '#2a2a2a');
-      g.strokeStyle = '#ffffff'; g.lineWidth = 2.4; g.beginPath();
-      g.moveTo(bx + 11, by + 15); g.lineTo(bx + 35, by + 15);
-      g.moveTo(bx + 11, by + 23); g.lineTo(bx + 35, by + 23);
-      g.moveTo(bx + 11, by + 31); g.lineTo(bx + 35, by + 31);
-      g.stroke();
-      hits.push({ id: 'screen-drawer-toggle', x: bx, y: by, w: bw, h: bh });
-    }
+    box(bx, by, bw, bh, 10, 'rgba(14, 14, 14, 0.94)', '#2a2a2a');
+    g.strokeStyle = '#ffffff'; g.lineWidth = 2.4; g.beginPath();
+    g.moveTo(bx + 11, by + 15); g.lineTo(bx + 35, by + 15);
+    g.moveTo(bx + 11, by + 23); g.lineTo(bx + 35, by + 23);
+    g.moveTo(bx + 11, by + 31); g.lineTo(bx + 35, by + 31);
+    g.stroke();
+    hits.push({ id: 'screen-drawer-toggle', x: bx, y: by, w: bw, h: bh });
 
     if (tab === 0) {
       txt('JOURNEY', mx, contentY0 + 44, 38, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
@@ -521,10 +518,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
           else line = t;
         }
         const imgH = (p.img && p.img.naturalWidth) ? (p.mobH || 110) + 16 : 0;
-        g.font = `600 28px ${SANS}`;
-        let tl = 1, tline = '';
-        for (const word of p.t.split(' ')) { const t2 = tline + word + ' '; if (g.measureText(t2).width > (mw - 48) && tline) { tl++; tline = word + ' '; } else tline = t2; }
-        return 132 + (tl - 1) * 36 + lines * 40 + 28 + imgH;
+        return 132 + lines * 40 + 28 + imgH;
       });
 
       const totalH = cardHeights.reduce((a, b) => a + b, 0) + (PROJECTS.length - 1) * gap;
@@ -549,9 +543,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
           const tagStr = p.tag.length > 20 ? p.tag.split('·')[0].trim() : p.tag;
           txt(tagStr.toUpperCase(), mx + 24, textTop + 36, 12, '#666666', { w: 400, font: HEAD_FONT, ls: '0.1em' });
           txt(p.y, mx + mw - 24, textTop + 36, 14, '#8a8a8a', { w: 400, font: HEAD_FONT, align: 'right' });
-          if ('letterSpacing' in g) g.letterSpacing = '0px';
-          const afterTitle = wrap(p.t, mx + 24, textTop + 82, mw - 48, 28, 36, '#f2f2f2', 600);
-          wrap(p.d, mx + 24, afterTitle + 10, mw - 48, 26, 40, '#9a9a9a');
+          txt(p.t, mx + 24, textTop + 82, 28, '#f2f2f2', { w: 600, font: SANS });
+          wrap(p.d, mx + 24, textTop + 128, mw - 48, 26, 40, '#9a9a9a');
         }
         curY += ch + gap;
       });
@@ -574,10 +567,9 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
   function drawScreen() {
     hits = [];
-    g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = '#000000'; g.fillRect(0, 0, sc.width, sc.height);
+    g.fillStyle = '#000000'; g.fillRect(0, 0, W, H);
     const m = getMobileMetrics();
     if (m && m.isMobile) {
-      g.setTransform(K, 0, 0, K, 0, 0); g.fillStyle = '#000000'; g.fillRect(0, 0, DW, DH);
       drawMobileScreen(m);
       if (screenTex) screenTex.needsUpdate = true;
       return;
@@ -599,35 +591,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     g.restore();
     if (screenTex) screenTex.needsUpdate = true;
   }
-
-
-  function makeScreenTexture() {
-    const old = screenTex;
-    screenTex = new THREE.CanvasTexture(sc);
-    screenTex.flipY = false; screenTex.colorSpace = THREE.SRGBColorSpace;
-    screenTex.anisotropy = renderer ? renderer.capabilities.getMaxAnisotropy() : 4;
-    // phones: the canvas covers only the part of the display the camera sees
-    screenTex.repeat.set(1 / crop.fx, 1 / crop.fy); screenTex.offset.set(-(1 - crop.fx) / (2 * crop.fx), -(1 - crop.fy) / (2 * crop.fy));
-    if (screenMat) { screenMat.map = screenTex; screenMat.needsUpdate = true; }
-    if (old) old.dispose();
-  }
-  function setScreenMode() {
-    const asp = innerWidth / innerHeight, wasCompact = compact, oldW = sc.width, oldH = sc.height;
-    compact = asp < COMPACT_BELOW;
-    document.body.classList.toggle('compact', compact);
-    if (compact) {
-      const S = clamp(innerWidth / PHONE_TEXT, .6, 1);          // CSS pixels per design pixel (text scale)
-      DW = Math.round(innerWidth / S); DH = Math.round(innerHeight / S);
-      K = clamp(innerHeight * Math.min(devicePixelRatio || 1, 2) / DH, .8, 3);
-      sc.width = Math.round(DW * K); sc.height = Math.round(DH * K);
-      crop.fy = CROP_FY; crop.fx = Math.min(1, screenDim.h * CROP_FY * asp / screenDim.w);
-    } else { K = 1; sc.width = W; sc.height = H; crop.fx = crop.fy = 1; }
-    if (!screenSetup || wasCompact !== compact || oldW !== sc.width || oldH !== sc.height || compact) makeScreenTexture();
-    screenSetup = true; dirtyScreen = true;
-  }
-  const uvToScreen = uv => compact
-    ? { x: (uv.x - (1 - crop.fx) / 2) / crop.fx * DW, y: (uv.y - (1 - crop.fy) / 2) / crop.fy * DH }
-    : { x: uv.x * W, y: uv.y * H };
 
   function screenAction(id) {
     tick(1.1);
@@ -744,17 +707,17 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   const P0 = V(), P1 = V(), T1 = V(), P2 = V(), T2 = V(), pos = V(), tgt = V();
   const state = { a: 0, q: 0 };   // a: rack -> screen, q: screen -> keyboard
 
-  const stacked = () => innerWidth / innerHeight < COMPACT_BELOW || innerWidth <= 820;   // same rule as the CSS hero layout
-  let rotKb = false;
   function layoutCamera() {
-    const asp = innerWidth / innerHeight, port = asp < .85;
-    P0.copy(T0).add(BASE.clone().sub(T0).multiplyScalar(stacked() ? 1.4 : 1));
+    const asp = innerWidth / innerHeight;
+    const isMobile = asp < 0.85;
+    P0.copy(T0).add(BASE.clone().sub(T0).multiplyScalar(asp < 1 ? 1.4 : 1));
     if (!screenMesh) return;
     const s = new THREE.Box3().setFromObject(screenMesh), sc3 = s.getCenter(V());
-    screenDim.w = s.max.x - s.min.x; screenDim.h = s.max.y - s.min.y;
-    const dS = compact
-      ? screenDim.h * CROP_FY / (2 * TAN)
-      : Math.max(screenDim.h / (2 * TAN), screenDim.w / (2 * TAN * asp)) * 1.06;
+    const meshH = s.max.y - s.min.y;
+    const meshW = s.max.x - s.min.x;
+    const dS = isMobile
+      ? (meshH * 0.94) / (2 * TAN)
+      : Math.max(meshH / (2 * TAN), meshW / (2 * TAN * asp)) * 1.06;
     T1.copy(sc3); P1.set(sc3.x, sc3.y, s.max.z + dS);
 
     const k = new THREE.Box3();
@@ -763,18 +726,17 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     else k.setFromObject(screenMesh);
     const kc = k.getCenter(V());
     const kw = k.max.x - k.min.x, kd = k.max.z - k.min.z, th = 30 * Math.PI / 180;
-    rotKb = port && ROTATE_KEYBOARD_ON_PHONE;
-    const d = rotKb
-      ? Math.max(kw * 1.22 / (2 * TAN), (kd + .14) * 1.28 / (2 * TAN * asp))
+    const d = isMobile
+      ? Math.max(kw * 0.98 / (2 * TAN * asp), (kd + .12) * Math.cos(th) * 1.25 / (2 * TAN))
       : Math.max(kw * 1.14 / (2 * TAN * asp), (kd + .15) * Math.cos(th) * 1.4 / (2 * TAN));
     T2.copy(kc);
-    P2.copy(kc).add(rotKb ? V(Math.sin(th) * d, Math.cos(th) * d, 0) : V(0, Math.cos(th) * d, Math.sin(th) * d));
+    P2.copy(kc).add(V(0, Math.cos(th) * d, Math.sin(th) * d));
   }
 
   function renderFrame() {
-    const e = state.a, q = state.q, vw = innerWidth, vh = innerHeight, port = stacked();
+    const e = state.a, q = state.q, vw = innerWidth, vh = innerHeight, port = vw < vh;
     pos.copy(P0).lerp(P1, e).lerp(P2, q); tgt.copy(T0).lerp(T1, e).lerp(T2, q);
-    if (q > 0 && !rotKb) pos.z += Math.sin(q * Math.PI) * 0.25;
+    if (q > 0) pos.z += Math.sin(q * Math.PI) * 0.25;
     camera.up.set(0, 1, 0); camera.position.copy(pos); camera.lookAt(tgt);
     renderer.toneMappingExposure = 1.25 - 0.62 * q;
     camera.setViewOffset(vw, vh, port ? 0 : -vw * .255 * (1 - e), port ? -vh * .17 * (1 - e) : 0, vw, vh);
@@ -850,7 +812,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     rim.position.set(-6, 3, -4);
     scene.add(rim);
 
-    setScreenMode();
+    screenTex = new THREE.CanvasTexture(sc);
+    screenTex.wrapS = THREE.RepeatWrapping;
+    screenTex.wrapT = THREE.RepeatWrapping;
+    screenTex.repeat.set(1, -1);
+    screenTex.offset.set(0, 1);
+    screenTex.colorSpace = THREE.SRGBColorSpace;
+    screenTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
     drawScreen();
 
     const loader = new GLTFLoader();
@@ -900,7 +868,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       window.__state = state;
       window.__needRender = () => { needRender = true; };
 
-      layoutCamera(); setScreenMode(); layoutCamera();
+      layoutCamera();
       setupScroll();
 
       const urlParams = new URLSearchParams(location.search);
@@ -969,14 +937,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     openDrawer();
   }
 
-  // The menu button is only shown while the camera is inside the laptop screen (phone layout only)
-  function updateDrawerToggle() {
-    if (!drawerToggle) return;
-    const inScreen = compact && state.a > 0.8 && state.q < 0.2;
-    drawerToggle.classList.toggle('visible', inScreen);
-    if (!inScreen) closeDrawer();
-  }
-
   function updateDrawerActive(navKey) {
     document.querySelectorAll('.drawer-link[data-nav]').forEach(btn => {
       if (btn.getAttribute('data-nav') === String(navKey)) btn.classList.add('active');
@@ -1012,19 +972,25 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       dirtyScreen = true;
     }
 
-    updateDrawerToggle();
+    // Only show the mobile drawer toggle when the camera is inside the laptop screen
+    const inScreen = (state.a > 0.8 && state.q < 0.2);
+    if (drawerToggle) {
+      if (inScreen) {
+        drawerToggle.classList.add('visible');
+      } else {
+        drawerToggle.classList.remove('visible');
+        closeDrawer();
+      }
+    }
     updateDrawerActive(t);
   }
-
-  // the camera hold time equals the real height of the screen stops, whatever the page markup uses
-  const stopsUnits = () => { let h = 0; document.querySelectorAll('.stop').forEach(el => (h += el.offsetHeight)); return h / innerHeight; };
 
   function setupScroll() {
     gsap.registerPlugin(ScrollTrigger);
     gsap.to('.hero-content', { opacity: 0, y: -40, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom 45%', scrub: true } });
-    gsap.timeline({ scrollTrigger: { trigger: 'main', start: 'top top', end: 'bottom bottom', scrub: .6, invalidateOnRefresh: true }, onUpdate: () => { needRender = true; updateDrawerToggle(); } })
+    gsap.timeline({ scrollTrigger: { trigger: 'main', start: 'top top', end: 'bottom bottom', scrub: .6, invalidateOnRefresh: true }, onUpdate: () => (needRender = true) })
       .to(state, { a: 1, duration: 1, ease: 'power2.inOut' })
-      .to(state, { duration: Math.max(1, stopsUnits()) })
+      .to(state, { duration: 8 })
       .to(state, { q: 1, duration: 1, ease: 'power2.inOut' });
     addEventListener('scroll', syncPages, { passive: true });
     syncPages();
@@ -1040,7 +1006,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     if (state.a > .85 && state.q < .15 && screenMesh) {
       const h = ray.intersectObject(screenMesh)[0];
       if (h && h.uv) {
-        const { x, y } = uvToScreen(h.uv);
+        const x = h.uv.x * W, y = h.uv.y * H;
         const b = hits.find(b => x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h);
         return { id: b ? b.id : null };
       }
@@ -1094,7 +1060,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       lastW = innerWidth; lastH = innerHeight;
       renderer.setSize(innerWidth, innerHeight, false);
       camera.aspect = innerWidth / innerHeight;
-      layoutCamera(); setScreenMode(); layoutCamera();
+      layoutCamera();
       if (window.ScrollTrigger) ScrollTrigger.refresh();
       dirtyScreen = true;
       needRender = true;
@@ -1102,7 +1068,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   });
 
   /* ---------------- Start ---------------- */
-  if (document.fonts) Promise.all(FONTS.map(f => document.fonts.load(f).catch(() => {}))).then(() => (dirtyScreen = true));
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => (dirtyScreen = true));
   (function loop() {
     requestAnimationFrame(loop);
