@@ -45,7 +45,15 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   ];
   const NAV = ['Journey', 'Qualifications', 'Documentations', 'Projects'];
   const loadImg = src => { const i = new Image(); i.onload = () => (dirtyScreen = true); i.src = src; return i; };
-  const school_cert = loadImg('assets/images/school_cert.jpg'), college_cert = loadImg('assets/images/college_cert.jpg'), ccna = loadImg('assets/images/ccna_cert.png'), comptia = loadImg('assets/images/A+_cert.png');
+  const school_cert = loadImg('assets/images/school_cert.jpg'),
+        college_cert = loadImg('assets/images/college_cert.jpg'),
+        cyber5w_cert = loadImg('assets/images/digital_cyber5w_cert.jpg'),
+        elab_cert = loadImg('assets/images/elab_cert.jpg'),
+        iti_cert = loadImg('assets/images/iti_cert.jpg'),
+        huawei_cert = loadImg('assets/images/huawei_ict_cert.png'),
+        ethydco_cert = loadImg('assets/images/ethydco_cert.jpg'),
+        comptia = loadImg('assets/images/A+_cert.png'),
+        ccna = loadImg('assets/images/ccna_cert.png');
   const TIMELINE = [
     {
       when: '2022',
@@ -58,7 +66,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       mobH: 125,
       bg: 'transparent',
       radius: 0,
-      border: 'rgba(255,255,255,0.22)'
     },
     {
       when: '2022 – 2026',
@@ -71,7 +78,66 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       mobH: 125,
       bg: 'transparent',
       radius: 0,
-      border: 'rgba(255,255,255,0.22)'
+    },
+    {
+      when: 'March, 2025',
+      t: 'Cyber 5W',
+      d: 'Introduction to Digital Forensics',
+      img: cyber5w_cert,
+      imgW: 300,
+      imgH: 212,
+      mobW: 110,
+      mobH: 78,
+      bg: 'transparent',
+      radius: 4,
+    },
+    {
+      when: 'July, 2025',
+      t: 'ELAB',
+      d: 'Summer Training — Egyptian Linear Alkyl Benzene',
+      img: elab_cert,
+      imgW: 300,
+      imgH: 206,
+      mobW: 110,
+      mobH: 76,
+      bg: 'transparent',
+      radius: 4,
+    },
+    {
+      when: 'August, 2025',
+      t: 'Information Technology Institute (ITI)',
+      d: 'Cyber Security Training (90 hrs)',
+      img: iti_cert,
+      imgW: 238,
+      imgH: 330,
+      mobW: 90,
+      mobH: 125,
+      bg: 'transparent',
+      radius: 0,
+    },
+    {
+      when: 'August, 2025',
+      t: 'Huawei ICT Academy',
+      d: 'HCCDA – Tech Essentials Course',
+      img: huawei_cert,
+      imgW: 233,
+      imgH: 330,
+      mobW: 90,
+      mobH: 125,
+      bg: 'transparent',
+      radius: 0,
+    },
+    {
+      when: 'Summer, 2025',
+      t: 'ETHYDCO',
+      d: 'Summer Training (80 Hours) — Egyptian Ethylene & Derivatives',
+      img: ethydco_cert,
+      imgW: 300,
+      imgH: 217,
+      mobW: 110,
+      mobH: 80,
+      bg: 'transparent',
+      radius: 4,
     },
     {
       when: 'May, 2026',
