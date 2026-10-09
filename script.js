@@ -21,14 +21,14 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
   /* ---------------- Content (from the CV) ---------------- */
   const C = {
-    name: 'Youssef Wael Elfeshawy', role: 'Network & Cybersecurity Engineer',
+    name: 'Youssef Wael Elfeshawy', role: 'Cybersecurity & Network Engineer',
     phone: '+201141259125', phone2: '+201212442281', email: 'youssifelfeshawy@gmail.com',
     linkedin: 'https://www.linkedin.com/in/youssifelfeshawy', place: 'Alexandria, Egypt',
     map: 'https://www.google.com/maps/search/?api=1&query=Alexandria+Egypt',
-    cv: 'assets/Youssef-Elfeshawy-CV.pdf', docs: 'network.html', github: 'https://github.com/youssifelfeshawy'
+    cv: 'assets/Youssef_Elfeshawy_CV.pdf', docs: 'network.html', github: 'https://github.com/youssifelfeshawy'
   };
   const ALL = [C.name, C.role, C.phone, C.phone2, C.email, C.linkedin, C.place].join('\n');
-  const ABOUT = 'Cybersecurity professional with strong hands-on project experience in network engineering, security infrastructure, and cloud technologies gained throughout 4 years of dedicated academic and personal projects. Holds CompTIA A+ and CCNA certifications. Demonstrated ability to design and secure complex network environments through building a comprehensive Zero Trust Architecture simulation featuring ML-based threat detection, Suricata IDS, and Splunk SIEM integration. Proficient in Python, Java, Linux, Docker, and network protocols, with a focus on network security, cloud infrastructure, and identity management.';
+  const ABOUT = 'Cybersecurity and Network Engineering graduate from Alexandria University with a solid understanding of network security, system administration, cloud computing, and secure infrastructure design. Through academic and personal projects, I have gained practical experience in network traffic analysis, Zero Trust Architecture, machine learning-based threat detection, and SIEM monitoring. My technical skills include Python, Linux, Docker, and network troubleshooting. I enjoy working on technical challenges, learning new technologies, and finding practical ways to improve network security and system reliability.';
   const PROJECTS = [
     { y: '2025', tag: 'NETWORK SECURITY · MACHINE LEARNING', t: 'Zero Trust Architecture Simulation', d: 'Designed a virtualised enterprise network with isolated subnets routed through a central Gateway, enforcing department-level VLAN segmentation and Zero Trust policies. Integrated ML-based real-time traffic classification, Keycloak OIDC/OAuth2 identity management, Suricata IDS, and Splunk SIEM for end-to-end threat detection and monitoring.' },
     { y: '2024', tag: 'CLOUD COMPUTING', t: 'Dockerized Application with Database', d: 'A web application using Docker that includes a web server container and a database container.' },
@@ -43,7 +43,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       url: C.docs
     }
   ];
-  const NAV = ['Journey', 'Qualifications', 'Documentations', 'Projects'];
+  const NAV = ['AboutMe', 'Qualifications', 'Documentations', 'Projects'];
   const loadImg = src => { const i = new Image(); i.onload = () => (dirtyScreen = true); i.src = src; return i; };
   const school_cert = loadImg('assets/images/school_cert.jpg'),
         college_cert = loadImg('assets/images/college_cert.jpg'),
@@ -304,8 +304,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     txt(title.toUpperCase(), M, 290, 64, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
   };
 
-  function pageJourney() {
-    head('', 'Journey');
+  function pageAboutMe() {
+    head('', 'AboutMe');
     wrap(ABOUT, M, 430, W - 2 * M, 40, 74, '#b0b0b0');
   }
 
@@ -407,7 +407,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     }
 
     if (tab === 0) {
-      txt('JOURNEY', mx, contentY0 + 44, 38, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
+      txt('AboutMe', mx, contentY0 + 44, 38, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
       wrap(ABOUT, mx, contentY0 + 114, mw, 28, 46, '#b0b0b0', 400);
     } else if (tab === 1) {
       txt('QUALIFICATIONS', mx, contentY0 + 44, 36, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
@@ -661,7 +661,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     });
     // Download CV button excluded from on-screen display per user preference
     g.save(); g.beginPath(); g.rect(0, 142, W, H - 142); g.clip();
-    [pageJourney, pageQualifications, pageDocumentation, pageProjects][tab]();
+    [pageAboutMe, pageQualifications, pageDocumentation, pageProjects][tab]();
     g.restore();
     if (screenTex) screenTex.needsUpdate = true;
   }
@@ -724,7 +724,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   const KEY_MAP = {
     // Row 1: Esc, F1 - F12, CV
     '005': { label: 'ESC', run: hero },
-    '003': { label: 'F1', run: toTab(0, 'Journey') },
+    '003': { label: 'F1', run: toTab(0, 'AboutMe') },
     '004': { label: 'F2', run: toTab(1, 'Qualifications') },
     '006': { label: 'F3', run: toTab (2, 'Documentations') },
     '007': { label: 'F4', run: toTab(3, 'Projects') },
