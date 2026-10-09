@@ -43,7 +43,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       url: C.docs
     }
   ];
-  const NAV = ['AboutMe', 'Qualifications', 'Documentations', 'Projects'];
+  const NAV = ['About Me', 'Qualifications', 'Documentations', 'Projects'];
   const loadImg = src => { const i = new Image(); i.onload = () => (dirtyScreen = true); i.src = src; return i; };
   const school_cert = loadImg('assets/images/school_cert.jpg'),
         college_cert = loadImg('assets/images/college_cert.jpg'),
@@ -305,7 +305,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   };
 
   function pageAboutMe() {
-    head('', 'AboutMe');
+    head('', 'About Me');
     wrap(ABOUT, M, 430, W - 2 * M, 40, 74, '#b0b0b0');
   }
 
@@ -407,7 +407,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     }
 
     if (tab === 0) {
-      txt('AboutMe', mx, contentY0 + 44, 38, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
+      txt('About Me', mx, contentY0 + 44, 38, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
       wrap(ABOUT, mx, contentY0 + 114, mw, 28, 46, '#b0b0b0', 400);
     } else if (tab === 1) {
       txt('QUALIFICATIONS', mx, contentY0 + 44, 36, '#f2f2f2', { w: 400, font: HEAD_FONT, ls: '0.12em' });
@@ -724,7 +724,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   const KEY_MAP = {
     // Row 1: Esc, F1 - F12, CV
     '005': { label: 'ESC', run: hero },
-    '003': { label: 'F1', run: toTab(0, 'AboutMe') },
+    '003': { label: 'F1', run: toTab(0, 'About Me') },
     '004': { label: 'F2', run: toTab(1, 'Qualifications') },
     '006': { label: 'F3', run: toTab (2, 'Documentations') },
     '007': { label: 'F4', run: toTab(3, 'Projects') },
