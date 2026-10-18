@@ -86,6 +86,16 @@
 </figure>
 <div class="doc-spacer" aria-hidden="true"></div>
 
+<h3 class="topic-heading" id="network-types">Network Types</h3>
+<p class="body-line">Networks can be classified by their geographic scope or by the environment in which they are used:</p>
+<ul class="doc-list">
+  <li><strong>LAN (Local Area Network):</strong> covers a small geographic area, such as a home, office, or single building. It provides high-speed connectivity over short distances, typically using Ethernet or Wi-Fi.</li>
+  <li><strong>MAN (Metropolitan Area Network):</strong> covers a larger geographic area, such as a city or large campus. It connects multiple LANs within the same region, often under the control of one organization or service provider.</li>
+  <li><strong>WAN (Wide Area Network):</strong> covers large geographic areas, such as multiple cities, countries, or even the entire globe. It connects networks over long distances; the Internet is the largest example of a WAN.</li>
+  <li><strong>SOHO (Small Office/Home Office):</strong> describes a small office or home networking environment rather than a geographic network type. SOHO networks typically have a small number of devices and often use a single multifunction router that combines routing, switching, firewall, wireless access point, and modem functions.</li>
+</ul>
+<div class="doc-spacer" aria-hidden="true"></div>
+
 <h3 class="topic-heading" id="network-devices">Network Devices</h3>
 <p class="body-line">Every device in a network is called a node. Nodes include routers, switches, firewalls, servers, and clients. Servers and clients are specifically called end hosts or endpoints.</p>
 <ul class="doc-list">
@@ -100,16 +110,6 @@
 <tr><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;"><strong>Host-Based Firewall</strong></td><td style="font-size: 15.5px; line-height: 1.5; padding: 14px 16px;">A software application that filters traffic entering and exiting a single host machine, such as a PC. Even with a network firewall in place, each host should have its own firewall as an extra line of defense.</td></tr>
 </tbody></table></div>
 <aside class="callout"><strong>Note:</strong><p>The same device can be a client in some situations and a server in others — for example, a PC that hosts a local file share is acting as a server for that service while also being a client when it browses the internet.</p></aside>
-<div class="doc-spacer" aria-hidden="true"></div>
-
-<h3 class="topic-heading" id="network-types">Network Types</h3>
-<p class="body-line">Networks can be classified by their geographic scope or by the environment in which they are used:</p>
-<ul class="doc-list">
-  <li><strong>LAN (Local Area Network):</strong> covers a small geographic area, such as a home, office, or single building. It provides high-speed connectivity over short distances, typically using Ethernet or Wi-Fi.</li>
-  <li><strong>MAN (Metropolitan Area Network):</strong> covers a larger geographic area, such as a city or large campus. It connects multiple LANs within the same region, often under the control of one organization or service provider.</li>
-  <li><strong>WAN (Wide Area Network):</strong> covers large geographic areas, such as multiple cities, countries, or even the entire globe. It connects networks over long distances; the Internet is the largest example of a WAN.</li>
-  <li><strong>SOHO (Small Office/Home Office):</strong> describes a small office or home networking environment rather than a geographic network type. SOHO networks typically have a small number of devices and often use a single multifunction router that combines routing, switching, firewall, wireless access point, and modem functions.</li>
-</ul>
 <div class="doc-spacer" aria-hidden="true"></div>
 
 <h3 class="topic-heading" id="network-design">Network Topologies</h3>
@@ -141,7 +141,7 @@
   <li><strong>Cable Internet (CATV):</strong> provides internet access over the same cable infrastructure used for television services and requires a cable modem to connect the customer's network to the ISP.</li>
   <li><strong>Fiber Ethernet:</strong> is a modern high-speed access technology that uses fiber-optic cables to provide fast, reliable connectivity over longer distances and is widely used for both business and residential internet access.</li>
 </ul>
-<p class="body-line">Because internet connectivity can be a critical part of a network, organizations may use more than one connection to improve availability. The amount of redundancy depends on the number of connections and Internet Service Providers (ISPs)—the companies that supply the actual internet access—that are used:</p>
+<p class="body-line">Because internet connectivity can be a critical part of a network, organizations may use more than one connection to improve availability. The amount of redundancy depends on the number of connections and ISPs that are used:</p>
 <div class="table-wrap"><table><thead><tr><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td>Single Homed</td><td>One connection to one ISP, providing no connection redundancy.</td></tr>
 <tr><td>Dual Homed</td><td>Two connections to one ISP, providing link redundancy, but the ISP remains a single point of failure.</td></tr>
@@ -164,7 +164,7 @@
 <h3 class="topic-heading" id="number-systems">Number Systems</h3>
 <p class="body-line">Networking uses three common number systems to represent digital information. Each system uses a different base and has a standard prefix:</p>
 <ul class="doc-list">
-  <li><strong>Binary (Base 2, prefix <code>0b</code>):</strong> uses only the digits 0 and 1. Used internally by all digital systems. Used internally by all digital systems.</li>
+  <li><strong>Binary (Base 2, prefix <code>0b</code>):</strong> uses only the digits 0 and 1. Used internally by all digital systems.</li>
   <li><strong>Decimal (Base 10, prefix <code>0d</code>):</strong> uses the digits 0 through 9 and is the standard number system used by people.</li>
   <li><strong>Hexadecimal (Base 16, prefix <code>0x</code>):</strong> uses the digits 0–9 and the letters A–F. It provides a compact way to represent binary values because one hexadecimal digit represents exactly four binary bits.</li>
 </ul>
@@ -188,9 +188,9 @@
 <p class="body-line">A terminal emulator such as PuTTY is then used to open the console session. A typical Cisco console connection uses <code>9600</code> speed (baud) rate, <code>8</code> data bits, <code>1</code> stop bit, no parity, and no flow control. The stop bit is sent after the 8 data bits to mark the end of each byte.</p>
 <p class="body-line">Once the connection is established, the Cisco IOS (Internetwork Operating System) command-line interface becomes available. Cisco IOS organizes commands into different modes, with each mode providing a different level of access:</p>
 <ul class="doc-list">
-  <li><strong>User EXEC Mode (<code>Router&gt;</code>):</strong> the initial mode after accessing the device. It provides limited monitoring commands but does not allow configuration changes.</li>
-  <li><strong>Privileged EXEC Mode (<code>Router#</code>):</strong> entered using <code>enable</code>. It provides access to advanced monitoring, management, saving, and configuration functions.</li>
-  <li><strong>Global Configuration Mode (<code>Router(config)#</code>):</strong> entered using <code>configure terminal</code> from Privileged EXEC mode and is used to make configuration changes to the device.</li>
+  <li><strong>User EXEC Mode (<code>&gt;</code>):</strong> the initial mode after accessing the device. It provides limited monitoring commands but does not allow configuration changes.</li>
+  <li><strong>Privileged EXEC Mode (<code>#</code>):</strong> entered using <code>enable</code>. It provides access to advanced monitoring, management, saving, and configuration functions.</li>
+  <li><strong>Global Configuration Mode (<code>(config)#</code>):</strong> entered using <code>configure terminal</code> from Privileged EXEC mode and is used to make configuration changes to the device.</li>
 </ul>
 <aside class="callout"><strong>Note:</strong><p>A question mark (<code>?</code>) can be entered at any point in the Cisco IOS CLI to display the commands or options available in the current mode or at the current position in a command.</p></aside>
 <p class="body-line">Because Privileged EXEC mode provides extensive control over the device, access to it can be protected with a password:</p>
@@ -324,7 +324,7 @@ write memory</code></pre>
     
 <div class="doc-spacer" aria-hidden="true"></div>
 <article class="osi-text-card osi-summary-card" id="layer-7-summary"><span>7</span><p>Layer 7 — Application: provides the interfaces and protocols needed by the user&#x27;s software, enabling applications on different end-systems to communicate. Examples: HTTP (Hypertext Transfer Protocol), DNS (Domain Name System), FTP (File Transfer Protocol), SMTP (Simple Mail Transfer Protocol).</p></article>
-<article class="osi-text-card osi-summary-card" id="layer-6-summary"><span>6</span><p>Layer 6 — Presentation: translates data between the application&#x27;s format and a standard network format. Also handles encryption, decryption, compression, and decompression. Examples: SSL/TLS (Secure Sockets Layer / Transport Layer Security), JPEG, ASCII.</p></article>
+<article class="osi-text-card osi-summary-card" id="layer-6-summary"><span>6</span><p>Layer 6 — Presentation: translates data between the application&#x27;s format and a standard network format. Also handles encryption, decryption, compression, and decompression. Examples: SSL/TLS (Secure Sockets Layer / Transport Layer Security), JPEG, ASCII, compression, encode.</p></article>
 <article class="osi-text-card osi-summary-card" id="layer-5-summary"><span>5</span><p>Layer 5 — Session: establishes, maintains, and terminates communication sessions between two applications. Examples: NetBIOS, RPC (Remote Procedure Call).</p></article>
 <article class="osi-text-card osi-summary-card" id="layer-4-summary"><span>4</span><p>Layer 4 — Transport: provides end-to-end delivery of data between applications. Handles segmentation, error recovery, and flow control. Adds a header containing source and destination port numbers. Examples: TCP (Transmission Control Protocol), UDP (User Datagram Protocol).</p></article>
 <article class="osi-text-card osi-summary-card" id="layer-3-summary"><span>3</span><p>Layer 3 — Network: handles logical addressing and routing of packets across different networks through intermediate routers. Adds a header containing source and destination IP (Internet Protocol) addresses. Examples: IPv4 (Internet Protocol version 4), IPv6, OSPF (Open Shortest Path First).</p></article>
@@ -351,7 +351,7 @@ write memory</code></pre>
 <h3 class="topic-heading" id="transmission-media">Transmission Media</h3>
 <p class="body-line">The physical medium is what carries the actual signal between devices. All transmission media fall into one of two categories:</p>
 <ul class="doc-list">
-  <li>Wired (guided) media: signals travel through a physical cable that guides the signal from source to destination. Examples: UTP (Unshielded Twisted Pair) copper cable, fiber optic cable, coaxial cable.</li>
+  <li>Wired (guided) media: signals travel through a physical cable that guides the signal from source to destination. Examples: copper cables, fiber optic cables, coaxial cables.</li>
   <li>Wireless (unguided) media: signals travel through the air as electromagnetic waves without any physical conductor. Examples: Wi-Fi local networks, cellular networks (4G/5G), satellite links, terrestrial microwave.</li>
 </ul>
 <div class="doc-spacer" aria-hidden="true"></div>
@@ -382,7 +382,7 @@ write memory</code></pre>
 <div class="table-wrap"><table><thead><tr><th>Standard</th><th>Speed</th><th>Wires Used</th><th>Bidirectional Pairs?</th></tr></thead><tbody><tr><td>10BASE-T</td><td>10 Mbps</td><td>4 — pins 1, 2, 3, 6</td><td>No — dedicated TX and RX pairs</td></tr><tr><td>100BASE-TX</td><td>100 Mbps</td><td>4 — pins 1, 2, 3, 6</td><td>No — dedicated TX and RX pairs</td></tr><tr><td>1000BASE-T</td><td>1 Gbps</td><td>8 — all 4 pairs</td><td>Yes — all 4 pairs bidirectional</td></tr><tr><td>10GBASE-T</td><td>10 Gbps</td><td>8 — all 4 pairs</td><td>Yes — all 4 pairs bidirectional</td></tr></tbody></table></div>
 <div class="doc-spacer" aria-hidden="true"></div>
 <h4 class="subheading" id="fiber-optic-cables">Fiber Optic Cables</h4>
-<p class="body-line">Fiber optic cables transmit data as pulses of light through a glass core, rather than electrical signals through copper. This enables much longer distances, higher speeds, and complete immunity to electromagnetic interference — making fiber the preferred medium for inter-building links, WAN (Wide Area Network) connections, and high-security environments.</p>
+<p class="body-line">Fiber optic cables transmit data as pulses of light through a glass core, rather than electrical signals through copper. This enables much longer distances, higher speeds, and complete immunity to electromagnetic interference — making fiber the preferred medium for inter-building links, WAN connections, and high-security environments.</p>
 <aside class="figure-block figure-with-image"><img src="assets/images/network_documentation/fiber_optic_cable.jpg" alt="Fiber Optic Cable"></aside>
 <ul class="doc-list">
   <li>Fiberglass core: the medium through which light pulses travel.</li>
@@ -506,7 +506,7 @@ show vlan brief                            → view VLANs and assigned access po
 <pre class="command-line"><code>int <i>interface-id</i>                                 → select the interface
   switchport trunk encapsulation dot1q           → set encapsulation to 802.1Q
   switchport mode trunk                          → configure as a trunk
-  switchport trunk allowed vlan <i>vlan-list</i>        → allow only specified VLANs
+  switchport trunk allowed vlan <i>vlan-ids</i>        → allow only specified VLANs
   switchport trunk native vlan <i>vlan-id</i>           → change the native VLAN
 show interfaces trunk                            → view trunk configurations</code></pre>
 <aside class="callout"><strong>Note:</strong><p>Because the 802.1Q tag adds 4 bytes to the Ethernet frame, a tagged frame can be up to 1522 bytes instead of the normal 1518 bytes. This is expected and is not considered a giant frame.</p></aside>
@@ -534,7 +534,7 @@ show interfaces trunk                            → view trunk configurations</
 
 <h4 class="subheading" id="vlan-trunking-protocol-vtp">VTP</h4>
 <p class="body-line">VTP (VLAN Trunking Protocol) is a Cisco-proprietary protocol that distributes VLAN configuration from a central VTP server switch to all VTP client switches in the same domain — eliminating the need to configure VLANs individually on every switch.</p>
-<div class="table-wrap"><table><thead><tr><th>VTP Mode</th><th>Add/Modify/Delete VLANs?</th><th>Stores VLAN DB in NVRAM?</th><th>Syncs to Server?</th><th>Forwards VTP Advertisements?</th></tr></thead><tbody><tr><td>Server</td><td>Yes</td><td>Yes</td><td>Yes (if another server has a higher revision number)</td><td>Yes</td></tr><tr><td>Client</td><td>No</td><td>No (VTPv3: Yes)</td><td>Yes — syncs to highest revision number seen</td><td>Yes</td></tr><tr><td>Transparent</td><td>Yes — local only, not advertised</td><td>Yes</td><td>No — ignores VTP advertisements</td><td>Yes — forwards others&#x27; advertisements</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>VTP Mode</th><th>Modify VLANs</th><th>Stores VLAN DB in NVRAM</th><th>Syncs to Server</th><th>Forwards VTP Advertisements</th></tr></thead><tbody><tr><td>Server</td><td>Yes</td><td>Yes</td><td>Yes (if another server has a higher revision number)</td><td>Yes</td></tr><tr><td>Client</td><td>No</td><td>No (VTPv3: Yes)</td><td>Yes — syncs to highest revision number seen</td><td>Yes</td></tr><tr><td>Transparent</td><td>Yes — local only, not advertised</td><td>Yes</td><td>No — ignores VTP advertisements</td><td>Yes — forwards others&#x27; advertisements</td></tr></tbody></table></div>
 <ul class="doc-list">
   <li>Revision number: VTP servers increment this counter every time a VLAN is added, modified, or deleted. Clients always sync to the highest revision number. To safely reset it to zero: change the VTP domain name or switch the device to transparent mode.</li>
   <li>VTP domain: all participating switches must use the same domain name <code> vtp domain DOMAIN-NAME </code></li>
@@ -585,11 +585,11 @@ show interfaces trunk                            → view trunk configurations</
 <p class="body-line">Once the Root Bridge is established, it becomes the only switch that originates Hello BPDUs every 2 seconds by default, while the other switches receive and forward them through the topology. STP then assigns a role to every port. Classic STP uses three main port roles:</p>
 <ul class="doc-list">
   <li><strong>Root Port (RP):</strong> the port on a non-root switch that provides the best path toward the Root Bridge. Every non-root switch has exactly one Root Port. During normal STP operation, it receives BPDUs from the Designated Port on the other end of the link.</li>
-  <li><strong>Designated Port (DP):</strong> the port selected to forward traffic on a network link. Every link has exactly one Designated Port. Designated Ports send or forward BPDUs onto their links.</li>
-  <li><strong>Non-Designated Port:</strong> a redundant port that is placed in the blocking state to prevent a Layer 2 loop. It receives BPDUs but does not forward regular traffic or forward BPDUs.</li>
+  <li><strong>Designated Port (DP):</strong> the port selected to send or forward BPDUs on a network link. Every link has exactly one Designated Port.</li>
+  <li><strong>Non-Designated Port:</strong> a redundant port that is placed in the blocking state to prevent a Layer 2 loop. It receives BPDUs but does not forward BPDUs or even forward regular traffic.</li>
 </ul>
 <figure class="overview-figure-block figure-with-image"><img src="" alt="STP Root Designated and Non-Designated Port Roles"></figure>
-<p class="body-line">STP assigns these roles in a specific order. First, all ports on the Root Bridge become Designated Ports. The Root Bridge does not have a Root Port because it is already the reference point that all other switches are trying to reach.</p>
+<p class="body-line">STP assigns these roles in a specific order. First, all ports on the Root Bridge become Designated Ports. The Root Bridge does not have a Root Port because it is already the reference point that all other switches are trying to reach and the only switch that originates Hello BPDUs.</p>
 <p class="body-line">Next, every non-root switch must select exactly <strong>one Root Port</strong> — the port that provides its best path toward the Root Bridge. If a switch has multiple possible paths, STP selects the Root Port using these tiebreakers in order:</p>
 <ol class="doc-list">
   <li><strong>Lowest Root Path Cost</strong></li>
@@ -608,7 +608,7 @@ show interfaces trunk                            → view trunk configurations</
 <p class="body-line">The Port Priority can be changed on the upstream interface to influence this final tiebreaker:</p>
 <pre class="command-line"><code>spanning-tree vlan <i>vlan-id</i> port-priority <i>priority</i></code></pre>
 </ul><aside class="callout"><strong>Note:</strong><p>It is the neighbor switch&#x27;s Port ID that is used to break ties — not the local switch&#x27;s own Port ID.</p></aside>
-<p class="body-line">Once every non-root switch has selected its Root Port, STP must determine which port should forward traffic on every network segment. This port is called the Designated Port. Every network segment has exactly one Designated Port. On the Root Bridge, all ports are automatically Designated Ports.</p>
+<p class="body-line">Once every non-root switch has selected its Root Port, STP must determine which port should forward the root bridge's BDPUs on every network segment. This port is called the Designated Port. Every network segment has exactly one Designated Port. On the Root Bridge, all ports are automatically Designated Ports.</p>
 <p class="body-line">On a link between two non-root switches, STP selects the Designated Port using the following order:</p>
 <ol class="doc-list">
   <li><strong>Lowest Root Path Cost</strong></li>
@@ -618,11 +618,9 @@ show interfaces trunk                            → view trunk configurations</
 <p class="body-line">After the Root Ports and Designated Ports have been selected, any remaining port becomes a Non-Designated Port. This is the redundant port that STP prevents from forwarding regular traffic so that a Layer 2 loop cannot form.</p>
 <p class="body-line">A port's <strong>role</strong> describes its purpose in the STP topology, while its state determines what the port is currently allowed to do. Classic STP uses five port states:</p>
 <div class="table-wrap"><table><thead><tr><th>State</th><th>Type</th><th>Sends/ Receives Traffic?</th><th>Sends/ Receives BPDUs?</th><th>Learning MAC Address</th><th>Description</th></tr></thead><tbody><tr><td>Blocking</td><td>Stable</td><td>No</td><td>Receives only</td><td>No</td><td>Blocks regular traffic indefinitely to prevent loops and remains in this state until the topology changes.</td></tr><tr><td>Listening</td><td>Transitional</td><td>No</td><td>Yes</td><td>No</td><td>Processes BPDUs for 15 seconds to determine whether the port can safely move toward Forwarding.</td></tr><tr><td>Learning</td><td>Transitional</td><td>No</td><td>Yes</td><td>Yes</td><td>Learns MAC addresses for 15 seconds while still preventing regular traffic from being forwarded.</td></tr><tr><td>Forwarding</td><td>Stable</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Operates normally by forwarding traffic and learning MAC addresses until the topology changes.</td></tr><tr><td>Disabled</td><td>Stable</td><td>No</td><td>No</td><td>No</td><td>Remains inactive while the port is administratively shut down and does not participate in STP.</td></tr></tbody></table></div>
-<p class="body-line">When a blocked port needs to become active, it normally transitions through <strong>Blocking → Listening → Learning → Forwarding</strong>. Listening and Learning each last 15 seconds, giving a 30-second Forward Delay.</p>
-<figure class="overview-figure-block figure-with-image"><img src="" alt="Classic STP Blocking Listening Learning and Forwarding State Transition"></figure>
 <aside class="callout">
   <strong>Note:</strong>
-  <p>Moving from Blocking to Forwarding, the port wait up to 20 seconds for the Max Age timer to expire which is how long the port don't recieve BPDUs before STP considers to change. After that, the port spends 15 seconds in Listening and 15 seconds in Learning, so convergence can take up to 50 seconds. These delays help STP avoid making a wrong topology decision that could create a loop. However, a port moving from Forwarding to Blocking can do so immediately.</p>
+  <p>When a blocked port needs to become active, it normally transitions through Blocking → Listening → Learning → Forwarding. The port wait up to 20 seconds for the Max Age timer to expire which is how long the port don't recieve BPDUs before STP considers to change. After that, the port spends 15 seconds in Listening and 15 seconds in Learning, so convergence can take up to 50 seconds. These delays help STP avoid making a wrong topology decision that could create a loop. However, a port moving from Forwarding to Blocking can do so immediately.</p>
 </aside>
 <p class="body-line">To view the STP configurations:</p>
 <pre class="command-line"><code>show spanning-tree [summary | {int &lt;interface-id&gt;} | {vlan &lt;vlan-id&gt;} | detail]</code></pre>
@@ -646,7 +644,7 @@ show interfaces trunk                            → view trunk configurations</
 <p class="body-line">To enable BPDU Guard globally on all PortFast-enabled ports:</p>
 <pre class="command-line"><code>spanning-tree portfast bpduguard default</code></pre>
 <h5 class="subheading" id="errdisable">3. ErrDisable and ErrDisable Recovery</h5>
-<p class="body-line">If a BPDU Guard-enabled port receives a BPDU, the switch places the port into the <strong>ErrDisable</strong> state to protect the Layer 2 topology. A port placed in <strong>ErrDisable</strong> stops forwarding traffic until the problem is corrected.</p>
+<p class="body-line">If a BPDU Guard-enabled port receives a BPDU, the switch places the port into the ErrDisable state to protect the Layer 2 topology. A port placed in ErrDisable stops forwarding traffic until the problem is corrected.</p>
 <p class="body-line">There are two ways to return the port to normal operation:</p>
 <ul>
   <li><strong>Manual recovery:</strong> fix the problem, then use <code>shutdown</code> followed by <code>no shutdown</code> on the affected interface.</li>
