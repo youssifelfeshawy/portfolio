@@ -651,9 +651,9 @@ show interfaces trunk                            → view trunk configurations</
   <li><strong>Automatic recovery:</strong> configure the switch to automatically re-enable the port after the recovery timer expires.</li>
 </ul>
 <p class="body-line">To configure and verify automatic recovery from BPDU Guard violations:</p>
-<pre class="command-line"><code>errdisable recovery cause bpduguard   → enable automatic recovery for BPDU Guard
-errdisable recovery interval <i>seconds</i>  → set the recovery timer
-show errdisable recovery              → view recovery settings and timers</code></pre>
+<pre class="command-line"><code>errdisable recovery cause bpduguard      → enable automatic recovery for BPDU Guard
+errdisable recovery interval <i>seconds</i>     → set the recovery timer
+show errdisable recovery                 → view recovery settings and timers</code></pre>
 <aside class="callout"><strong>Note:</strong><p>The default ErrDisable recovery interval is 300 seconds. The underlying problem should always be fixed first; otherwise, the port may enter ErrDisable again after it recovers.</p></aside>
 <h5 class="subheading" id="bpdu-filter">4. BPDU Filter</h5>
 <p class="body-line">BPDU Filter controls whether STP BPDUs are sent and processed on an edge port. It is used when the port should not normally participate in STP communication.</p>
@@ -700,7 +700,7 @@ show errdisable recovery              → view recovery settings and timers</cod
 <p class="body-line">The Root Port and Designated Port roles remain the same as in Classic STP, while the Non-Designated role is replaced by two more specific roles:</p>
 <ul class="doc-list">
   <li><strong>Alternate Port:</strong> a Discarding port that provides an alternative path toward the Root Bridge. If the current Root Port fails, the Alternate Port can rapidly replace it.</li>
-  <li><strong>Backup Port:</strong> a Discarding port that provides a backup to another port on the same switch connected to the same shared segment. This is mainly associated with hub-based networks and is rarely seen in modern switched networks. The interface with the lowest Port ID becomes the Designated Port; the other becomes the Backup Port.</li>
+  <li><strong>Backup Port:</strong> a Discarding port that provides a backup to another port on the same switch connected to the same shared segment. This is mainly associated with hub-based networks and is rarely seen in modern switched networks. The switch assigns this role when it receives its own BPDUs back through the segment.</li>
 </ul>
 <figure class="overview-figure-block figure-with-image"><img src="" alt="RSTP Root Designated Alternate and Backup Port Roles"></figure>
 <p class="body-line">RSTP also simplifies the five Classic STP port states into only three. Disabled, Blocking, and Listening are represented by the Discarding state, while Learning and Forwarding remain:</p>
@@ -767,39 +767,37 @@ show etherchannel load-balance</code></pre>
 <p class="body-line">CDP (Cisco Discovery Protocol) is a Cisco proprietary protocol. It can be enabled globally using:</p>
 <pre class="command-line"><code>cdp run</code></pre>
 <p class="body-line">CDP periodically sends advertisements to directly connected devices. The CDP Timer is <code>60</code> seconds by default and controls how often advertisements are sent, while the CDP Holdtime is <code>180</code> seconds by default and determines how long neighbor information is kept before it is removed if no new advertisement is received. These values can be changed using:</p>
-<pre class="command-line"><code>cdp timer <i>seconds</i>                  → change the advertisement interval
-cdp holdtime <i>seconds</i>               → change the holdtime</code></pre>
+<pre class="command-line"><code>cdp timer <i>seconds</i>                    → change the advertisement interval
+cdp holdtime <i>seconds</i>                 → change the holdtime</code></pre>
 <p class="body-line">CDP can also be controlled separately on each interface:</p>
 <pre class="command-line"><code>interface <i>interface-id</i>
   cdp enable</code></pre>
 <p class="body-line">Cisco devices use CDPv2 advertisements by default. CDPv2 carries additional information compared with the older CDPv1 format. If CDPv2 advertisements are disabled, the device uses the older CDPv1 format instead:</p>
-<pre class="command-line"><code>[no] cdp advertise-v2               → enable or disable CDPv2 advertisements</code></pre>
+<pre class="command-line"><code>[no] cdp advertise-v2                → enable or disable CDPv2 advertisements</code></pre>
 <p class="body-line">CDP operation and discovered neighbors can be verified using:</p>
-<pre class="command-line"><code>show cdp                         → view global CDP status and timer settings
-show cdp interface               → view CDP status on interfaces
-show cdp neighbors               → view a summary of discovered neighbors
-show cdp neighbors detail        → view detailed information about all neighbors
-show cdp entry <i>name</i>              → view detailed information about one neighbor
-show cdp traffic                 → view CDP packet statistics</code></pre>
+<pre class="command-line"><code>show cdp                             → view global CDP status and timer settings
+show cdp interface                   → view CDP status on interfaces
+show cdp neighbors [detail]          → view information about discovered neighbors
+show cdp entry <i>name</i>                  → view detailed information about one neighbor
+show cdp traffic                     → view CDP packet statistics</code></pre>
 <aside class="callout"><strong>Note:</strong><p>CDP is typically enabled by default on Cisco devices and supported interfaces. For security, the <code>no cdp run</code> command can disable it globally, or <code>no cdp enable</code> can disable it only on interfaces where neighbor discovery is not required.</p></aside>
 <h4 class="subheading" id="lldp">2. LLDP</h4>
 <p class="body-line">LLDP (Link Layer Discovery Protocol) is an IEEE 802.1AB industry-standard protocol, allowing devices from different vendors to discover information about each other. On Cisco devices, LLDP must normally be enabled globally before it can operate:</p>
 <pre class="command-line"><code>lldp run</code></pre>
 <p class="body-line">Like CDP, LLDP uses a Timer and Holdtime The LLDP Timer is <code>30</code> seconds by default and controls how often advertisements are sent, while the LLDP Holdtime is <code>120</code> seconds and determines how long neighbor information is kept. Unlike CDP, LLDP also has a Reinitialization Timer, which is <code>2</code> seconds by default and controls how long LLDP waits before restarting after it is re-enabled. These values can be changed using:</p>
-<pre class="command-line"><code>lldp timer <i>seconds</i>                 → change the advertisement interval
-lldp holdtime <i>seconds</i>              → change the holdtime
-lldp reinit <i>seconds</i>                → change the reinitialization delay</code></pre>
+<pre class="command-line"><code>lldp timer <i>seconds</i>                    → change the advertisement interval
+lldp holdtime <i>seconds</i>                 → change the holdtime
+lldp reinit <i>seconds</i>                   → change the reinitialization delay</code></pre>
 <p class="body-line">Unlike CDP, which uses one interface command to control discovery, LLDP allows transmission and reception to be controlled independently on each interface:</p>
 <pre class="command-line"><code>interface <i>interface-id</i>
-  [no] lldp transmit           → enable or disable sending LLDP advertisements
-  [no] lldp receive            → enable or disable receiving LLDP advertisements</code></pre>
+  [no] lldp transmit                  → enable or disable sending LLDP advertisements
+  [no] lldp receive                   → enable or disable receiving LLDP advertisements</code></pre>
 <p class="body-line">LLDP operation and discovered neighbors can be verified using:</p>
-<pre class="command-line"><code>show lldp                        → view global LLDP status and timer settings
-show lldp interface              → view LLDP status on interfaces
-show lldp neighbors              → view a summary of discovered LLDP neighbors
-show lldp neighbors detail       → view detailed information about all neighbors
-show lldp entry <i>name</i>             → view detailed information about one neighbor
-show lldp traffic                → view LLDP packet statistics</code></pre>
+<pre class="command-line"><code>show lldp                             → view global LLDP status and timer settings
+show lldp interface                   → view LLDP status on interfaces
+show lldp neighbors [detail]          → view information about discovered neighbors
+show lldp entry <i>name</i>                  → view detailed information about one neighbor
+show lldp traffic                     → view LLDP packet statistics</code></pre>
 <aside class="callout"><strong>Note:</strong><p>CDP and LLDP are separate protocols and can operate at the same time on the same Cisco device and interfaces.</p></aside>
 <div class="doc-spacer" aria-hidden="true"></div>
 
@@ -945,7 +943,6 @@ show mac address-table secure                 → list secured MAC address entri
 
 <h3 class="topic-heading" id="internet-control-message-protocol-icmp">ICMP</h3>
 <p class="body-line">ICMP (Internet Control Message Protocol) is a protocol used by network devices to report problems and provide diagnostic information about IP communication. It does not carry normal application data; instead, it sends control and error messages when certain network events occur.</p>
-<p class="body-line">Common ICMP messages include:</p>
 <div class="table-wrap"><table><thead><tr><th>ICMP Message</th><th>Purpose</th></tr></thead><tbody><tr><td>Echo Request</td><td>Sent to test whether a destination is reachable.</td></tr><tr><td>Echo Reply</td><td>Returned by the destination in response to an Echo Request.</td></tr><tr><td>Destination Unreachable</td><td>Indicates that a packet could not reach its destination or required service.</td></tr><tr><td>Time Exceeded</td><td>Sent by a router when a packet's TTL reaches 0 and the packet is discarded.</td></tr></tbody></table></div>
 <p class="body-line">One of the most common tools that uses ICMP is <code>ping</code>. Ping tests whether a destination is reachable by sending an ICMP Echo Request to the target IP address and waiting for an ICMP Echo Reply. It can also measure the round-trip time (RTT), which is the time required for the request to reach the destination and for the reply to return.</p>
 <pre class="command-line"><code>ping <i>ip-address</i></code></pre>
